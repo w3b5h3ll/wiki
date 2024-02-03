@@ -276,6 +276,28 @@
       </tags>
   </entry>
   <entry>
+    <title>Fuzzing技术文章整理</title>
+    <url>/2022/12/15/Fuzzing%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0%E6%95%B4%E7%90%86/</url>
+    <content><![CDATA[<h3 id="AFL"><a href="#AFL" class="headerlink" title="AFL"></a>AFL</h3><p><a href="https://paper.seebug.org/841/">https://paper.seebug.org/841/</a></p>
+<p><a href="https://paper.seebug.org/842/">https://paper.seebug.org/842/</a></p>
+<p>AFL技术白皮书</p>
+<p><a href="https://lcamtuf.coredump.cx/afl/technical_details.txt">https://lcamtuf.coredump.cx/afl/technical_details.txt</a></p>
+<p>AFL简单使用</p>
+<p><a href="https://0xfocu5.github.io/posts/2ba75ee3/">https://0xfocu5.github.io/posts/2ba75ee3/</a></p>
+<p>「afl++」fuzzing一个IoT二进制程序，文件fuzz</p>
+<p><a href="https://blog.attify.com/fuzzing-iot-devices-part-1/">https://blog.attify.com/fuzzing-iot-devices-part-1/</a></p>
+<p>「afl++」如何fuzz网络程序</p>
+<p><a href="https://blog.attify.com/fuzzing-iot-binaries-with-afl-part-ii/">https://blog.attify.com/fuzzing-iot-binaries-with-afl-part-ii/</a></p>
+<h3 id="Fuzzing技术综述"><a href="#Fuzzing技术综述" class="headerlink" title="Fuzzing技术综述"></a>Fuzzing技术综述</h3><p><a href="https://mp.weixin.qq.com/s/nREiT1Uj25igCMWu1kta9g">https://mp.weixin.qq.com/s/nREiT1Uj25igCMWu1kta9g</a></p>
+<p>无源fuzz，arm平台</p>
+<p><a href="https://mp.weixin.qq.com/s/G26MJOH4VPene1Sd_zjEQw">https://mp.weixin.qq.com/s/G26MJOH4VPene1Sd_zjEQw</a></p>
+<p><a href="https://www.anquanke.com/post/id/230811#h2-3">https://www.anquanke.com/post/id/230811#h2-3</a></p>
+]]></content>
+      <tags>
+        <tag>Fuzzing</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Android应用安全分析案例0x01</title>
     <url>/2023/11/25/Android%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E6%A1%88%E4%BE%8B0x01/</url>
     <content><![CDATA[<blockquote>
@@ -327,28 +349,6 @@
       <tags>
         <tag>AndroidSEC</tag>
         <tag>objection</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Fuzzing技术文章整理</title>
-    <url>/2022/12/15/Fuzzing%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0%E6%95%B4%E7%90%86/</url>
-    <content><![CDATA[<h3 id="AFL"><a href="#AFL" class="headerlink" title="AFL"></a>AFL</h3><p><a href="https://paper.seebug.org/841/">https://paper.seebug.org/841/</a></p>
-<p><a href="https://paper.seebug.org/842/">https://paper.seebug.org/842/</a></p>
-<p>AFL技术白皮书</p>
-<p><a href="https://lcamtuf.coredump.cx/afl/technical_details.txt">https://lcamtuf.coredump.cx/afl/technical_details.txt</a></p>
-<p>AFL简单使用</p>
-<p><a href="https://0xfocu5.github.io/posts/2ba75ee3/">https://0xfocu5.github.io/posts/2ba75ee3/</a></p>
-<p>「afl++」fuzzing一个IoT二进制程序，文件fuzz</p>
-<p><a href="https://blog.attify.com/fuzzing-iot-devices-part-1/">https://blog.attify.com/fuzzing-iot-devices-part-1/</a></p>
-<p>「afl++」如何fuzz网络程序</p>
-<p><a href="https://blog.attify.com/fuzzing-iot-binaries-with-afl-part-ii/">https://blog.attify.com/fuzzing-iot-binaries-with-afl-part-ii/</a></p>
-<h3 id="Fuzzing技术综述"><a href="#Fuzzing技术综述" class="headerlink" title="Fuzzing技术综述"></a>Fuzzing技术综述</h3><p><a href="https://mp.weixin.qq.com/s/nREiT1Uj25igCMWu1kta9g">https://mp.weixin.qq.com/s/nREiT1Uj25igCMWu1kta9g</a></p>
-<p>无源fuzz，arm平台</p>
-<p><a href="https://mp.weixin.qq.com/s/G26MJOH4VPene1Sd_zjEQw">https://mp.weixin.qq.com/s/G26MJOH4VPene1Sd_zjEQw</a></p>
-<p><a href="https://www.anquanke.com/post/id/230811#h2-3">https://www.anquanke.com/post/id/230811#h2-3</a></p>
-]]></content>
-      <tags>
-        <tag>Fuzzing</tag>
       </tags>
   </entry>
   <entry>
