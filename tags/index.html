@@ -219,14 +219,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-count">11</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -283,10 +283,10 @@
       <div class="post-body">
           <div class="tag-cloud">
   <div class="tag-cloud-title">
-    目前共计 9 个标签
+    目前共计 10 个标签
   </div>
   <div class="tag-cloud-tags">
-    <a href="/tags/AndroidSEC/" style="font-size: 30px;" class="tag-cloud-10">AndroidSEC</a> <a href="/tags/AutoSec/" style="font-size: 12px;" class="tag-cloud-0">AutoSec</a> <a href="/tags/C-C/" style="font-size: 12px;" class="tag-cloud-0">C/C++</a> <a href="/tags/Fuzzing/" style="font-size: 12px;" class="tag-cloud-0">Fuzzing</a> <a href="/tags/Hardware/" style="font-size: 12px;" class="tag-cloud-0">Hardware</a> <a href="/tags/IoT/" style="font-size: 12px;" class="tag-cloud-0">IoT</a> <a href="/tags/Reverse/" style="font-size: 12px;" class="tag-cloud-0">Reverse</a> <a href="/tags/objection/" style="font-size: 12px;" class="tag-cloud-0">objection</a> <a href="/tags/%E8%BD%AC%E8%BD%BD/" style="font-size: 21px;" class="tag-cloud-5">转载</a>
+    <a href="/tags/AndroidSEC/" style="font-size: 30px;" class="tag-cloud-10">AndroidSEC</a> <a href="/tags/AutoSec/" style="font-size: 12px;" class="tag-cloud-0">AutoSec</a> <a href="/tags/C-C/" style="font-size: 12px;" class="tag-cloud-0">C/C++</a> <a href="/tags/Fuzzing/" style="font-size: 12px;" class="tag-cloud-0">Fuzzing</a> <a href="/tags/Google/" style="font-size: 12px;" class="tag-cloud-0">Google</a> <a href="/tags/Hardware/" style="font-size: 12px;" class="tag-cloud-0">Hardware</a> <a href="/tags/IoT/" style="font-size: 12px;" class="tag-cloud-0">IoT</a> <a href="/tags/Reverse/" style="font-size: 12px;" class="tag-cloud-0">Reverse</a> <a href="/tags/objection/" style="font-size: 12px;" class="tag-cloud-0">objection</a> <a href="/tags/%E8%BD%AC%E8%BD%BD/" style="font-size: 21px;" class="tag-cloud-5">转载</a>
   </div>
 </div>
 
@@ -373,6 +373,19 @@
 
 
 
+<script>
+if (document.querySelectorAll('.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8.7.0/dist/mermaid.min.js', () => {
+    mermaid.init({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    }, '.mermaid');
+  }, window.mermaid);
+}
+</script>
 
 
   

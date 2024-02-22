@@ -25,21 +25,28 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"8.0.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"buttons","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
   </script>
 
-  <meta name="description" content="AFLhttps:&#x2F;&#x2F;paper.seebug.org&#x2F;841&#x2F; https:&#x2F;&#x2F;paper.seebug.org&#x2F;842&#x2F; AFL技术白皮书 https:&#x2F;&#x2F;lcamtuf.coredump.cx&#x2F;afl&#x2F;technical_details.txt AFL简单使用 https:&#x2F;&#x2F;0xfocu5.github.io&#x2F;posts&#x2F;2ba75ee3&#x2F; 「afl++」fuzzing一个IoT二进制程序">
+  <meta name="description" content="在一般访问Google等网站的情况下，往往需要在每个终端安装代理软件，如Clash，SSR等。而软路由的方式让我们对其访问变得无感。百科上对软路由的定义如下，即使用软件的方案来进行路由：  软路由是指利用台式机或服务器的供应商配合一定软件而形成的路由解决方案，主要靠对软件的设置，实现路由器路由器的功能，它的软件与硬件是独立分开的。软路由使用普通计算机，使用通用的操作系统，如Linux或window">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Fuzzing技术文章整理">
-<meta property="og:url" content="http://example.com/2022/12/15/Fuzzing%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0%E6%95%B4%E7%90%86/index.html">
+<meta property="og:title" content="R2S软路由搭建指南">
+<meta property="og:url" content="http://example.com/2024/02/21/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/index.html">
 <meta property="og:site_name" content="尘埃落定的空间站">
-<meta property="og:description" content="AFLhttps:&#x2F;&#x2F;paper.seebug.org&#x2F;841&#x2F; https:&#x2F;&#x2F;paper.seebug.org&#x2F;842&#x2F; AFL技术白皮书 https:&#x2F;&#x2F;lcamtuf.coredump.cx&#x2F;afl&#x2F;technical_details.txt AFL简单使用 https:&#x2F;&#x2F;0xfocu5.github.io&#x2F;posts&#x2F;2ba75ee3&#x2F; 「afl++」fuzzing一个IoT二进制程序">
+<meta property="og:description" content="在一般访问Google等网站的情况下，往往需要在每个终端安装代理软件，如Clash，SSR等。而软路由的方式让我们对其访问变得无感。百科上对软路由的定义如下，即使用软件的方案来进行路由：  软路由是指利用台式机或服务器的供应商配合一定软件而形成的路由解决方案，主要靠对软件的设置，实现路由器路由器的功能，它的软件与硬件是独立分开的。软路由使用普通计算机，使用通用的操作系统，如Linux或window">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-12-15T06:57:22.000Z">
-<meta property="article:modified_time" content="2024-01-11T15:20:02.349Z">
+<meta property="og:image" content="http://example.com/2024/02/21/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-06-06-image.png">
+<meta property="og:image" content="http://example.com/2024/02/21/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-10-18-image.png">
+<meta property="og:image" content="http://example.com/2024/02/21/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-15-56-image.png">
+<meta property="og:image" content="http://example.com/2024/02/21/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-35-01-image.png">
+<meta property="og:image" content="http://example.com/2024/02/21/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-40-11-image.png">
+<meta property="og:image" content="http://example.com/2024/02/21/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-41-41-image.png">
+<meta property="article:published_time" content="2024-02-21T12:49:02.738Z">
+<meta property="article:modified_time" content="2024-02-21T13:41:52.620Z">
 <meta property="article:author" content="w3b5h3ll">
-<meta property="article:tag" content="Fuzzing">
+<meta property="article:tag" content="Google">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2024/02/21/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-06-06-image.png">
 
 
-<link rel="canonical" href="http://example.com/2022/12/15/Fuzzing%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0%E6%95%B4%E7%90%86/">
+<link rel="canonical" href="http://example.com/2024/02/21/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/">
 
 
 <script class="page-configurations">
@@ -52,7 +59,7 @@
   };
 </script>
 
-  <title>Fuzzing技术文章整理 | 尘埃落定的空间站</title>
+  <title>R2S软路由搭建指南 | 尘埃落定的空间站</title>
   
 
 
@@ -208,7 +215,7 @@
 
       <!--noindex-->
       <section class="post-toc-wrap sidebar-panel">
-          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#AFL"><span class="nav-number">1.</span> <span class="nav-text">AFL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Fuzzing%E6%8A%80%E6%9C%AF%E7%BB%BC%E8%BF%B0"><span class="nav-number">2.</span> <span class="nav-text">Fuzzing技术综述</span></a></li></ol></div>
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E5%A4%87"><span class="nav-number">1.</span> <span class="nav-text">设备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%B7%E6%9C%BA"><span class="nav-number">2.</span> <span class="nav-text">刷机</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E6%8B%93%E6%89%91"><span class="nav-number">2.1.</span> <span class="nav-text">网络拓扑</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#OpenClash%E9%85%8D%E7%BD%AE"><span class="nav-number">3.</span> <span class="nav-text">OpenClash配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
       </section>
       <!--/noindex-->
 
@@ -266,7 +273,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/12/15/Fuzzing%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0%E6%95%B4%E7%90%86/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/02/21/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -282,7 +289,7 @@
     
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Fuzzing技术文章整理
+          R2S软路由搭建指南
         </h1>
 
         <div class="post-meta-container">
@@ -292,19 +299,13 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
+      
 
-      <time title="创建时间：2022-12-15 14:57:22" itemprop="dateCreated datePublished" datetime="2022-12-15T14:57:22+08:00">2022-12-15</time>
+      <time title="创建时间：2024-02-21 20:49:02 / 修改时间：21:41:52" itemprop="dateCreated datePublished" datetime="2024-02-21T20:49:02+08:00">2024-02-21</time>
     </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2024-01-11 23:20:02" itemprop="dateModified" datetime="2024-01-11T23:20:02+08:00">2024-01-11</time>
-      </span>
 
   
-    <span id="/2022/12/15/Fuzzing%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0%E6%95%B4%E7%90%86/" class="post-meta-item leancloud_visitors" data-flag-title="Fuzzing技术文章整理" title="阅读次数">
+    <span id="/2024/02/21/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/" class="post-meta-item leancloud_visitors" data-flag-title="R2S软路由搭建指南" title="阅读次数">
       <span class="post-meta-item-icon">
         <i class="far fa-eye"></i>
       </span>
@@ -319,8 +320,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2022/12/15/Fuzzing%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0%E6%95%B4%E7%90%86/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2022/12/15/Fuzzing%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0%E6%95%B4%E7%90%86/" itemprop="commentCount"></span>
+    <a title="valine" href="/2024/02/21/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2024/02/21/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -334,20 +335,38 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <h3 id="AFL"><a href="#AFL" class="headerlink" title="AFL"></a>AFL</h3><p><a target="_blank" rel="noopener" href="https://paper.seebug.org/841/">https://paper.seebug.org/841/</a></p>
-<p><a target="_blank" rel="noopener" href="https://paper.seebug.org/842/">https://paper.seebug.org/842/</a></p>
-<p>AFL技术白皮书</p>
-<p><a target="_blank" rel="noopener" href="https://lcamtuf.coredump.cx/afl/technical_details.txt">https://lcamtuf.coredump.cx/afl/technical_details.txt</a></p>
-<p>AFL简单使用</p>
-<p><a target="_blank" rel="noopener" href="https://0xfocu5.github.io/posts/2ba75ee3/">https://0xfocu5.github.io/posts/2ba75ee3/</a></p>
-<p>「afl++」fuzzing一个IoT二进制程序，文件fuzz</p>
-<p><a target="_blank" rel="noopener" href="https://blog.attify.com/fuzzing-iot-devices-part-1/">https://blog.attify.com/fuzzing-iot-devices-part-1/</a></p>
-<p>「afl++」如何fuzz网络程序</p>
-<p><a target="_blank" rel="noopener" href="https://blog.attify.com/fuzzing-iot-binaries-with-afl-part-ii/">https://blog.attify.com/fuzzing-iot-binaries-with-afl-part-ii/</a></p>
-<h3 id="Fuzzing技术综述"><a href="#Fuzzing技术综述" class="headerlink" title="Fuzzing技术综述"></a>Fuzzing技术综述</h3><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/nREiT1Uj25igCMWu1kta9g">https://mp.weixin.qq.com/s/nREiT1Uj25igCMWu1kta9g</a></p>
-<p>无源fuzz，arm平台</p>
-<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/G26MJOH4VPene1Sd_zjEQw">https://mp.weixin.qq.com/s/G26MJOH4VPene1Sd_zjEQw</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.anquanke.com/post/id/230811#h2-3">https://www.anquanke.com/post/id/230811#h2-3</a></p>
+        <p>在一般访问Google等网站的情况下，往往需要在每个终端安装代理软件，如<code>Clash</code>，<code>SSR</code>等。而软路由的方式让我们对其访问变得无感。百科上对软路由的定义如下，即使用软件的方案来进行路由：</p>
+<blockquote>
+<p>软路由是指利用台式机或服务器的供应商配合一定软件而形成的路由解决方案，主要靠对软件的设置，实现路由器路由器的功能，它的软件与硬件是独立分开的。软路由使用普通计算机，使用通用的操作系统，如Linux或windows，因此软路由的设置事实上是windows或linux的设置。根据使用的操作系统不同，可以分为基于windows平台和基于Linux&#x2F;bsd平台开发的软件路由器。</p>
+</blockquote>
+<h2 id="设备"><a href="#设备" class="headerlink" title="设备"></a>设备</h2><p>Nanopi R2S</p>
+<p>最低价可以买裸板，TF卡自己单买的，5v3a&#x2F;2a电源使用之前的旧设备。读卡器已有</p>
+<p><img src="/2024/02/21/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-06-06-image.png"></p>
+<p>64GTF卡</p>
+<p><img src="/2024/02/21/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-10-18-image.png"></p>
+<h2 id="刷机"><a href="#刷机" class="headerlink" title="刷机"></a>刷机</h2><p>使用<code>FriendlyWrt</code>系统，镜像下载：</p>
+<p><a target="_blank" rel="noopener" href="https://drive.google.com/drive/folders/1W-2MLML9lkD2xAVjiwzEBNiUlPF5BgU9">01_SD card images - Google 云端硬盘</a></p>
+<ul>
+<li>rk3328-sd-friendlywrt-23.05-20231223.img.gz</li>
+</ul>
+<p><code>balenaEtcher</code>烧录至TF卡</p>
+<p><img src="/2024/02/21/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-15-56-image.png"></p>
+<h3 id="网络拓扑"><a href="#网络拓扑" class="headerlink" title="网络拓扑"></a>网络拓扑</h3><p>网络结构比较简单，如下<br>光猫&lt;——–&gt;(WAN)R2S(LAN)&lt;——–&gt;(WAN)小米路由器</p>
+<p>等待开机后，访问<code>192.168.2.1</code>。使用<code>root/passowrd</code>即可进入FriendlyWrt的管理后台</p>
+<p><img src="/2024/02/21/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-35-01-image.png"></p>
+<h2 id="OpenClash配置"><a href="#OpenClash配置" class="headerlink" title="OpenClash配置"></a>OpenClash配置</h2><p>如<code>OpenClash</code>描述，需要安装客户端与内核模块</p>
+<p>客户端安装</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#安装依赖</span></span><br><span class="line">* luci</span><br><span class="line">* luci-base</span><br><span class="line">* iptables</span><br><span class="line">* dnsmasq-full</span><br><span class="line">* coreutils</span><br><span class="line">* coreutils-nohup</span><br><span class="line">* bash</span><br><span class="line">* curl</span><br><span class="line">* jsonfilter</span><br><span class="line">* ca-certificates</span><br><span class="line">* ipset</span><br><span class="line">* ip-full</span><br><span class="line">* iptables-mod-tproxy</span><br><span class="line">* kmod-tun(TUN模式)</span><br><span class="line">* luci-compat(Luci-19.07)</span><br><span class="line"></span><br><span class="line"><span class="comment">#上传IPK文件至您路由器的 /tmp 目录下</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#假设安装包名字为</span></span><br><span class="line">luci-app-openclash_0.33.7-beta_all.ipk</span><br><span class="line"></span><br><span class="line"><span class="comment">#执行安装命令</span></span><br><span class="line">opkg install /tmp/luci-app-openclash_0.33.7-beta_all.ipk</span><br><span class="line"></span><br><span class="line"><span class="comment">#执行卸载命令</span></span><br><span class="line"><span class="comment">#插件在卸载后会自动备份配置文件到 /tmp 目录下，除非路由器重启，在下次安装时将还原您的配置文件</span></span><br><span class="line">opkg remove luci-app-openclash</span><br><span class="line"></span><br><span class="line">安装完成后刷新LUCI页面，在菜单栏 -&gt; 服务 -&gt; OpenClash 进入插件页面</span><br></pre></td></tr></table></figure>
+
+<p>内核</p>
+<p>进入<code>OpenClash</code>插件页面时，总是下载失败。可以增加代理来完成安装</p>
+<p><img src="/2024/02/21/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-40-11-image.png"></p>
+<p>启动</p>
+<p>最后，上传配置文件，并启动即可。最终效果如下</p>
+<p><img src="/2024/02/21/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-41-41-image.png"></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://wiki.friendlyelec.com/wiki/index.php/NanoPi_R2S/zh">https://wiki.friendlyelec.com/wiki/index.php/NanoPi_R2S/zh</a></p>
+<p><a target="_blank" rel="noopener" href="https://wiki.mbalib.com/wiki/%E8%BD%AF%E8%B7%AF%E7%94%B1">软路由 - MBA智库百科</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/vernesong/OpenClash/releases">Releases · vernesong&#x2F;OpenClash · GitHub</a></p>
 
     </div>
 
@@ -365,7 +384,7 @@
   </li>
   <li class="post-copyright-link">
       <strong>本文链接：</strong>
-      <a href="http://example.com/2022/12/15/Fuzzing%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0%E6%95%B4%E7%90%86/" title="Fuzzing技术文章整理">http://example.com/2022/12/15/Fuzzing技术文章整理/</a>
+      <a href="http://example.com/2024/02/21/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/" title="R2S软路由搭建指南">http://example.com/2024/02/21/R2S软路由搭建指南/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -374,21 +393,18 @@
 </div>
 
           <div class="post-tags">
-              <a href="/tags/Fuzzing/" rel="tag"># Fuzzing</a>
+              <a href="/tags/Google/" rel="tag"># Google</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2022/11/28/AndroidSEC%E6%8A%93%E5%8C%85%E6%80%BB%E7%BB%93/" rel="prev" title="AndroidSEC抓包总结">
-                  <i class="fa fa-chevron-left"></i> AndroidSEC抓包总结
+                <a href="/2024/01/16/%E4%BD%BF%E7%94%A8GDB%E5%AF%B9%E7%A8%8B%E5%BA%8F%E6%89%A7%E8%A1%8C%E8%BF%9B%E8%A1%8Ctrace/" rel="prev" title="使用GDB对程序执行进行trace">
+                  <i class="fa fa-chevron-left"></i> 使用GDB对程序执行进行trace
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2023/02/13/UDS%E5%8D%8F%E8%AE%AE%E5%88%86%E6%9E%90-Teslaaaaa/" rel="next" title="UDS协议分析-Teslaaaaa">
-                  UDS协议分析-Teslaaaaa <i class="fa fa-chevron-right"></i>
-                </a>
             </div>
           </div>
     </footer>
@@ -502,7 +518,7 @@ NexT.utils.loadComments('#valine-comments', () => {
   NexT.utils.getScript('//cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', () => {
     new Valine(Object.assign({
       el  : '#valine-comments',
-      path: "/2022/12/15/Fuzzing%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0%E6%95%B4%E7%90%86/",
+      path: "/2024/02/21/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/",
     }, {"enable":true,"appId":"htEoF16VKxb4kS3oG0LReLBz-MdYXbMMI","appKey":"P7rwEt21RTK0B11XxuTwjss2","serverURLs":"https://hteof16v.api.lncldglobal.com","placeholder":"Just go go","avatar":"mm","meta":["nick","mail","link"],"pageSize":10,"visitor":true,"comment_count":true,"recordIP":false}
     ));
   }, window.Valine);
