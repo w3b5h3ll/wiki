@@ -12,7 +12,7 @@
 
 <link rel="stylesheet" href="/css/main.css">
 
-<link rel="stylesheet" href="https://www.uncon.net/MesloLGSNF-web-fonts/stylesheet.css/css?family=Arial:300,300italic,400,400italic,700,700italic|'Noto+Sans+SC':300,300italic,400,400italic,700,700italic|sans-serif:300,300italic,400,400italic,700,700italic|MesloLGS+NF:300,300italic,400,400italic,700,700italic|monospace:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,300italic,400,400italic,700,700italic|sans-serif:300,300italic,400,400italic,700,700italic|'Noto+Sans+SC':300,300italic,400,400italic,700,700italic|Fira+Code:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
 
 <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14.0/css/all.min.css">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
@@ -216,14 +216,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-count">12</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">11</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -255,6 +255,146 @@
       
 
       
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/30/void%E7%B1%BB%E5%9E%8B%E7%90%86%E8%A7%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="w3b5h3ll">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="尘埃落定的空间站">
+    </span>
+
+    
+    
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/08/30/void%E7%B1%BB%E5%9E%8B%E7%90%86%E8%A7%A3/" class="post-title-link" itemprop="url">void类型理解</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-08-30 00:30:42" itemprop="dateCreated datePublished" datetime="2021-08-30T00:30:42+08:00">2021-08-30</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2023-10-17 01:01:58" itemprop="dateModified" datetime="2023-10-17T01:01:58+08:00">2023-10-17</time>
+      </span>
+
+  
+    <span id="/2021/08/30/void%E7%B1%BB%E5%9E%8B%E7%90%86%E8%A7%A3/" class="post-meta-item leancloud_visitors" data-flag-title="void类型理解" title="阅读次数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span class="leancloud-visitors-count"></span>
+    </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/08/30/void%E7%B1%BB%E5%9E%8B%E7%90%86%E8%A7%A3/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/08/30/void%E7%B1%BB%E5%9E%8B%E7%90%86%E8%A7%A3/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="void-和-void-指针"><a href="#void-和-void-指针" class="headerlink" title="void 和 void 指针"></a><code>void</code> 和 <code>void</code> 指针</h3><ul>
+<li><p><strong><code>void</code>：</strong> 代表”无类型”。<code>void*</code> 表示”无类型指针”，可以指向任何数据类型。</p>
+</li>
+<li><p><strong><code>void</code> 指针：</strong> 可以指向任意类型的数据，示例代码如下：</p>
+</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> *pint;</span><br><span class="line"><span class="type">void</span> *pvoid;</span><br><span class="line"></span><br><span class="line"><span class="comment">// pvoid 可以指向任何类型</span></span><br><span class="line">pvoid = pint;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 将 `void` 类型转为其他类型需要强制类型转换</span></span><br><span class="line">pint = (<span class="type">int</span> *)pvoid;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在 ANSI C 标准中，不允许对 <code>void</code> 指针进行算术运算。但在 GNU C 中，<code>void*</code> 和 <code>char*</code> 视为相同，即 <code>sizeof(*pvoid) == sizeof(char)</code>。</li>
+</ul>
+<h3 id="void-关键字的作用"><a href="#void-关键字的作用" class="headerlink" title="void 关键字的作用"></a><code>void</code> 关键字的作用</h3><ul>
+<li><p><strong>对函数返回值的限定：</strong> 如果函数不需要返回值，必须使用 <code>void</code> 限定，例如 <code>void func();</code>。</p>
+</li>
+<li><p><strong>对函数参数的限定：</strong> 如果函数不允许接收参数，必须使用 <code>void</code> 限定，例如 <code>int func(void);</code>。</p>
+</li>
+</ul>
+<p><code>void</code> 指针可以指向任意类型的数据，因此可以在函数参数中使用 <code>void</code> 指针，使函数能够接受任意数据类型的指针作为参数，示例代码如下：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">void</span> *<span class="title function_">memcpy</span><span class="params">(<span class="type">void</span> *dest, <span class="type">const</span> <span class="type">void</span> *src, <span class="type">size_t</span> len)</span>;</span><br><span class="line"><span class="type">void</span> *<span class="title function_">memset</span><span class="params">(<span class="type">void</span> *buffer, <span class="type">int</span> c, <span class="type">size_t</span> num)</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="void-的真正作用"><a href="#void-的真正作用" class="headerlink" title="void 的真正作用"></a><code>void</code> 的真正作用</h3><p><code>void</code> 的作用在于：</p>
+<ul>
+<li>对函数返回值的限定。</li>
+<li>对函数参数的限定。</li>
+</ul>
+<p>示例代码如下：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">float</span> *p1;</span><br><span class="line"><span class="type">int</span> *p2;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 错误</span></span><br><span class="line">p1 = p2;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 正确</span></span><br><span class="line">p1 = (<span class="type">float</span> *)p2;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> *p1;</span><br><span class="line"><span class="type">int</span> *p2;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 正确</span></span><br><span class="line">p1 = p2;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 错误</span></span><br><span class="line">p2 = p1;</span><br></pre></td></tr></table></figure>
+
+<h3 id="void-的使用规则"><a href="#void-的使用规则" class="headerlink" title="void 的使用规则"></a><code>void</code> 的使用规则</h3><ul>
+<li>如果函数没有返回值，应该声明为 <code>void</code> 类型。</li>
+</ul>
+<p>在 C 语言中，未加返回类型限定的函数会被默认处理为返回整型值。例如：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line">add(<span class="type">int</span> a, <span class="type">int</span> b);</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;2 + 3 = %d\n&quot;</span>, add(<span class="number">2</span>, <span class="number">3</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">add(<span class="type">int</span> a, <span class="type">int</span> b)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> a + b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如果函数没有参数，应该声明参数为 <code>void</code>。</li>
+</ul>
+<p>在 C 语言中，可以向无参数的函数传递任何类型的参数，但在 C++ 中不行。</p>
+<ul>
+<li><p>对于 <code>void</code> 指针类型的使用：</p>
+<ul>
+<li><p>ANSI C 中不允许对 <code>void</code> 指针进行算术操作，因为 ANSI C 标准下，指针算术操作需要知道指向数据类型的大小，例如 <code>int *pint; pint++;</code> 会使 <code>pint</code> 增加 <code>sizeof(int)</code>。</p>
+</li>
+<li><p>GNU C（GNU’s Not Unix）认为 <code>void*</code> 类型与 <code>char*</code> 类型一致。</p>
+</li>
+</ul>
+</li>
+<li><p>如果函数的参数可以是任意指针，应该声明参数为 <code>void*</code>。注意，<code>void**</code> 不能代表一个真实的变量，<code>void</code> 体现了一种抽象。</p>
+</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -813,6 +953,8 @@ if (document.querySelectorAll('.mermaid').length) {
 
 
 
+
+  
 
   
 

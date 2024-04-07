@@ -58,9 +58,8 @@
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">adb forward tcp:31415 tcp:31415</span><br></pre></td></tr></table></figure>
 
 <p><img src="/2023/08/04/AndroidSEC%E5%B7%A5%E5%85%B7%E5%88%97%E8%A1%A8/2023-08-06-20-33-57-image.png"></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">drozer console connect</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">drozer console connect</span><br><span class="line">...</span><br><span class="line">drozer Console (v2.4.4)</span><br><span class="line">dz&gt;</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2023/08/04/AndroidSEC%E5%B7%A5%E5%85%B7%E5%88%97%E8%A1%A8/2023-08-06-20-35-21-image.png"></p>
 <blockquote>
 <p>Interesting Commands</p>
 </blockquote>
@@ -139,7 +138,6 @@
 <li>漏洞扫描</li>
 </ul>
 <p>python AppScannner.py -i ~&#x2F;Desktop&#x2F;sieve.apk</p>
-<p><img src="/2023/08/04/AndroidSEC%E5%B7%A5%E5%85%B7%E5%88%97%E8%A1%A8/2023-08-06-22-09-29-image.png"></p>
 <h3 id="AppShark"><a href="#AppShark" class="headerlink" title="AppShark"></a>AppShark</h3><p><a href="https://github.com/bytedance/appshark">https://github.com/bytedance/appshark</a></p>
 <ul>
 <li><p>静态污点分析工具</p>
@@ -149,7 +147,8 @@
 </ul>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">java -jar build/libs/AppShark-0.1.2-all.jar  config/config.json5</span><br><span class="line"><span class="comment"># config</span></span><br><span class="line">&#123;</span><br><span class="line">  //apk to anlayze</span><br><span class="line">  <span class="string">&quot;apkPath&quot;</span>: <span class="string">&quot;/Users/tiger/Desktop/sieve.apk&quot;</span>,</span><br><span class="line">  //result output directory</span><br><span class="line">  <span class="string">&quot;out&quot;</span>: <span class="string">&quot;out&quot;</span>,</span><br><span class="line">  <span class="string">&quot;rules&quot;</span>: <span class="string">&quot;unZipSlip.json&quot;</span>,</span><br><span class="line">  <span class="string">&quot;maxPointerAnalyzeTime&quot;</span>: 600,</span><br><span class="line">  //print more info about this rule</span><br><span class="line">  <span class="string">&quot;debugRule&quot;</span>: <span class="string">&quot;unZipSlip&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2023/08/04/AndroidSEC%E5%B7%A5%E5%85%B7%E5%88%97%E8%A1%A8/2023-08-06-22-50-45-image.png"></p>
+
+
 <h3 id="APKHunt"><a href="#APKHunt" class="headerlink" title="APKHunt"></a>APKHunt</h3><p>Linux环境使用，一个go开发的工具，用于满足OWASP MASVS安全要求</p>
 <p><a href="https://github.com/Cyber-Buddy/APKHunt">https://github.com/Cyber-Buddy/APKHunt</a></p>
 <h3 id="apk-sh"><a href="#apk-sh" class="headerlink" title="apk.sh"></a>apk.sh</h3><p>一个脚本工具，增强功能</p>
@@ -227,9 +226,8 @@
 <ol start="2">
 <li>计算hash值并重命名</li>
 </ol>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl x509 -inform PEM -subject_hash_old -<span class="keyword">in</span> xxx.pem</span><br><span class="line"><span class="built_in">mv</span> xxx.pem 9a5ba575.0</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl x509 -inform PEM -subject_hash_old -<span class="keyword">in</span> xxx.pem</span><br><span class="line"><span class="built_in">mv</span> xxx.pem 9a5ba575.0</span><br><span class="line"></span><br><span class="line">openssl x509 -inform PEM -subject_hash_old -<span class="keyword">in</span> cacert.pem</span><br><span class="line">9a5ba575</span><br><span class="line">----BEGIN CERTIFICATE-</span><br><span class="line">MIIDyTCCArGgAWIBAgIEUOviVzANBgkqhkiG9w0BAQSFADCBijEUMBIGA1UEBhMLUG9ydFN3aWdnZXIxFDASBgNVBAgTC1BvcnRTd21nz2VyMRQwEgYDVQQHEwtQb3J0</span><br><span class="line">U3dpz2dlcjEUMBIGA1UEChMLUG9ydFN3aWdnZXIxFzAVBgNVBASTD1BvcnRTd21nZ2VyIENBMRCWFQYDVQQDEw5Qb3J0U3dpz2dlciBDQTAeFw0xNDAOMTQXMZI5MzVa</span><br><span class="line">Fw00MjAOMTQXMZI5MzVaMIGKMRQWEgYDVQQGEwtQb3J0U3dpz2dlcjEUMBIGA1UEGAJECXMOUG9ycnRTd2.CdhUxCDIhZvLJ7Pa7Ufac</span><br><span class="line">T7mcIfKS4YcE50PZ/U+okICGdtCaazfh/5Dd31UAC3taisW93UbficcRAhol+uQikJfXIuH1/hMiBza4G0x4zEanpUlv09AdTVpWilsjsvj8C/bnRIzzen3txHgHPuYJ7+hn2JGPfUDE3Jg4Z8B7tTOrg0iLTeC02</span><br><span class="line">XxKEte+1sNWy/0qKB/yUb14gFuMPrXwIDAQABozUwMzASBgNVHRMBAf8ECDAGAQH/AgEAMB0GA1UdDgQWBBRbHd8X70xgbAuh/1WHDb916MS4nDANBgkqhkiG9w0BAQSFAAOCAQEAfSag</span><br><span class="line">FORECRrOVCJVbsposU/gs8wgR8GT1/wujBorVnTr7w51XTgE6pGzMGxQ+vXkYne1tSwGoW7esJJz4IvDtdNpF0JvlBLdE010/PJHI4dCGn2dmLdIcZoXKf9VC40r2BEV</span><br><span class="line">IibdZuNq0ADaZOI5TPxQrg7/T3FpSWp6yyTFpx2eqWvxL1kINDNy2AAxtE3X10Qc5kNrgJoF/N7DoTnqr2rt4uXpPsbcvwD7GQ2Br60e9QZz4vX4ChCFDUwibPjdR7jt</span><br><span class="line">hfQinYkM2oqu+8HPViMYX83yds34MnDawU0+4KvS56Mq8S6EnpTryWZYw6N1+nHbOQruHJLlux+ek0R6uw==</span><br><span class="line">---END CERTIFICATE-----</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2022/11/28/AndroidSEC%E6%8A%93%E5%8C%85%E6%80%BB%E7%BB%93/image-20221203164113972.png" alt="image-20221203164113972"></p>
 <ol start="3">
 <li>推送至系统CA存储区域</li>
 </ol>
@@ -277,7 +275,7 @@
   </entry>
   <entry>
     <title>Android应用安全分析案例0x01</title>
-    <url>/2023/11/25/Android%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E6%A1%88%E4%BE%8B0x01/</url>
+    <url>/2024/03/05/Android%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E6%A1%88%E4%BE%8B0x01/</url>
     <content><![CDATA[<blockquote>
 <p>一道TCTF题目，解密db文件</p>
 </blockquote>
@@ -288,24 +286,24 @@
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">  ~/D/D/1.ab_dir  java -jar ../abe.jar unpack 1.ab 1.tar                                        (base)</span><br><span class="line">0% 1% 2% 3% 4% 5% 6% 7% 8% 9% 10% 11% 12% 13% 14% 15% 16% 17% 18% 19% 20% 21% 22% 23% 24% 25% 26% 27% 28% 29% 30% 31% 32% 33% 34% 35% 36% 37% 38% 39% 40% 41% 42% 43% 44% 45% 46% 47% 48% 49% 50% 51% 52% 53% 54% 55% 56% 57% 58% 59% 60% 61% 62% 63% 64% 65% 66% 67% 68% 69% 70% 71% 72% 73% 74% 75% 76% 77% 78% 79% 80% 81% 82% 83% 84% 85% 86% 87% 88% 89% 90% 91% 92% 93% 94% 95% 96% 97% 98% 99% 100%</span><br><span class="line">9097216 bytes written to 1.tar.</span><br><span class="line"></span><br><span class="line"><span class="comment"># 解压tar</span></span><br><span class="line">~/D/D/1.ab_dir  tar xvf 1.tar                                                                 (base)</span><br><span class="line">x apps/com.example.yaphetshan.tencentwelcome/a/base.apk</span><br><span class="line">x apps/com.example.yaphetshan.tencentwelcome/db/Demo.db</span><br><span class="line">x apps/com.example.yaphetshan.tencentwelcome/Encryto.db</span><br><span class="line">x apps/com.example.yaphetshan.tencentwelcome/_manifest </span><br><span class="line">    ~/D/D/1/a/com.example.yaphetshan.tencentwelcome  tree -NCfhl                                  (base)</span><br><span class="line">[ 192]  .</span><br><span class="line">├── [3.0K]  ./Encryto.db</span><br><span class="line">├── [1013]  ./_manifest</span><br><span class="line">├── [  96]  ./a</span><br><span class="line">│   └── [8.7M]  ./a/base.apk</span><br><span class="line">└── [  96]  ./db</span><br><span class="line">    └── [3.0K]  ./db/Demo.db</span><br><span class="line"></span><br><span class="line">3 directories, 4 files</span><br></pre></td></tr></table></figure>
 
 <p>使用<code>逍遥模拟器</code>中的低版本系统，安装base.apk。<font color="red">失败</font>，创建Androidstudio模拟器继续</p>
-<p><img src="/2023/11/25/Android%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E6%A1%88%E4%BE%8B0x01/2023-11-25-17-02-42-image.png"></p>
+<p><img src="/2024/03/05/Android%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E6%A1%88%E4%BE%8B0x01/2023-11-25-17-02-42-image.png"></p>
 <p>无加固</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">  ~/D/D/1/a/c/a  apkid base.apk                                                                 (base)</span><br><span class="line">[+] APKiD 2.1.5 :: from RedNaga :: rednaga.io</span><br><span class="line">[*] base.apk!classes.dex</span><br><span class="line"> |-&gt; compiler : dx</span><br></pre></td></tr></table></figure>
 
 <p><code>Jadx</code>静态分析</p>
 <p>可以发现登陆流程与数据库的生成过程是隔离的</p>
-<p><img src="/2023/11/25/Android%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E6%A1%88%E4%BE%8B0x01/2023-11-26-00-23-45-image.png"></p>
+<p><img src="/2024/03/05/Android%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E6%A1%88%E4%BE%8B0x01/2023-11-26-00-23-45-image.png"></p>
 <p>向表<code>TencentMicrMsg</code>中插入数据</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># objection</span></span><br><span class="line">  ~/D/Doing  frida-ps -U|grep tencent                (Python3.8)</span><br><span class="line">3551  com.example.yaphetshan.tencentwelcome</span><br><span class="line"><span class="comment"># objection explore by usb</span></span><br><span class="line">objection -g com.example.yaphetshan.tencentwelcome explore</span><br><span class="line"><span class="comment"># objection工作原理，存在进程直接attaching，没有那么进行spawned -d参数</span></span><br><span class="line">[debug] Attempting to attach to process: `com.example.yaphetshan.tencentwelcome`</span><br><span class="line">[debug] Unable to find process: `com.example.yaphetshan.tencentwelcome`, attempting spawn</span><br><span class="line">[debug] PID `4705` spawned, attaching...</span><br><span class="line">[debug] Resuming PID `4705`</span><br><span class="line"><span class="comment"># Wallbreaker进行内存dump</span></span><br></pre></td></tr></table></figure>
 
-<p><img src="/2023/11/25/Android%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E6%A1%88%E4%BE%8B0x01/2023-11-26-14-28-34-image.png"></p>
+<p><img src="/2024/03/05/Android%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E6%A1%88%E4%BE%8B0x01/2023-11-26-14-28-34-image.png"></p>
 <p>函数调用</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">onCreate() &gt;&gt; a()</span><br><span class="line">class: aVar: com.example.yaphetshan.tencentwelcome.a.a()</span><br><span class="line">    &gt;&gt; aVar.a()</span><br><span class="line">    &gt;&gt; aVar.b()</span><br></pre></td></tr></table></figure>
 
 <p>通过后续的了解，使用SQLiteCipher时，hook该函数<code>getWritableDatabase</code>获取其参数，<strong>主动调用</strong>即可拿到加密密码</p>
-<p><img src="/2023/11/25/Android%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E6%A1%88%E4%BE%8B0x01/2023-12-09-17-51-06-image.png"></p>
+<p><img src="/2024/03/05/Android%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E6%A1%88%E4%BE%8B0x01/2023-12-09-17-51-06-image.png"></p>
 <p>使用<code>ae56f99</code>打开即可</p>
-<p><img src="/2023/11/25/Android%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E6%A1%88%E4%BE%8B0x01/2023-12-09-17-54-00-image.png"></p>
+<p><img src="/2024/03/05/Android%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E6%A1%88%E4%BE%8B0x01/2023-12-09-17-54-00-image.png"></p>
 <p>Tctf{H3ll0_Do_Y0u_Lov3_Tenc3nt!}</p>
 <h2 id="SQLite与SQLCipher食用"><a href="#SQLite与SQLCipher食用" class="headerlink" title="SQLite与SQLCipher食用"></a>SQLite与SQLCipher食用</h2><p>基本的用法很简单，创建SQL语句创建数据库即可</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">createBook</span> <span class="operator">=</span> <span class="string">&quot;create table Book(&quot;</span> + <span class="string">&quot;id integer primary key autoincrement,&quot;</span> + <span class="string">&quot;author text,&quot;</span> + <span class="string">&quot;price real,&quot;</span> + <span class="string">&quot;pages integer,&quot;</span> + <span class="string">&quot;name text)&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> Context mContext;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="title function_">MyDatabaseHelper</span><span class="params">(<span class="meta">@Nullable</span> Context context, <span class="meta">@Nullable</span> String name, <span class="meta">@Nullable</span> SQLiteDatabase.CursorFactory factory, <span class="type">int</span> version)</span> &#123;</span><br><span class="line">    <span class="built_in">super</span>(context, name, factory, version);</span><br><span class="line">    mContext = context;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onCreate</span><span class="params">(SQLiteDatabase sqLiteDatabase)</span> &#123;</span><br><span class="line">    sqLiteDatabase.execSQL(createBook);</span><br><span class="line">    Toast.makeText(mContext, <span class="string">&quot;Create succeeded&quot;</span>, Toast.LENGTH_SHORT).show();</span><br><span class="line"></span><br><span class="line"><span class="comment">// MainActivity调用</span></span><br><span class="line">    <span class="type">MyDatabaseHelper</span> <span class="variable">dbHelper</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MyDatabaseHelper</span>(<span class="built_in">this</span>, <span class="string">&quot;BookStore.db&quot;</span>, <span class="literal">null</span>, <span class="number">1</span>);</span><br><span class="line">    createDatabase.setOnClickListener(view -&gt; dbHelper.getWritableDatabase());</span><br></pre></td></tr></table></figure>
@@ -318,7 +316,7 @@
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">public SQLiteDatabase <span class="function"><span class="title">getWritableDatabase</span></span>() &#123;</span><br><span class="line">    SQLiteDatabase db = super.getWritableDatabase(KEY);</span><br><span class="line">    <span class="built_in">return</span> db;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public SQLiteDatabase <span class="function"><span class="title">getReadableDatabase</span></span>() &#123;</span><br><span class="line">    SQLiteDatabase db = super.getReadableDatabase(KEY);</span><br><span class="line">    <span class="built_in">return</span> db;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>使用<code>DB Browser for SQLite</code>查看</p>
-<p><img src="/2023/11/25/Android%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E6%A1%88%E4%BE%8B0x01/2023-12-08-14-47-03-image.png"></p>
+<p><img src="/2024/03/05/Android%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E6%A1%88%E4%BE%8B0x01/2023-12-08-14-47-03-image.png"></p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>SQLCiphe，SQLite加密扩展</p>
 <p><a href="https://www.zetetic.net/sqlcipher/">SQLCipher - Zetetic</a></p>
 <p>第一行代码Android第三版</p>
@@ -327,6 +325,74 @@
       <tags>
         <tag>AndroidSEC</tag>
         <tag>objection</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Fuzzing101-3: TCPdump</title>
+    <url>/2024/03/15/Fuzzing101-3-TCPdump/</url>
+    <content><![CDATA[<p><a href="https://github.com/antonio-morales/Fuzzing101/tree/main/Exercise%203">https://github.com/antonio-morales/Fuzzing101/tree/main/Exercise%203</a></p>
+<blockquote>
+<p>In this exercise we will fuzz <strong>TCPdump</strong> packet analyzer. The goal is to find a crash&#x2F;PoC for <a href="https://www.cvedetails.com/cve/CVE-2017-13028/"><strong>CVE-2017-13028</strong></a> in TCPdump 4.9.2.</p>
+<p>CVE-2017-13028: <a href="https://cwe.mitre.org/data/definitions/125.html">https://cwe.mitre.org/data/definitions/125.html</a></p>
+</blockquote>
+<p>学习目标</p>
+<ul>
+<li><p>What is ASan(Address Sanitizer), a runtime memory error detection tool</p>
+</li>
+<li><p>How to use ASAN to fuzz a target</p>
+</li>
+<li><p>How much easy is to triage the creashes using ASan</p>
+</li>
+</ul>
+<span id="more"></span>
+
+<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"> $ neofetch --off</span><br><span class="line">w3b5h3ll@Fuzzing </span><br><span class="line">---------------- </span><br><span class="line">OS: Ubuntu 22.04.3 LTS x86_64 </span><br><span class="line">Host: VMware Virtual Platform None </span><br><span class="line">Kernel: 6.5.0-21-generic </span><br><span class="line">Uptime: 2 hours, 40 mins </span><br><span class="line">Packages: 2045 (dpkg), 11 (snap) </span><br><span class="line">Shell: bash 5.1.16 </span><br><span class="line">Resolution: 2159x1226 </span><br><span class="line">DE: GNOME 42.9 </span><br><span class="line">WM: Mutter </span><br><span class="line">WM Theme: Adwaita </span><br><span class="line">Theme: Yaru [GTK2/3] </span><br><span class="line">Icons: Yaru [GTK2/3] </span><br><span class="line">Terminal: x-terminal-emul </span><br><span class="line">CPU: AMD Ryzen 5 5600X (4) @ 3.693GHz </span><br><span class="line">GPU: 00:0f.0 VMware SVGA II Adapter </span><br><span class="line">Memory: 1401MiB / 5880MiB </span><br></pre></td></tr></table></figure>
+
+<p>AFL++（注意使用llvm-15以及clang-15）: <a href="https://github.com/AFLplusplus/AFLplusplus/blob/stable/docs/INSTALL.md">https://github.com/AFLplusplus/AFLplusplus/blob/stable/docs/INSTALL.md</a></p>
+<ul>
+<li>如无需<code>FRIDA mode|QEMU mode|unicorn mode|...</code>，直接<code>make all</code>即可</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt install python3-pip</span><br><span class="line"><span class="comment"># llvm mode</span></span><br><span class="line">sudo <span class="built_in">ln</span> -s /usr/bin/clang|clang++|llvm-config-15 /usr/bin/clang|clang++/llvm-config</span><br><span class="line"><span class="built_in">ulimit</span> -c unlimited</span><br><span class="line">sudo su</span><br><span class="line"><span class="built_in">echo</span> core &gt;/proc/sys/kernel/core_pattern</span><br><span class="line"><span class="built_in">exit</span></span><br><span class="line"></span><br><span class="line">779  2024-03-15 11:13:39 <span class="built_in">export</span> LLVM_CONFIG=<span class="string">&quot;llvm-config&quot;</span></span><br><span class="line">780  2024-03-15 11:13:56 <span class="built_in">cd</span> libpcap-1.8.0/</span><br><span class="line">781  2024-03-15 11:14:50 CC=afl-clang-lto ./configure --enable-shared=no --prefix=<span class="string">&quot;/home/w3b5h3ll/Desktop/Fuzzing101/Exercise\ 3/fuzzing_tcpdump/install/&quot;</span></span><br><span class="line">782  2024-03-15 11:15:21 <span class="built_in">export</span> AFL_USE_ASAN=1</span><br><span class="line">783  2024-03-15 11:15:23 make</span><br><span class="line">784  2024-03-15 11:15:33 <span class="built_in">cd</span> ../tcpdump-tcpdump-4.9.2/</span><br><span class="line">785  2024-03-15 11:15:48 CC=afl-clang-lto ./configure --prefix=<span class="string">&quot;/home/w3b5h3ll/Desktop/Fuzzing101/Exercise\ 3/fuzzing_tcpdump/install/&quot;</span></span><br><span class="line">786  2024-03-15 11:16:40 make</span><br><span class="line">787  2024-03-15 11:17:54 make install</span><br></pre></td></tr></table></figure>
+
+<h3 id="WSL性能加速"><a href="#WSL性能加速" class="headerlink" title="WSL性能加速"></a>WSL性能加速</h3><p>为了更快的性能，于WSL2.0重现了一套环境，如下</p>
+<p><img src="/2024/03/15/Fuzzing101-3-TCPdump/2024-03-30-18-25-43-image.png"></p>
+<h2 id="fuzz"><a href="#fuzz" class="headerlink" title="fuzz"></a>fuzz</h2><p>语料库精简</p>
+<p><code>afl-cmin</code>，删除达到同样路径的冗余文件</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">afl-cmin -i tcpdump-tcpdump-4.9.2/tests/ -o cmin_in/ -- ./install/sbin/tcpdump -vvvvXX -ee -nn -r @@</span><br></pre></td></tr></table></figure>
+
+<p><code>afl-tmin</code>默认只能单次执行一个输入，使用脚本循环进行处理</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">  805  2024-03-15 12:51:53 <span class="built_in">export</span> AFL_DEBUG=1</span><br><span class="line">  806  2024-03-15 12:52:23 <span class="built_in">export</span> AFL_MAP_SIZE=10000000</span><br><span class="line"></span><br><span class="line"><span class="comment"># 检查cmin_in目录是否存在</span></span><br><span class="line"><span class="keyword">if</span> [ ! -d <span class="string">&quot;cmin_in&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;Error: cmin_in directory not found.&quot;</span></span><br><span class="line">  <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 遍历cmin_in目录下的所有文件</span></span><br><span class="line"><span class="keyword">for</span> file <span class="keyword">in</span> cmin_in/*; <span class="keyword">do</span></span><br><span class="line">  <span class="comment"># 检查文件是否是普通文件</span></span><br><span class="line">  <span class="keyword">if</span> [ -f <span class="string">&quot;<span class="variable">$file</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">    <span class="comment"># 使用afl-tmin命令对文件进行处理，并输出到tmin_in目录下</span></span><br><span class="line">    output_file=<span class="string">&quot;tmin_in/<span class="subst">$(basename <span class="string">&quot;<span class="variable">$file</span>&quot;</span>)</span>&quot;</span></span><br><span class="line">    afl-tmin -i <span class="string">&quot;<span class="variable">$file</span>&quot;</span> -o <span class="string">&quot;<span class="variable">$output_file</span>&quot;</span> -- ./install/sbin/tcpdump -vvvvXX -ee -nn -r @@</span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;Processed file: <span class="variable">$file</span>&quot;</span></span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;Skipping non-regular file: <span class="variable">$file</span>&quot;</span></span><br><span class="line">  <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;All files processed.&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>afl-system-config</code>: 获得最佳fuzz性能</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"> $ sudo afl-system-config </span><br><span class="line">[sudo] password <span class="keyword">for</span> w3b5h3ll: </span><br><span class="line">This reconfigures the system to have a better fuzzing performance.</span><br><span class="line">WARNING: this reduces the security of the system!</span><br><span class="line"></span><br><span class="line">Settings applied.</span><br><span class="line"></span><br><span class="line">It is recommended to boot the kernel with lots of security off - <span class="keyword">if</span> you are running a machine that is <span class="keyword">in</span> a secured network - so <span class="built_in">set</span> this:</span><br><span class="line">  /etc/default/grub:GRUB_CMDLINE_LINUX_DEFAULT=<span class="string">&quot;ibpb=off ibrs=off kpti=0 l1tf=off mds=off mitigations=off no_stf_barrier noibpb noibrs pcid nopti nospec_store_bypass_disable nospectre_v1 nospectre_v2 pcid=on pti=off spec_store_bypass_disable=off spectre_v2=off stf_barrier=off srbds=off noexec=off noexec32=off tsx=on tsx_async_abort=off arm64.nopauth audit=0 hardened_usercopy=off ssbd=force-off&quot;</span></span><br><span class="line"></span><br><span class="line">If you run fuzzing instances <span class="keyword">in</span> docker, run them with <span class="string">&quot;--security-opt seccomp=unconfined&quot;</span> <span class="keyword">for</span> more speed.</span><br></pre></td></tr></table></figure>
+
+<p>使用<code>-M|-S</code>指定多线程操作</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">afl-fuzz -m none -i ./cmin_in/ -o out/ -M master -s 32 -- ./install/sbin/tcpdump -vvvvXX -ee -nn -r @@</span><br><span class="line">afl-fuzz -m none -i ./cmin_in/ -o out/ -S slave1 -s 32 -- ./install/sbin/tcpdump -vvvvXX -ee -nn -r @@</span><br><span class="line">afl-fuzz -m none -i ./cmin_in/ -o out/ -S slave2 -s 32 -- ./install/sbin/tcpdump -vvvvXX -ee -nn -r @@</span><br></pre></td></tr></table></figure>
+
+<p>此时，均只启用了<code>havoc</code>模式</p>
+<h3 id="Keep-your-test-case-small-Why"><a href="#Keep-your-test-case-small-Why" class="headerlink" title="Keep your test case small, Why?"></a>Keep your test case small, Why?</h3><p>在执行过程中，提示我们的某些case太大，有168KB</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[!] WARNING: Some <span class="built_in">test</span> cases are huge (168 kB) - see /usr/local/share/doc/afl/fuzzing_in_depth.md<span class="comment">#i-improve-the-speed</span></span><br><span class="line">[!] WARNING: You probably have far too many input files! Consider trimming down.</span><br></pre></td></tr></table></figure>
+
+<p>AFL的性能提升建议将此条作为了<strong>最重要的第一步</strong>，减小用例大小十分必要。其假设了一个场景:</p>
+<p>如果翻转第47bit位置会导致bug，那么对于一个100字节大小的case，执行1000次发现此bug的概率，计算如下</p>
+<p>$$<br>1-(1-\frac{1}{8*100})^{1000}\approx71%<br>$$</p>
+<ul>
+<li><p>随着case的size增大，发现bug需要执行的次数会显著增加</p>
+</li>
+<li><p>运行时的内存，执行开销也会显著增大</p>
+</li>
+</ul>
+<p>此时，我们需要使用<code>afl-cmin</code>以及<code>afl-tmin</code>工具精简语料，并设置较好的超时时间<code>-t</code>（默认1000ms），限制其每次执行的时间。</p>
+<hr>
+<p>大约进行2h，<code>slave2</code>出现了crash</p>
+<h3 id="WSL执行"><a href="#WSL执行" class="headerlink" title="WSL执行"></a>WSL执行</h3><p>在剔除大于1kb文件后，执行了1h左右出现了crash，5h后很长一段时间没有新crash，此时我停止了afl</p>
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>查看<code>tcpudump4.9.2</code>所有CVE信息：</p>
+<p><a href="https://www.cvedetails.com/vulnerability-list/vendor_id-6197/product_id-10494/version_id-575909/Tcpdump-Tcpdump-4.9.2.html?page=1&order=1&trc=29&sha=cc09d17caee42a5be7a0ceabc20e3190ae7d6667">https://www.cvedetails.com/vulnerability-list/vendor_id-6197/product_id-10494/version_id-575909/Tcpdump-Tcpdump-4.9.2.html?page=1&amp;order=1&amp;trc=29&amp;sha=cc09d17caee42a5be7a0ceabc20e3190ae7d6667</a></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://afl-1.readthedocs.io/en/latest/tips.html#performance-tips">Tips &#8212; AFL 2.53b documentation</a></p>
+]]></content>
+      <tags>
+        <tag>Fuzzing</tag>
+        <tag>AFL++</tag>
       </tags>
   </entry>
   <entry>
@@ -353,36 +419,36 @@
   </entry>
   <entry>
     <title>R2S软路由搭建指南</title>
-    <url>/2024/02/21/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/</url>
+    <url>/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/</url>
     <content><![CDATA[<p>在一般访问Google等网站的情况下，往往需要在每个终端安装代理软件，如<code>Clash</code>，<code>SSR</code>等。而软路由的方式让我们对其访问变得无感。百科上对软路由的定义如下，即使用软件的方案来进行路由：</p>
 <blockquote>
 <p>软路由是指利用台式机或服务器的供应商配合一定软件而形成的路由解决方案，主要靠对软件的设置，实现路由器路由器的功能，它的软件与硬件是独立分开的。软路由使用普通计算机，使用通用的操作系统，如Linux或windows，因此软路由的设置事实上是windows或linux的设置。根据使用的操作系统不同，可以分为基于windows平台和基于Linux&#x2F;bsd平台开发的软件路由器。</p>
 </blockquote>
 <h2 id="设备"><a href="#设备" class="headerlink" title="设备"></a>设备</h2><p>Nanopi R2S</p>
 <p>最低价可以买裸板，TF卡自己单买的，5v3a&#x2F;2a电源使用之前的旧设备。读卡器已有</p>
-<p><img src="/2024/02/21/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-06-06-image.png"></p>
+<p><img src="/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-06-06-image.png"></p>
 <p>64GTF卡</p>
-<p><img src="/2024/02/21/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-10-18-image.png"></p>
+<p><img src="/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-10-18-image.png"></p>
 <h2 id="刷机"><a href="#刷机" class="headerlink" title="刷机"></a>刷机</h2><p>使用<code>FriendlyWrt</code>系统，镜像下载：</p>
 <p><a href="https://drive.google.com/drive/folders/1W-2MLML9lkD2xAVjiwzEBNiUlPF5BgU9">01_SD card images - Google 云端硬盘</a></p>
 <ul>
 <li>rk3328-sd-friendlywrt-23.05-20231223.img.gz</li>
 </ul>
 <p><code>balenaEtcher</code>烧录至TF卡</p>
-<p><img src="/2024/02/21/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-15-56-image.png"></p>
+<p><img src="/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-15-56-image.png"></p>
 <h3 id="网络拓扑"><a href="#网络拓扑" class="headerlink" title="网络拓扑"></a>网络拓扑</h3><p>网络结构比较简单，如下<br>光猫&lt;——–&gt;(WAN)R2S(LAN)&lt;——–&gt;(WAN)小米路由器</p>
 <p>等待开机后，访问<code>192.168.2.1</code>。使用<code>root/passowrd</code>即可进入FriendlyWrt的管理后台</p>
-<p><img src="/2024/02/21/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-35-01-image.png"></p>
+<p><img src="/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-35-01-image.png"></p>
 <h2 id="OpenClash配置"><a href="#OpenClash配置" class="headerlink" title="OpenClash配置"></a>OpenClash配置</h2><p>如<code>OpenClash</code>描述，需要安装客户端与内核模块</p>
 <p>客户端安装</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#安装依赖</span></span><br><span class="line">* luci</span><br><span class="line">* luci-base</span><br><span class="line">* iptables</span><br><span class="line">* dnsmasq-full</span><br><span class="line">* coreutils</span><br><span class="line">* coreutils-nohup</span><br><span class="line">* bash</span><br><span class="line">* curl</span><br><span class="line">* jsonfilter</span><br><span class="line">* ca-certificates</span><br><span class="line">* ipset</span><br><span class="line">* ip-full</span><br><span class="line">* iptables-mod-tproxy</span><br><span class="line">* kmod-tun(TUN模式)</span><br><span class="line">* luci-compat(Luci-19.07)</span><br><span class="line"></span><br><span class="line"><span class="comment">#上传IPK文件至您路由器的 /tmp 目录下</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#假设安装包名字为</span></span><br><span class="line">luci-app-openclash_0.33.7-beta_all.ipk</span><br><span class="line"></span><br><span class="line"><span class="comment">#执行安装命令</span></span><br><span class="line">opkg install /tmp/luci-app-openclash_0.33.7-beta_all.ipk</span><br><span class="line"></span><br><span class="line"><span class="comment">#执行卸载命令</span></span><br><span class="line"><span class="comment">#插件在卸载后会自动备份配置文件到 /tmp 目录下，除非路由器重启，在下次安装时将还原您的配置文件</span></span><br><span class="line">opkg remove luci-app-openclash</span><br><span class="line"></span><br><span class="line">安装完成后刷新LUCI页面，在菜单栏 -&gt; 服务 -&gt; OpenClash 进入插件页面</span><br></pre></td></tr></table></figure>
 
 <p>内核</p>
 <p>进入<code>OpenClash</code>插件页面时，总是下载失败。可以增加代理来完成安装</p>
-<p><img src="/2024/02/21/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-40-11-image.png"></p>
+<p><img src="/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-40-11-image.png"></p>
 <p>启动</p>
 <p>最后，上传配置文件，并启动即可。最终效果如下</p>
-<p><img src="/2024/02/21/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-41-41-image.png"></p>
+<p><img src="/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-41-41-image.png"></p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://wiki.friendlyelec.com/wiki/index.php/NanoPi_R2S/zh">https://wiki.friendlyelec.com/wiki/index.php/NanoPi_R2S/zh</a></p>
 <p><a href="https://wiki.mbalib.com/wiki/%E8%BD%AF%E8%B7%AF%E7%94%B1">软路由 - MBA智库百科</a></p>
 <p><a href="https://github.com/vernesong/OpenClash/releases">Releases · vernesong&#x2F;OpenClash · GitHub</a></p>
@@ -476,7 +542,11 @@
 
 <p>汽车ECU为ARM，0x08000000地址一般为第二BootLoader地址，载入ECU，需要关注写入0x08000000地址的数据。</p>
 <h3 id="提取数据"><a href="#提取数据" class="headerlink" title="提取数据"></a>提取数据</h3><p>首先将数据传送区域的数据筛选出来，删除Rx行已经Tx行无关数据</p>
-<p><img src="/2023/02/13/UDS%E5%8D%8F%E8%AE%AE%E5%88%86%E6%9E%90-Teslaaaaa/8f85b1a81f3fb49ee2000432b8f3bfc5974707b7.png" alt="image-20230214230612177"></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">head</span> -n 10 can_log2.asc</span><br><span class="line">9.795696 1 730 Tx d81082360128040020 Length = 232244 BitCount = 119 ID = 1840</span><br><span class="line">9.795987 1 7B0 Rx d83008000000000000 Length = 239910 BitCount = 124 ID = 1968</span><br><span class="line">9.796548 1 730 Tx d82145010008210300 Length = 236244 BitCount = 121 ID = 1840</span><br><span class="line">9.796790 1 730 Tx d82208230300082703 Length = 236244 BitCount = 121 ID = 1840</span><br><span class="line">9.797030 1 730 Tx d82300082B0300082F Length = 234000 BitCount = 120 ID = 1840</span><br><span class="line">9.797278 1 730 Tx d82403000800000000 Length = 242000 BitCount = 124 ID = 1840</span><br><span class="line">9.797526 1 730 Tx d82500000000009000 Length = 242000 BitCount = 124 ID = 1840</span><br><span class="line">9.797770 1 730 Tx d82600000000003303 Length = 238000 BitCount = 122 ID = 1840</span><br><span class="line">9.798012 1 730 Tx d82700083503000800 Length = 236000 BitCount = 121 ID = 1840</span><br><span class="line">9.798256 1 730 Tx d82800000037030008 Length = 238000 BitCount = 122 ID = 1840</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>提取</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line"><span class="comment"># 读取文本文件</span></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;can_log2.asc&#x27;</span>, <span class="string">&#x27;r&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    lines = f.readlines()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 匹配包含 Rx 的行</span></span><br><span class="line">rx_pattern = re.<span class="built_in">compile</span>(<span class="string">&#x27;.*Rx.*&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(lines)):</span><br><span class="line">    <span class="keyword">if</span> rx_pattern.<span class="keyword">match</span>(lines[i]):</span><br><span class="line">        lines[i] = <span class="string">&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 对于每一行，提取目标字符串并写回文件</span></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;can_log2_1.asc&quot;</span>, <span class="string">&quot;w&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> lines:</span><br><span class="line">        <span class="keyword">match</span> = re.search(<span class="string">r&quot;d 8 (.*) Length&quot;</span>, line)</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">match</span>:</span><br><span class="line">            target_str = <span class="keyword">match</span>.group(<span class="number">1</span>)</span><br><span class="line">            f.write(target_str + <span class="string">&quot;\n&quot;</span>)</span><br></pre></td></tr></table></figure>
 
 <p>接着开始提取CAN数据字节流，这里有一个情况：10开头，则只有后四个字节可以写入，2x则可以写入7个字节。后续在处理时发现许多填充字节，修改：每次block只有0x80有效字节</p>
@@ -494,8 +564,7 @@
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> __fastcall <span class="title function_">sub_8000168</span><span class="params">(_BYTE *a1)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">int</span> result; <span class="comment">// r0</span></span><br><span class="line">  <span class="type">char</span> v3[<span class="number">52</span>]; <span class="comment">// [sp+4h] [bp-34h] BYREF</span></span><br><span class="line"></span><br><span class="line">  sub_800120C(v3, <span class="string">&quot;flag&#123;canoecr7-zd9h-1emi-or8m-f8vm2od81nfk&#125;&quot;</span>, <span class="number">44</span>);</span><br><span class="line">  <span class="comment">// 拷贝v3到a1，即是对该字符串的处理过程</span></span><br><span class="line">  sub_8001256(a1, v3);</span><br><span class="line">  a1 += <span class="number">5</span>;</span><br><span class="line">  a1[<span class="number">2</span>] -= <span class="number">13</span>;</span><br><span class="line">  a1[<span class="number">11</span>] -= <span class="number">5</span>;</span><br><span class="line">  a1[<span class="number">15</span>] -= <span class="number">44</span>;</span><br><span class="line">  a1[<span class="number">3</span>] -= <span class="number">11</span>;</span><br><span class="line">  a1[<span class="number">5</span>] -= <span class="number">48</span>;</span><br><span class="line">  a1[<span class="number">7</span>] += <span class="number">43</span>;</span><br><span class="line">  a1[<span class="number">28</span>] += <span class="number">50</span>;</span><br><span class="line">  a1[<span class="number">31</span>] += <span class="number">46</span>;</span><br><span class="line">  a1[<span class="number">19</span>] -= <span class="number">13</span>;</span><br><span class="line">  a1[<span class="number">20</span>] -= <span class="number">66</span>;</span><br><span class="line">  a1[<span class="number">1</span>] += <span class="number">3</span>;</span><br><span class="line">  a1[<span class="number">29</span>] -= <span class="number">55</span>;</span><br><span class="line">  a1[<span class="number">24</span>] -= <span class="number">51</span>;</span><br><span class="line">  a1[<span class="number">9</span>] -= <span class="number">23</span>;</span><br><span class="line">  a1[<span class="number">25</span>] -= <span class="number">6</span>;</span><br><span class="line">  a1[<span class="number">27</span>] -= <span class="number">60</span>;</span><br><span class="line">  a1[<span class="number">4</span>] -= <span class="number">52</span>;</span><br><span class="line">  a1[<span class="number">6</span>] -= <span class="number">14</span>;</span><br><span class="line">  a1[<span class="number">30</span>] -= <span class="number">52</span>;</span><br><span class="line">  a1[<span class="number">22</span>] -= <span class="number">58</span>;</span><br><span class="line">  a1[<span class="number">12</span>] -= <span class="number">48</span>;</span><br><span class="line">  a1[<span class="number">16</span>] -= <span class="number">56</span>;</span><br><span class="line">  a1[<span class="number">34</span>] -= <span class="number">53</span>;</span><br><span class="line">  *a1 -= <span class="number">48</span>;</span><br><span class="line">  a1[<span class="number">14</span>] += <span class="number">3</span>;</span><br><span class="line">  a1[<span class="number">17</span>] -= <span class="number">5</span>;</span><br><span class="line">  a1[<span class="number">33</span>] -= <span class="number">55</span>;</span><br><span class="line">  a1[<span class="number">35</span>] -= <span class="number">56</span>;</span><br><span class="line">  a1[<span class="number">10</span>] -= <span class="number">2</span>;</span><br><span class="line">  a1[<span class="number">26</span>] -= <span class="number">67</span>;</span><br><span class="line">  result = (<span class="type">unsigned</span> __int8)a1[<span class="number">21</span>] - <span class="number">6</span>;</span><br><span class="line">  a1[<span class="number">21</span>] = result;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h2 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h2><p>如下:</p>
-<p><img src="/2023/02/13/UDS%E5%8D%8F%E8%AE%AE%E5%88%86%E6%9E%90-Teslaaaaa/1d85c1ad3a05bb221511ff2c28df6423b19ee4c3.png" alt="image-20230215131140321"></p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span>&#123;</span><br><span class="line"><span class="type">char</span> org_str[] = <span class="string">&quot;canoecr7-zd9h-1emi-or8m-f8vm2od81nfk&quot;</span>;</span><br><span class="line">org_str[<span class="number">2</span>] -= <span class="number">13</span>;</span><br><span class="line">org_str[<span class="number">11</span>] -= <span class="number">5</span>;</span><br><span class="line">org_str[<span class="number">15</span>] -= <span class="number">44</span>;</span><br><span class="line">org_str[<span class="number">3</span>] -= <span class="number">11</span>;</span><br><span class="line">org_str[<span class="number">5</span>] -= <span class="number">48</span>;</span><br><span class="line">org_str[<span class="number">7</span>] += <span class="number">43</span>;</span><br><span class="line">org_str[<span class="number">28</span>] += <span class="number">50</span>;</span><br><span class="line">org_str[<span class="number">31</span>] += <span class="number">46</span>;</span><br><span class="line">org_str[<span class="number">19</span>] -= <span class="number">13</span>;</span><br><span class="line">org_str[<span class="number">20</span>] -= <span class="number">66</span>;</span><br><span class="line">org_str[<span class="number">1</span>] += <span class="number">3</span>;</span><br><span class="line">org_str[<span class="number">29</span>] -= <span class="number">55</span>;</span><br><span class="line">org_str[<span class="number">24</span>] -= <span class="number">51</span>;</span><br><span class="line">org_str[<span class="number">9</span>] -= <span class="number">23</span>;</span><br><span class="line">org_str[<span class="number">25</span>] -= <span class="number">6</span>;</span><br><span class="line">org_str[<span class="number">27</span>] -= <span class="number">60</span>;</span><br><span class="line">org_str[<span class="number">4</span>] -= <span class="number">52</span>;</span><br><span class="line">org_str[<span class="number">6</span>] -= <span class="number">14</span>;</span><br><span class="line">org_str[<span class="number">30</span>] -= <span class="number">52</span>;</span><br><span class="line">org_str[<span class="number">22</span>] -= <span class="number">58</span>;</span><br><span class="line">org_str[<span class="number">12</span>] -= <span class="number">48</span>;</span><br><span class="line">org_str[<span class="number">16</span>] -= <span class="number">56</span>;</span><br><span class="line">org_str[<span class="number">34</span>] -= <span class="number">53</span>;</span><br><span class="line">org_str[<span class="number">0</span>] -= <span class="number">48</span>;</span><br><span class="line">org_str[<span class="number">14</span>] += <span class="number">3</span>;</span><br><span class="line">org_str[<span class="number">17</span>] -= <span class="number">5</span>;</span><br><span class="line">org_str[<span class="number">33</span>] -= <span class="number">55</span>;</span><br><span class="line">org_str[<span class="number">35</span>] -= <span class="number">56</span>;</span><br><span class="line">org_str[<span class="number">10</span>] -= <span class="number">2</span>;</span><br><span class="line">org_str[<span class="number">26</span>] -= <span class="number">67</span>;</span><br><span class="line">org_str[<span class="number">21</span>] -= <span class="number">6</span>;</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;flag: %s\n&quot;</span>, org_str);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// ./telsaaaaa</span></span><br><span class="line"><span class="comment">// flag:f1ag&#123;3dad13db-cb48-495d-b023-3231d80f1713&#125;</span></span><br><span class="line"><span class="comment">// (base)</span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span>&#123;</span><br><span class="line"><span class="type">char</span> org_str[] = <span class="string">&quot;canoecr7-zd9h-1emi-or8m-f8vm2od81nfk&quot;</span>;</span><br><span class="line">org_str[<span class="number">2</span>] -= <span class="number">13</span>;</span><br><span class="line">org_str[<span class="number">11</span>] -= <span class="number">5</span>;</span><br><span class="line">org_str[<span class="number">15</span>] -= <span class="number">44</span>;</span><br><span class="line">org_str[<span class="number">3</span>] -= <span class="number">11</span>;</span><br><span class="line">org_str[<span class="number">5</span>] -= <span class="number">48</span>;</span><br><span class="line">org_str[<span class="number">7</span>] += <span class="number">43</span>;</span><br><span class="line">org_str[<span class="number">28</span>] += <span class="number">50</span>;</span><br><span class="line">org_str[<span class="number">31</span>] += <span class="number">46</span>;</span><br><span class="line">org_str[<span class="number">19</span>] -= <span class="number">13</span>;</span><br><span class="line">org_str[<span class="number">20</span>] -= <span class="number">66</span>;</span><br><span class="line">org_str[<span class="number">1</span>] += <span class="number">3</span>;</span><br><span class="line">org_str[<span class="number">29</span>] -= <span class="number">55</span>;</span><br><span class="line">org_str[<span class="number">24</span>] -= <span class="number">51</span>;</span><br><span class="line">org_str[<span class="number">9</span>] -= <span class="number">23</span>;</span><br><span class="line">org_str[<span class="number">25</span>] -= <span class="number">6</span>;</span><br><span class="line">org_str[<span class="number">27</span>] -= <span class="number">60</span>;</span><br><span class="line">org_str[<span class="number">4</span>] -= <span class="number">52</span>;</span><br><span class="line">org_str[<span class="number">6</span>] -= <span class="number">14</span>;</span><br><span class="line">org_str[<span class="number">30</span>] -= <span class="number">52</span>;</span><br><span class="line">org_str[<span class="number">22</span>] -= <span class="number">58</span>;</span><br><span class="line">org_str[<span class="number">12</span>] -= <span class="number">48</span>;</span><br><span class="line">org_str[<span class="number">16</span>] -= <span class="number">56</span>;</span><br><span class="line">org_str[<span class="number">34</span>] -= <span class="number">53</span>;</span><br><span class="line">org_str[<span class="number">0</span>] -= <span class="number">48</span>;</span><br><span class="line">org_str[<span class="number">14</span>] += <span class="number">3</span>;</span><br><span class="line">org_str[<span class="number">17</span>] -= <span class="number">5</span>;</span><br><span class="line">org_str[<span class="number">33</span>] -= <span class="number">55</span>;</span><br><span class="line">org_str[<span class="number">35</span>] -= <span class="number">56</span>;</span><br><span class="line">org_str[<span class="number">10</span>] -= <span class="number">2</span>;</span><br><span class="line">org_str[<span class="number">26</span>] -= <span class="number">67</span>;</span><br><span class="line">org_str[<span class="number">21</span>] -= <span class="number">6</span>;</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;flag: %s\n&quot;</span>, org_str);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h3 id="unicorn模拟执行"><a href="#unicorn模拟执行" class="headerlink" title="unicorn模拟执行"></a>unicorn模拟执行</h3><p>需要的几个组件，有时间看一下官方文档</p>
 <ul>
@@ -517,8 +586,66 @@
       </tags>
   </entry>
   <entry>
+    <title>void类型理解</title>
+    <url>/2021/08/30/void%E7%B1%BB%E5%9E%8B%E7%90%86%E8%A7%A3/</url>
+    <content><![CDATA[<h3 id="void-和-void-指针"><a href="#void-和-void-指针" class="headerlink" title="void 和 void 指针"></a><code>void</code> 和 <code>void</code> 指针</h3><ul>
+<li><p><strong><code>void</code>：</strong> 代表”无类型”。<code>void*</code> 表示”无类型指针”，可以指向任何数据类型。</p>
+</li>
+<li><p><strong><code>void</code> 指针：</strong> 可以指向任意类型的数据，示例代码如下：</p>
+</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> *pint;</span><br><span class="line"><span class="type">void</span> *pvoid;</span><br><span class="line"></span><br><span class="line"><span class="comment">// pvoid 可以指向任何类型</span></span><br><span class="line">pvoid = pint;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 将 `void` 类型转为其他类型需要强制类型转换</span></span><br><span class="line">pint = (<span class="type">int</span> *)pvoid;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在 ANSI C 标准中，不允许对 <code>void</code> 指针进行算术运算。但在 GNU C 中，<code>void*</code> 和 <code>char*</code> 视为相同，即 <code>sizeof(*pvoid) == sizeof(char)</code>。</li>
+</ul>
+<h3 id="void-关键字的作用"><a href="#void-关键字的作用" class="headerlink" title="void 关键字的作用"></a><code>void</code> 关键字的作用</h3><ul>
+<li><p><strong>对函数返回值的限定：</strong> 如果函数不需要返回值，必须使用 <code>void</code> 限定，例如 <code>void func();</code>。</p>
+</li>
+<li><p><strong>对函数参数的限定：</strong> 如果函数不允许接收参数，必须使用 <code>void</code> 限定，例如 <code>int func(void);</code>。</p>
+</li>
+</ul>
+<p><code>void</code> 指针可以指向任意类型的数据，因此可以在函数参数中使用 <code>void</code> 指针，使函数能够接受任意数据类型的指针作为参数，示例代码如下：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">void</span> *<span class="title function_">memcpy</span><span class="params">(<span class="type">void</span> *dest, <span class="type">const</span> <span class="type">void</span> *src, <span class="type">size_t</span> len)</span>;</span><br><span class="line"><span class="type">void</span> *<span class="title function_">memset</span><span class="params">(<span class="type">void</span> *buffer, <span class="type">int</span> c, <span class="type">size_t</span> num)</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="void-的真正作用"><a href="#void-的真正作用" class="headerlink" title="void 的真正作用"></a><code>void</code> 的真正作用</h3><p><code>void</code> 的作用在于：</p>
+<ul>
+<li>对函数返回值的限定。</li>
+<li>对函数参数的限定。</li>
+</ul>
+<p>示例代码如下：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">float</span> *p1;</span><br><span class="line"><span class="type">int</span> *p2;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 错误</span></span><br><span class="line">p1 = p2;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 正确</span></span><br><span class="line">p1 = (<span class="type">float</span> *)p2;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> *p1;</span><br><span class="line"><span class="type">int</span> *p2;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 正确</span></span><br><span class="line">p1 = p2;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 错误</span></span><br><span class="line">p2 = p1;</span><br></pre></td></tr></table></figure>
+
+<h3 id="void-的使用规则"><a href="#void-的使用规则" class="headerlink" title="void 的使用规则"></a><code>void</code> 的使用规则</h3><ul>
+<li>如果函数没有返回值，应该声明为 <code>void</code> 类型。</li>
+</ul>
+<p>在 C 语言中，未加返回类型限定的函数会被默认处理为返回整型值。例如：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line">add(<span class="type">int</span> a, <span class="type">int</span> b);</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;2 + 3 = %d\n&quot;</span>, add(<span class="number">2</span>, <span class="number">3</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">add(<span class="type">int</span> a, <span class="type">int</span> b)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> a + b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如果函数没有参数，应该声明参数为 <code>void</code>。</li>
+</ul>
+<p>在 C 语言中，可以向无参数的函数传递任何类型的参数，但在 C++ 中不行。</p>
+<ul>
+<li><p>对于 <code>void</code> 指针类型的使用：</p>
+<ul>
+<li><p>ANSI C 中不允许对 <code>void</code> 指针进行算术操作，因为 ANSI C 标准下，指针算术操作需要知道指向数据类型的大小，例如 <code>int *pint; pint++;</code> 会使 <code>pint</code> 增加 <code>sizeof(int)</code>。</p>
+</li>
+<li><p>GNU C（GNU’s Not Unix）认为 <code>void*</code> 类型与 <code>char*</code> 类型一致。</p>
+</li>
+</ul>
+</li>
+<li><p>如果函数的参数可以是任意指针，应该声明参数为 <code>void*</code>。注意，<code>void**</code> 不能代表一个真实的变量，<code>void</code> 体现了一种抽象。</p>
+</li>
+</ul>
+]]></content>
+      <tags>
+        <tag>C/C++</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>USB接口安全测试</title>
-    <url>/2023/11/14/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/</url>
+    <url>/2024/03/05/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>USB已经成为计算机与智能设备的必备接口之一，广泛应用于社会的各个场景。近年来各类硬件产品的安全事件层出不穷，出现了多种针对USB接口的攻击手段，导致相关系统面临着严重的安全风险。简要对于<code>USB</code>接口存在的安全问题进行梳理，并进行测试。</p>
 <h2 id="USB-101"><a href="#USB-101" class="headerlink" title="USB 101"></a>USB 101</h2><p><img src="https://www.usbzh.com/uploadimg/202105080959336094.png" alt="USB协议分层"></p>
 <p>USB设备的枚举过程如下：</p>
@@ -589,8 +716,8 @@
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">picocom -b 115200 /dev/tty.usbmodemch0000011</span><br><span class="line">root:hak5bunny</span><br></pre></td></tr></table></figure>
 
 <p>同时其作为存储设备，如下目录</p>
-<p><img src="/2023/11/14/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/2023-11-09-16-05-30-image.png"></p>
-<h2 id="攻击面分析"><a href="#攻击面分析" class="headerlink" title="攻击面分析"></a>攻击面分析</h2><p><img src="/2023/11/14/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/2023-11-09-12-56-02-image.png"></p>
+<p><img src="/2024/03/05/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/2023-11-09-16-05-30-image.png"></p>
+<h2 id="攻击面分析"><a href="#攻击面分析" class="headerlink" title="攻击面分析"></a>攻击面分析</h2><p><img src="/2024/03/05/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/2023-11-09-12-56-02-image.png"></p>
 <h3 id="攻击负载媒介"><a href="#攻击负载媒介" class="headerlink" title="攻击负载媒介"></a>攻击负载媒介</h3><p>非常典型有震网病毒，通过U盘即突破了物理隔离，不做详细展开</p>
 <p><img src="https://s.secrss.com/anquanneican/702f33f11f8bf9226bb4185e124fefb3.jpg"></p>
 <h3 id="HID攻击"><a href="#HID攻击" class="headerlink" title="HID攻击"></a>HID攻击</h3><blockquote>
@@ -604,7 +731,7 @@
 </li>
 </ul>
 <p>常见USB HID开发平台</p>
-<p><img src="/2023/11/14/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/2023-11-09-13-17-25-image.png"></p>
+<p><img src="/2024/03/05/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/2023-11-09-13-17-25-image.png"></p>
 <p>想要实现<code>HID</code>攻击，设备需要支持<code>Keyboard</code>等人机交互接口类型。利用<code>Umap2</code>框架，可以对目标进行一个初步的USB安全评估（注：该工具需要使用<code>Python2.7</code>启动）</p>
 <ul>
 <li><a href="https://github.com/nccgroup/umap2">GitHub - nccgroup&#x2F;umap2: Umap2 is the second revision of NCC Group’s python based USB host security assessment tool.</a></li>
@@ -632,7 +759,10 @@
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Title:         Nmapper for Bash Bunny</span></span><br><span class="line"><span class="comment"># Author:        Hak5Darren</span></span><br><span class="line"><span class="comment"># Version:       1.1</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Scans target with nmap using specified options</span></span><br><span class="line"><span class="comment"># Saves sequential logs to mass storage loot folder</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Red ...........Setup</span></span><br><span class="line"><span class="comment"># Red Blinking...Setup Failed. Target did not obtain IP address. Exit.</span></span><br><span class="line"><span class="comment"># Amber..........Scanning</span></span><br><span class="line"><span class="comment"># White..........Switching to Mass Storage (optional)</span></span><br><span class="line"><span class="comment"># Green..........Finished</span></span><br><span class="line"><span class="comment"># </span></span><br><span class="line"><span class="comment"># See nmap --help for options. Default &quot;-O --fuzzy&quot; profiles target OS.</span></span><br><span class="line">NMAP_OPTIONS=<span class="string">&quot;-O --fuzzy&quot;</span></span><br><span class="line">LOOTDIR=/root/udisk/loot/nmap</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">######## INITIALIZATION ########</span></span><br><span class="line">LED SETUP</span><br><span class="line"><span class="comment"># Use RNDIS for Windows. Mac/*nix use ECM_ETHERNET</span></span><br><span class="line">ATTACKMODE RNDIS_ETHERNET </span><br><span class="line"><span class="comment">#ATTACKMODE ECM_ETHERNET</span></span><br><span class="line">GET TARGET_IP</span><br><span class="line">GET TARGET_HOSTNAME</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">######## MAKE LOOT DIRECTORY ########</span></span><br><span class="line"><span class="comment"># Setup named logs in loot directory</span></span><br><span class="line"><span class="built_in">mkdir</span> -p <span class="variable">$LOOTDIR</span></span><br><span class="line">HOST=<span class="variable">$&#123;TARGET_HOSTNAME&#125;</span></span><br><span class="line"><span class="comment"># If hostname is blank set it to &quot;noname&quot;</span></span><br><span class="line">[[ -z <span class="string">&quot;<span class="variable">$HOST</span>&quot;</span> ]] &amp;&amp; HOST=<span class="string">&quot;noname&quot;</span></span><br><span class="line">COUNT=$(<span class="built_in">ls</span> -lad <span class="variable">$LOOTDIR</span>/<span class="variable">$HOST</span>*.<span class="built_in">log</span> | <span class="built_in">wc</span> -l)</span><br><span class="line">COUNT=$((COUNT+<span class="number">1</span>))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">######## ERROR IF NO TARGET IP ########</span></span><br><span class="line"><span class="keyword">if</span> [ -z <span class="string">&quot;<span class="variable">$&#123;TARGET_IP&#125;</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">    LED FAIL</span><br><span class="line">    <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">######## ATTACK ########</span></span><br><span class="line">LED ATTACK</span><br><span class="line">nmap <span class="variable">$NMAP_OPTIONS</span> <span class="variable">$TARGET_IP</span> &gt;&gt; <span class="variable">$LOOTDIR</span>/<span class="variable">$HOST</span>-<span class="variable">$COUNT</span>.<span class="built_in">log</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">######## CLEANUP ########</span></span><br><span class="line">LED CLEANUP</span><br><span class="line"><span class="built_in">sync</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">######## FINISH ########</span></span><br><span class="line">LED FINISH</span><br></pre></td></tr></table></figure>
 
 <p>扫描结果</p>
-<p><img src="/2023/11/14/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/2023-11-10-15-44-37-image.png"></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ <span class="built_in">pwd</span></span><br><span class="line">/Volumes/BashBunny/loot/nmap</span><br><span class="line">$ <span class="built_in">cat</span> LEHZ5202344-1.10g</span><br><span class="line">Starting Nmap 6.47 http://nmap.org at 2021-01-30 18:26 PST</span><br><span class="line">Nmap scan report <span class="keyword">for</span> 172.16.64.10</span><br><span class="line">Host is up (0.00051s latency).</span><br><span class="line">Not shown:994 filtered ports</span><br><span class="line">PORT</span><br><span class="line">STATE SERVICE</span><br><span class="line">80/tcp</span><br><span class="line">open</span><br><span class="line">http</span><br><span class="line">135/tcp</span><br><span class="line">open msrpc</span><br><span class="line">139/tcp</span><br><span class="line">open netbios-ssn</span><br><span class="line">445/tcp</span><br><span class="line">open microsoft-ds</span><br><span class="line">2701/tcp open</span><br><span class="line">sms-rcinfo</span><br><span class="line">6129/tcp open</span><br><span class="line">unknown</span><br><span class="line">MAC Address:00:11:22:33:44:55 (Cimsys)</span><br><span class="line">Warning:OSScan results may be unreliable because we could not find at least 1 open and 1 closed port</span><br><span class="line">Device <span class="built_in">type</span>:general purpose</span><br><span class="line">Running (JUST GUESSING):Microsoft Windows 2008 (85%)</span><br><span class="line">OS CPE:cpe:/o:microsoft:windows_server_2008:sp1 cpe:/o:microsoft:windows_server_2008:r2</span><br><span class="line">Aggressive os guesses:Microsoft Windows Server 2008 SP1 or Windows Server 2008 R2 (85%)</span><br><span class="line">No exact os matches <span class="keyword">for</span> host (<span class="built_in">test</span> conditions non-ideal).</span><br><span class="line">Network Distance:1 hop</span><br><span class="line">OS detection performed.Please report any incorrect results at http://nmap.org/submit/</span><br><span class="line">Nmap <span class="keyword">done</span>:1 IP address (1 host up)scanned <span class="keyword">in</span> 43.56 seconds</span><br></pre></td></tr></table></figure>
+
+
+
 <h4 id="Demo02"><a href="#Demo02" class="headerlink" title="Demo02:"></a>Demo02:</h4><p>查看、分析针对<code>Android/Linux</code>平台的payload，描绘攻击路径。（未有可直接使用<code>Android</code>平台Payload，待开发）</p>
 <h3 id="BadUSB"><a href="#BadUSB" class="headerlink" title="BadUSB"></a>BadUSB</h3><p>对USB HID技术的改进。原有技术依赖于特定的嵌入式开发版，无法在通用USB设备上实现。存在局限性：无法通用；容易被破除设备封装等检测方式发现。</p>
 <p>BadUSB攻击的基本思路是<strong>篡改USB设备中的原有固件，将含有攻击负载的内容写入到设备固件中，从而使得USB设备在接入到目标主机时，通过执行固件中的攻击负载实现攻击功能</strong>. BadUSB攻击的实现虽然需要USB设备支持固件更新这一前提，但是仍然比USB HID攻击具有更好的通用性（据Karsten Nohl称，BadUSB首次提出时可以适用的优盘占当时市场份额的50%以上另外，由于BadUSB攻击实现过程中仅对存储器芯片中存放的固件进行了篡改，并不对USB设备硬件进行任何改变，所以该类攻击的隐蔽性更高.</p>
@@ -672,64 +802,6 @@
       </tags>
   </entry>
   <entry>
-    <title>void类型理解</title>
-    <url>/2021/08/30/void%E7%B1%BB%E5%9E%8B%E7%90%86%E8%A7%A3/</url>
-    <content><![CDATA[<h3 id="void-和-void-指针"><a href="#void-和-void-指针" class="headerlink" title="void 和 void 指针"></a><code>void</code> 和 <code>void</code> 指针</h3><ul>
-<li><p><strong><code>void</code>：</strong> 代表”无类型”。<code>void*</code> 表示”无类型指针”，可以指向任何数据类型。</p>
-</li>
-<li><p><strong><code>void</code> 指针：</strong> 可以指向任意类型的数据，示例代码如下：</p>
-</li>
-</ul>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> *pint;</span><br><span class="line"><span class="type">void</span> *pvoid;</span><br><span class="line"></span><br><span class="line"><span class="comment">// pvoid 可以指向任何类型</span></span><br><span class="line">pvoid = pint;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 将 `void` 类型转为其他类型需要强制类型转换</span></span><br><span class="line">pint = (<span class="type">int</span> *)pvoid;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>在 ANSI C 标准中，不允许对 <code>void</code> 指针进行算术运算。但在 GNU C 中，<code>void*</code> 和 <code>char*</code> 视为相同，即 <code>sizeof(*pvoid) == sizeof(char)</code>。</li>
-</ul>
-<h3 id="void-关键字的作用"><a href="#void-关键字的作用" class="headerlink" title="void 关键字的作用"></a><code>void</code> 关键字的作用</h3><ul>
-<li><p><strong>对函数返回值的限定：</strong> 如果函数不需要返回值，必须使用 <code>void</code> 限定，例如 <code>void func();</code>。</p>
-</li>
-<li><p><strong>对函数参数的限定：</strong> 如果函数不允许接收参数，必须使用 <code>void</code> 限定，例如 <code>int func(void);</code>。</p>
-</li>
-</ul>
-<p><code>void</code> 指针可以指向任意类型的数据，因此可以在函数参数中使用 <code>void</code> 指针，使函数能够接受任意数据类型的指针作为参数，示例代码如下：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">void</span> *<span class="title function_">memcpy</span><span class="params">(<span class="type">void</span> *dest, <span class="type">const</span> <span class="type">void</span> *src, <span class="type">size_t</span> len)</span>;</span><br><span class="line"><span class="type">void</span> *<span class="title function_">memset</span><span class="params">(<span class="type">void</span> *buffer, <span class="type">int</span> c, <span class="type">size_t</span> num)</span>;</span><br></pre></td></tr></table></figure>
-
-<h3 id="void-的真正作用"><a href="#void-的真正作用" class="headerlink" title="void 的真正作用"></a><code>void</code> 的真正作用</h3><p><code>void</code> 的作用在于：</p>
-<ul>
-<li>对函数返回值的限定。</li>
-<li>对函数参数的限定。</li>
-</ul>
-<p>示例代码如下：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">float</span> *p1;</span><br><span class="line"><span class="type">int</span> *p2;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 错误</span></span><br><span class="line">p1 = p2;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 正确</span></span><br><span class="line">p1 = (<span class="type">float</span> *)p2;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> *p1;</span><br><span class="line"><span class="type">int</span> *p2;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 正确</span></span><br><span class="line">p1 = p2;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 错误</span></span><br><span class="line">p2 = p1;</span><br></pre></td></tr></table></figure>
-
-<h3 id="void-的使用规则"><a href="#void-的使用规则" class="headerlink" title="void 的使用规则"></a><code>void</code> 的使用规则</h3><ul>
-<li>如果函数没有返回值，应该声明为 <code>void</code> 类型。</li>
-</ul>
-<p>在 C 语言中，未加返回类型限定的函数会被默认处理为返回整型值。例如：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line">add(<span class="type">int</span> a, <span class="type">int</span> b);</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;2 + 3 = %d\n&quot;</span>, add(<span class="number">2</span>, <span class="number">3</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">add(<span class="type">int</span> a, <span class="type">int</span> b)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> a + b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>如果函数没有参数，应该声明参数为 <code>void</code>。</li>
-</ul>
-<p>在 C 语言中，可以向无参数的函数传递任何类型的参数，但在 C++ 中不行。</p>
-<ul>
-<li><p>对于 <code>void</code> 指针类型的使用：</p>
-<ul>
-<li><p>ANSI C 中不允许对 <code>void</code> 指针进行算术操作，因为 ANSI C 标准下，指针算术操作需要知道指向数据类型的大小，例如 <code>int *pint; pint++;</code> 会使 <code>pint</code> 增加 <code>sizeof(int)</code>。</p>
-</li>
-<li><p>GNU C（GNU’s Not Unix）认为 <code>void*</code> 类型与 <code>char*</code> 类型一致。</p>
-</li>
-</ul>
-</li>
-<li><p>如果函数的参数可以是任意指针，应该声明参数为 <code>void*</code>。注意，<code>void**</code> 不能代表一个真实的变量，<code>void</code> 体现了一种抽象。</p>
-</li>
-</ul>
-]]></content>
-      <tags>
-        <tag>C/C++</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>使用GDB对程序执行进行trace</title>
     <url>/2024/01/16/%E4%BD%BF%E7%94%A8GDB%E5%AF%B9%E7%A8%8B%E5%BA%8F%E6%89%A7%E8%A1%8C%E8%BF%9B%E8%A1%8Ctrace/</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>静态反汇编与动态反汇编存在一个精度与广度的区别。一般来说静态反汇编可以得到更多的覆盖率，而动态反汇编则可以得到更精确的执行路径。尝试以一个类<code>gdbinit</code>的GDB启动交互过程，对可执行程序进行trace，用于同<code>IDA Pro</code>等专业反编译&#x2F;反汇编工具进行比较，更好的对程序进行分析。</p>
@@ -742,7 +814,7 @@
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">egrep <span class="string">&#x27;^=&gt; 0x[0-9a-f]+:&#x27;</span> gdb.txt &gt; test.txt</span><br></pre></td></tr></table></figure>
 
 <p>此时，就可以获取到程序实际执行的指令</p>
-<p><img src="/2024/01/16/%E4%BD%BF%E7%94%A8GDB%E5%AF%B9%E7%A8%8B%E5%BA%8F%E6%89%A7%E8%A1%8C%E8%BF%9B%E8%A1%8Ctrace/2024-01-16-12-33-15-image.png"></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">1 =&gt; 0x7ffff7cc51a0: endbr64</span><br><span class="line">2 =&gt; 0x7ffff7cc51a4: mov rax,QWORD PTR[rip+0x153d1d]</span><br><span class="line">3 =&gt; 0x7ffff7cc5lab: mov rdx,QWORD PTR [rax+0x1c0]</span><br><span class="line">4 =&gt; 0x7ffff7cc51b2: and rdx,Oxffffffffffffff0O</span><br><span class="line">5 =&gt; 0x7ffff7cc51b9: jle 0x7ffff7cc51cf</span><br><span class="line">6 =&gt; 0x7ffff7cc51bb: mov rcx,rdx</span><br><span class="line">7 =&gt; 0x7ffff7cc51be: mov QWORD PTR [rip+0x15424b],rdx</span><br><span class="line">8 =&gt; 0x7ffff7cc51c5: sar rcx,1</span><br><span class="line">9 =&gt; 0x7ffff7cc51c8: mov QWORD PTR [rip+0x154249],rcx</span><br><span class="line">10 =&gt; 0x7ffff7cc51cf: mov rdx,QWORD PTR [rax+0x1c8]</span><br><span class="line">11 =&gt; 0x7ffff7cc51d6: and rdx,0xffffffffffffff0</span><br><span class="line">12 =&gt; 0x7ffff7cc51dd: jle 0x7ffff7cc51f3</span><br><span class="line">13 =&gt; 0x7ffff7cc51df: mov rcx,rdx</span><br><span class="line">14 =&gt; 0x7ffff7cc51e2: mov QWORD PTR [rip+0x154217],rdx</span><br><span class="line">15 =&gt; 0x7ffff7cc51e9: sar rcx,1</span><br><span class="line">16 =&gt; 0x7ffff7cc5lec: mov QWORD PTR [rip+0x154215],rcx</span><br><span class="line">17 =&gt; 0x7ffff7cc51f3: mov rdx,QWORD PTR [rax+0x1d0]</span><br><span class="line">18 =&gt; 0x7ffff7cc51fa: mov QWORD PTR [rip+0x15b3a7],rdx</span><br><span class="line">19 =&gt; 0x7ffff7cc5201: mov rdx,QWORD PTR [rax+0x1d8]</span><br><span class="line">20 =&gt; 0x7ffff7cc5208: mov QWORD PTR [rip+0x1541e9],rdx</span><br><span class="line">21 =&gt; 0x7ffff7cc520f: mov rdx,QWORD PTR [rax+0x1e8]</span><br><span class="line">22 =&gt; 0x7ffff7cc5216: mov QWORD PTR [rip+0x1541d3],rdx</span><br><span class="line">23 =&gt; 0x7ffff7cc521d: mov rdx,QWORD PTR [rax+0x1e0]</span><br><span class="line">24 =&gt; 0x7ffff7cc5224: mov QWORD PTR [rip+0x15b375],rdx</span><br><span class="line">25 =&gt; 0x7ffff7cc522b: <span class="built_in">test</span> BYTE PTR [rax+0x1a5],0x80</span><br><span class="line">26 =&gt; 0x7ffff7cc5232: je 0x7ffff7cc523b</span><br><span class="line">27 =&gt; 0x7ffff7cc523b: xor eax,eax</span><br><span class="line">28 =&gt; 0x7ffff7cc523d: ret</span><br><span class="line">29 =&gt; 0x7ffff7ca8720: endbr64</span><br><span class="line">30 =&gt; 0x7ffff7ca8724: mov rcx,QWORD PTR [rip+0x17079d]</span><br><span class="line">31 =&gt; 0x7ffff7ca872b: lea rax,[rip+0x123be]</span><br><span class="line">32 =&gt; 0x7ffff7ca8732: mov edx,DWORD PTR [rcx+0xb8]</span><br></pre></td></tr></table></figure>
 ]]></content>
       <tags>
         <tag>Reverse</tag>

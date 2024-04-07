@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,300italic,400,400italic,700,700italic|sans-serif:300,300italic,400,400italic,700,700italic|'Noto+Sans+SC':300,300italic,400,400italic,700,700italic|Fira+Code:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14.0/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/pace-js@1.0.2/themes/blue/pace-theme-minimal.css">
+  <script src="//cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"8.0.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"buttons","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+
+  <meta name="description" content="https:&#x2F;&#x2F;github.com&#x2F;antonio-morales&#x2F;Fuzzing101&#x2F;tree&#x2F;main&#x2F;Exercise%203  In this exercise we will fuzz TCPdump packet analyzer. The goal is to find a crash&#x2F;PoC for CVE-2017-13028 in TCPdump 4.9.2. C">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Fuzzing101-3: TCPdump">
+<meta property="og:url" content="http://example.com/2024/03/15/Fuzzing101-3-TCPdump/index.html">
+<meta property="og:site_name" content="尘埃落定的空间站">
+<meta property="og:description" content="https:&#x2F;&#x2F;github.com&#x2F;antonio-morales&#x2F;Fuzzing101&#x2F;tree&#x2F;main&#x2F;Exercise%203  In this exercise we will fuzz TCPdump packet analyzer. The goal is to find a crash&#x2F;PoC for CVE-2017-13028 in TCPdump 4.9.2. C">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2024/03/15/Fuzzing101-3-TCPdump/2024-03-30-18-25-43-image.png">
+<meta property="article:published_time" content="2024-03-15T05:00:17.000Z">
+<meta property="article:modified_time" content="2024-04-07T03:15:23.959Z">
+<meta property="article:author" content="w3b5h3ll">
+<meta property="article:tag" content="Fuzzing">
+<meta property="article:tag" content="AFL++">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2024/03/15/Fuzzing101-3-TCPdump/2024-03-30-18-25-43-image.png">
+
+
+<link rel="canonical" href="http://example.com/2024/03/15/Fuzzing101-3-TCPdump/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Fuzzing101-3: TCPdump | 尘埃落定的空间站</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">尘埃落定的空间站</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">嘩啦啦啦啦 天在下雨 嘩啦啦啦啦 雲在哭泣 ......</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="nav-number">1.</span> <span class="nav-text">环境搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#WSL%E6%80%A7%E8%83%BD%E5%8A%A0%E9%80%9F"><span class="nav-number">1.1.</span> <span class="nav-text">WSL性能加速</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fuzz"><span class="nav-number">2.</span> <span class="nav-text">fuzz</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Keep-your-test-case-small-Why"><span class="nav-number">2.1.</span> <span class="nav-text">Keep your test case small, Why?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#WSL%E6%89%A7%E8%A1%8C"><span class="nav-number">2.2.</span> <span class="nav-text">WSL执行</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E6%9E%90"><span class="nav-number">3.</span> <span class="nav-text">分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">w3b5h3ll</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </section>
+        <div class="back-to-top animated">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+      
+
+      
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/03/15/Fuzzing101-3-TCPdump/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="w3b5h3ll">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="尘埃落定的空间站">
+    </span>
+
+    
+    
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Fuzzing101-3: TCPdump
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-03-15 13:00:17" itemprop="dateCreated datePublished" datetime="2024-03-15T13:00:17+08:00">2024-03-15</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2024-04-07 11:15:23" itemprop="dateModified" datetime="2024-04-07T11:15:23+08:00">2024-04-07</time>
+      </span>
+
+  
+    <span id="/2024/03/15/Fuzzing101-3-TCPdump/" class="post-meta-item leancloud_visitors" data-flag-title="Fuzzing101-3: TCPdump" title="阅读次数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span class="leancloud-visitors-count"></span>
+    </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2024/03/15/Fuzzing101-3-TCPdump/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2024/03/15/Fuzzing101-3-TCPdump/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p><a target="_blank" rel="noopener" href="https://github.com/antonio-morales/Fuzzing101/tree/main/Exercise%203">https://github.com/antonio-morales/Fuzzing101/tree/main/Exercise%203</a></p>
+<blockquote>
+<p>In this exercise we will fuzz <strong>TCPdump</strong> packet analyzer. The goal is to find a crash&#x2F;PoC for <a target="_blank" rel="noopener" href="https://www.cvedetails.com/cve/CVE-2017-13028/"><strong>CVE-2017-13028</strong></a> in TCPdump 4.9.2.</p>
+<p>CVE-2017-13028: <a target="_blank" rel="noopener" href="https://cwe.mitre.org/data/definitions/125.html">https://cwe.mitre.org/data/definitions/125.html</a></p>
+</blockquote>
+<p>学习目标</p>
+<ul>
+<li><p>What is ASan(Address Sanitizer), a runtime memory error detection tool</p>
+</li>
+<li><p>How to use ASAN to fuzz a target</p>
+</li>
+<li><p>How much easy is to triage the creashes using ASan</p>
+</li>
+</ul>
+<span id="more"></span>
+
+<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"> $ neofetch --off</span><br><span class="line">w3b5h3ll@Fuzzing </span><br><span class="line">---------------- </span><br><span class="line">OS: Ubuntu 22.04.3 LTS x86_64 </span><br><span class="line">Host: VMware Virtual Platform None </span><br><span class="line">Kernel: 6.5.0-21-generic </span><br><span class="line">Uptime: 2 hours, 40 mins </span><br><span class="line">Packages: 2045 (dpkg), 11 (snap) </span><br><span class="line">Shell: bash 5.1.16 </span><br><span class="line">Resolution: 2159x1226 </span><br><span class="line">DE: GNOME 42.9 </span><br><span class="line">WM: Mutter </span><br><span class="line">WM Theme: Adwaita </span><br><span class="line">Theme: Yaru [GTK2/3] </span><br><span class="line">Icons: Yaru [GTK2/3] </span><br><span class="line">Terminal: x-terminal-emul </span><br><span class="line">CPU: AMD Ryzen 5 5600X (4) @ 3.693GHz </span><br><span class="line">GPU: 00:0f.0 VMware SVGA II Adapter </span><br><span class="line">Memory: 1401MiB / 5880MiB </span><br></pre></td></tr></table></figure>
+
+<p>AFL++（注意使用llvm-15以及clang-15）: <a target="_blank" rel="noopener" href="https://github.com/AFLplusplus/AFLplusplus/blob/stable/docs/INSTALL.md">https://github.com/AFLplusplus/AFLplusplus/blob/stable/docs/INSTALL.md</a></p>
+<ul>
+<li>如无需<code>FRIDA mode|QEMU mode|unicorn mode|...</code>，直接<code>make all</code>即可</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt install python3-pip</span><br><span class="line"><span class="comment"># llvm mode</span></span><br><span class="line">sudo <span class="built_in">ln</span> -s /usr/bin/clang|clang++|llvm-config-15 /usr/bin/clang|clang++/llvm-config</span><br><span class="line"><span class="built_in">ulimit</span> -c unlimited</span><br><span class="line">sudo su</span><br><span class="line"><span class="built_in">echo</span> core &gt;/proc/sys/kernel/core_pattern</span><br><span class="line"><span class="built_in">exit</span></span><br><span class="line"></span><br><span class="line">779  2024-03-15 11:13:39 <span class="built_in">export</span> LLVM_CONFIG=<span class="string">&quot;llvm-config&quot;</span></span><br><span class="line">780  2024-03-15 11:13:56 <span class="built_in">cd</span> libpcap-1.8.0/</span><br><span class="line">781  2024-03-15 11:14:50 CC=afl-clang-lto ./configure --enable-shared=no --prefix=<span class="string">&quot;/home/w3b5h3ll/Desktop/Fuzzing101/Exercise\ 3/fuzzing_tcpdump/install/&quot;</span></span><br><span class="line">782  2024-03-15 11:15:21 <span class="built_in">export</span> AFL_USE_ASAN=1</span><br><span class="line">783  2024-03-15 11:15:23 make</span><br><span class="line">784  2024-03-15 11:15:33 <span class="built_in">cd</span> ../tcpdump-tcpdump-4.9.2/</span><br><span class="line">785  2024-03-15 11:15:48 CC=afl-clang-lto ./configure --prefix=<span class="string">&quot;/home/w3b5h3ll/Desktop/Fuzzing101/Exercise\ 3/fuzzing_tcpdump/install/&quot;</span></span><br><span class="line">786  2024-03-15 11:16:40 make</span><br><span class="line">787  2024-03-15 11:17:54 make install</span><br></pre></td></tr></table></figure>
+
+<h3 id="WSL性能加速"><a href="#WSL性能加速" class="headerlink" title="WSL性能加速"></a>WSL性能加速</h3><p>为了更快的性能，于WSL2.0重现了一套环境，如下</p>
+<p><img src="/2024/03/15/Fuzzing101-3-TCPdump/2024-03-30-18-25-43-image.png"></p>
+<h2 id="fuzz"><a href="#fuzz" class="headerlink" title="fuzz"></a>fuzz</h2><p>语料库精简</p>
+<p><code>afl-cmin</code>，删除达到同样路径的冗余文件</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">afl-cmin -i tcpdump-tcpdump-4.9.2/tests/ -o cmin_in/ -- ./install/sbin/tcpdump -vvvvXX -ee -nn -r @@</span><br></pre></td></tr></table></figure>
+
+<p><code>afl-tmin</code>默认只能单次执行一个输入，使用脚本循环进行处理</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">  805  2024-03-15 12:51:53 <span class="built_in">export</span> AFL_DEBUG=1</span><br><span class="line">  806  2024-03-15 12:52:23 <span class="built_in">export</span> AFL_MAP_SIZE=10000000</span><br><span class="line"></span><br><span class="line"><span class="comment"># 检查cmin_in目录是否存在</span></span><br><span class="line"><span class="keyword">if</span> [ ! -d <span class="string">&quot;cmin_in&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;Error: cmin_in directory not found.&quot;</span></span><br><span class="line">  <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 遍历cmin_in目录下的所有文件</span></span><br><span class="line"><span class="keyword">for</span> file <span class="keyword">in</span> cmin_in/*; <span class="keyword">do</span></span><br><span class="line">  <span class="comment"># 检查文件是否是普通文件</span></span><br><span class="line">  <span class="keyword">if</span> [ -f <span class="string">&quot;<span class="variable">$file</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">    <span class="comment"># 使用afl-tmin命令对文件进行处理，并输出到tmin_in目录下</span></span><br><span class="line">    output_file=<span class="string">&quot;tmin_in/<span class="subst">$(basename <span class="string">&quot;<span class="variable">$file</span>&quot;</span>)</span>&quot;</span></span><br><span class="line">    afl-tmin -i <span class="string">&quot;<span class="variable">$file</span>&quot;</span> -o <span class="string">&quot;<span class="variable">$output_file</span>&quot;</span> -- ./install/sbin/tcpdump -vvvvXX -ee -nn -r @@</span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;Processed file: <span class="variable">$file</span>&quot;</span></span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;Skipping non-regular file: <span class="variable">$file</span>&quot;</span></span><br><span class="line">  <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;All files processed.&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>afl-system-config</code>: 获得最佳fuzz性能</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"> $ sudo afl-system-config </span><br><span class="line">[sudo] password <span class="keyword">for</span> w3b5h3ll: </span><br><span class="line">This reconfigures the system to have a better fuzzing performance.</span><br><span class="line">WARNING: this reduces the security of the system!</span><br><span class="line"></span><br><span class="line">Settings applied.</span><br><span class="line"></span><br><span class="line">It is recommended to boot the kernel with lots of security off - <span class="keyword">if</span> you are running a machine that is <span class="keyword">in</span> a secured network - so <span class="built_in">set</span> this:</span><br><span class="line">  /etc/default/grub:GRUB_CMDLINE_LINUX_DEFAULT=<span class="string">&quot;ibpb=off ibrs=off kpti=0 l1tf=off mds=off mitigations=off no_stf_barrier noibpb noibrs pcid nopti nospec_store_bypass_disable nospectre_v1 nospectre_v2 pcid=on pti=off spec_store_bypass_disable=off spectre_v2=off stf_barrier=off srbds=off noexec=off noexec32=off tsx=on tsx_async_abort=off arm64.nopauth audit=0 hardened_usercopy=off ssbd=force-off&quot;</span></span><br><span class="line"></span><br><span class="line">If you run fuzzing instances <span class="keyword">in</span> docker, run them with <span class="string">&quot;--security-opt seccomp=unconfined&quot;</span> <span class="keyword">for</span> more speed.</span><br></pre></td></tr></table></figure>
+
+<p>使用<code>-M|-S</code>指定多线程操作</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">afl-fuzz -m none -i ./cmin_in/ -o out/ -M master -s 32 -- ./install/sbin/tcpdump -vvvvXX -ee -nn -r @@</span><br><span class="line">afl-fuzz -m none -i ./cmin_in/ -o out/ -S slave1 -s 32 -- ./install/sbin/tcpdump -vvvvXX -ee -nn -r @@</span><br><span class="line">afl-fuzz -m none -i ./cmin_in/ -o out/ -S slave2 -s 32 -- ./install/sbin/tcpdump -vvvvXX -ee -nn -r @@</span><br></pre></td></tr></table></figure>
+
+<p>此时，均只启用了<code>havoc</code>模式</p>
+<h3 id="Keep-your-test-case-small-Why"><a href="#Keep-your-test-case-small-Why" class="headerlink" title="Keep your test case small, Why?"></a>Keep your test case small, Why?</h3><p>在执行过程中，提示我们的某些case太大，有168KB</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[!] WARNING: Some <span class="built_in">test</span> cases are huge (168 kB) - see /usr/local/share/doc/afl/fuzzing_in_depth.md<span class="comment">#i-improve-the-speed</span></span><br><span class="line">[!] WARNING: You probably have far too many input files! Consider trimming down.</span><br></pre></td></tr></table></figure>
+
+<p>AFL的性能提升建议将此条作为了<strong>最重要的第一步</strong>，减小用例大小十分必要。其假设了一个场景:</p>
+<p>如果翻转第47bit位置会导致bug，那么对于一个100字节大小的case，执行1000次发现此bug的概率，计算如下</p>
+<p>$$<br>1-(1-\frac{1}{8*100})^{1000}\approx71%<br>$$</p>
+<ul>
+<li><p>随着case的size增大，发现bug需要执行的次数会显著增加</p>
+</li>
+<li><p>运行时的内存，执行开销也会显著增大</p>
+</li>
+</ul>
+<p>此时，我们需要使用<code>afl-cmin</code>以及<code>afl-tmin</code>工具精简语料，并设置较好的超时时间<code>-t</code>（默认1000ms），限制其每次执行的时间。</p>
+<hr>
+<p>大约进行2h，<code>slave2</code>出现了crash</p>
+<h3 id="WSL执行"><a href="#WSL执行" class="headerlink" title="WSL执行"></a>WSL执行</h3><p>在剔除大于1kb文件后，执行了1h左右出现了crash，5h后很长一段时间没有新crash，此时我停止了afl</p>
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>查看<code>tcpudump4.9.2</code>所有CVE信息：</p>
+<p><a target="_blank" rel="noopener" href="https://www.cvedetails.com/vulnerability-list/vendor_id-6197/product_id-10494/version_id-575909/Tcpdump-Tcpdump-4.9.2.html?page=1&order=1&trc=29&sha=cc09d17caee42a5be7a0ceabc20e3190ae7d6667">https://www.cvedetails.com/vulnerability-list/vendor_id-6197/product_id-10494/version_id-575909/Tcpdump-Tcpdump-4.9.2.html?page=1&amp;order=1&amp;trc=29&amp;sha=cc09d17caee42a5be7a0ceabc20e3190ae7d6667</a></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://afl-1.readthedocs.io/en/latest/tips.html#performance-tips">Tips &#8212; AFL 2.53b documentation</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>w3b5h3ll
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://example.com/2024/03/15/Fuzzing101-3-TCPdump/" title="Fuzzing101-3: TCPdump">http://example.com/2024/03/15/Fuzzing101-3-TCPdump/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Fuzzing/" rel="tag"># Fuzzing</a>
+              <a href="/tags/AFL/" rel="tag"># AFL++</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/" rel="prev" title="R2S软路由搭建指南">
+                  <i class="fa fa-chevron-left"></i> R2S软路由搭建指南
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+  
+  
+  
+
+
+
+      
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      
+
+      
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">w3b5h3ll</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8.7.0/dist/mermaid.min.js', () => {
+    mermaid.init({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    }, '.mermaid');
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+  
+      <script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              const target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    const script = document.createElement('script');
+    script.src = '//cdn.jsdelivr.net/npm/mathjax@3.1.0/es5/tex-mml-chtml.js';
+    script.defer = true;
+    document.head.appendChild(script);
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.typesetClear();
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+<script>
+NexT.utils.loadComments('#valine-comments', () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', () => {
+    new Valine(Object.assign({
+      el  : '#valine-comments',
+      path: "/2024/03/15/Fuzzing101-3-TCPdump/",
+    }, {"enable":true,"appId":"htEoF16VKxb4kS3oG0LReLBz-MdYXbMMI","appKey":"P7rwEt21RTK0B11XxuTwjss2","serverURLs":"https://hteof16v.api.lncldglobal.com","placeholder":"Just go go","avatar":"mm","meta":["nick","mail","link"],"pageSize":10,"visitor":true,"comment_count":true,"recordIP":false}
+    ));
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

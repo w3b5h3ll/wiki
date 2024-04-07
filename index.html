@@ -12,7 +12,7 @@
 
 <link rel="stylesheet" href="/css/main.css">
 
-<link rel="stylesheet" href="https://www.uncon.net/MesloLGSNF-web-fonts/stylesheet.css/css?family=Arial:300,300italic,400,400italic,700,700italic|'Noto+Sans+SC':300,300italic,400,400italic,700,700italic|sans-serif:300,300italic,400,400italic,700,700italic|MesloLGS+NF:300,300italic,400,400italic,700,700italic|monospace:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,300italic,400,400italic,700,700italic|sans-serif:300,300italic,400,400italic,700,700italic|'Noto+Sans+SC':300,300italic,400,400italic,700,700italic|Fira+Code:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
 
 <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14.0/css/all.min.css">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
@@ -216,14 +216,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-count">12</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">11</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -259,7 +259,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2024/02/21/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/03/15/Fuzzing101-3-TCPdump/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -276,7 +276,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2024/02/21/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/" class="post-title-link" itemprop="url">R2S软路由搭建指南</a>
+            <a href="/2024/03/15/Fuzzing101-3-TCPdump/" class="post-title-link" itemprop="url">Fuzzing101-3: TCPdump</a>
         </h2>
 
         <div class="post-meta-container">
@@ -286,13 +286,19 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2024-02-21 20:49:02 / 修改时间：21:41:52" itemprop="dateCreated datePublished" datetime="2024-02-21T20:49:02+08:00">2024-02-21</time>
+      <time title="创建时间：2024-03-15 13:00:17" itemprop="dateCreated datePublished" datetime="2024-03-15T13:00:17+08:00">2024-03-15</time>
     </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2024-04-07 11:15:23" itemprop="dateModified" datetime="2024-04-07T11:15:23+08:00">2024-04-07</time>
+      </span>
 
   
-    <span id="/2024/02/21/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/" class="post-meta-item leancloud_visitors" data-flag-title="R2S软路由搭建指南" title="阅读次数">
+    <span id="/2024/03/15/Fuzzing101-3-TCPdump/" class="post-meta-item leancloud_visitors" data-flag-title="Fuzzing101-3: TCPdump" title="阅读次数">
       <span class="post-meta-item-icon">
         <i class="far fa-eye"></i>
       </span>
@@ -307,8 +313,119 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2024/02/21/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2024/02/21/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/" itemprop="commentCount"></span>
+    <a title="valine" href="/2024/03/15/Fuzzing101-3-TCPdump/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2024/03/15/Fuzzing101-3-TCPdump/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p><a target="_blank" rel="noopener" href="https://github.com/antonio-morales/Fuzzing101/tree/main/Exercise%203">https://github.com/antonio-morales/Fuzzing101/tree/main/Exercise%203</a></p>
+<blockquote>
+<p>In this exercise we will fuzz <strong>TCPdump</strong> packet analyzer. The goal is to find a crash&#x2F;PoC for <a target="_blank" rel="noopener" href="https://www.cvedetails.com/cve/CVE-2017-13028/"><strong>CVE-2017-13028</strong></a> in TCPdump 4.9.2.</p>
+<p>CVE-2017-13028: <a target="_blank" rel="noopener" href="https://cwe.mitre.org/data/definitions/125.html">https://cwe.mitre.org/data/definitions/125.html</a></p>
+</blockquote>
+<p>学习目标</p>
+<ul>
+<li><p>What is ASan(Address Sanitizer), a runtime memory error detection tool</p>
+</li>
+<li><p>How to use ASAN to fuzz a target</p>
+</li>
+<li><p>How much easy is to triage the creashes using ASan</p>
+</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2024/03/15/Fuzzing101-3-TCPdump/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="w3b5h3ll">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="尘埃落定的空间站">
+    </span>
+
+    
+    
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/" class="post-title-link" itemprop="url">R2S软路由搭建指南</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-03-05 14:17:25" itemprop="dateCreated datePublished" datetime="2024-03-05T14:17:25+08:00">2024-03-05</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2024-02-21 21:41:52" itemprop="dateModified" datetime="2024-02-21T21:41:52+08:00">2024-02-21</time>
+      </span>
+
+  
+    <span id="/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/" class="post-meta-item leancloud_visitors" data-flag-title="R2S软路由搭建指南" title="阅读次数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span class="leancloud-visitors-count"></span>
+    </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -328,29 +445,29 @@
 </blockquote>
 <h2 id="设备"><a href="#设备" class="headerlink" title="设备"></a>设备</h2><p>Nanopi R2S</p>
 <p>最低价可以买裸板，TF卡自己单买的，5v3a&#x2F;2a电源使用之前的旧设备。读卡器已有</p>
-<p><img src="/2024/02/21/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-06-06-image.png"></p>
+<p><img src="/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-06-06-image.png"></p>
 <p>64GTF卡</p>
-<p><img src="/2024/02/21/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-10-18-image.png"></p>
+<p><img src="/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-10-18-image.png"></p>
 <h2 id="刷机"><a href="#刷机" class="headerlink" title="刷机"></a>刷机</h2><p>使用<code>FriendlyWrt</code>系统，镜像下载：</p>
 <p><a target="_blank" rel="noopener" href="https://drive.google.com/drive/folders/1W-2MLML9lkD2xAVjiwzEBNiUlPF5BgU9">01_SD card images - Google 云端硬盘</a></p>
 <ul>
 <li>rk3328-sd-friendlywrt-23.05-20231223.img.gz</li>
 </ul>
 <p><code>balenaEtcher</code>烧录至TF卡</p>
-<p><img src="/2024/02/21/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-15-56-image.png"></p>
+<p><img src="/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-15-56-image.png"></p>
 <h3 id="网络拓扑"><a href="#网络拓扑" class="headerlink" title="网络拓扑"></a>网络拓扑</h3><p>网络结构比较简单，如下<br>光猫&lt;——–&gt;(WAN)R2S(LAN)&lt;——–&gt;(WAN)小米路由器</p>
 <p>等待开机后，访问<code>192.168.2.1</code>。使用<code>root/passowrd</code>即可进入FriendlyWrt的管理后台</p>
-<p><img src="/2024/02/21/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-35-01-image.png"></p>
+<p><img src="/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-35-01-image.png"></p>
 <h2 id="OpenClash配置"><a href="#OpenClash配置" class="headerlink" title="OpenClash配置"></a>OpenClash配置</h2><p>如<code>OpenClash</code>描述，需要安装客户端与内核模块</p>
 <p>客户端安装</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#安装依赖</span></span><br><span class="line">* luci</span><br><span class="line">* luci-base</span><br><span class="line">* iptables</span><br><span class="line">* dnsmasq-full</span><br><span class="line">* coreutils</span><br><span class="line">* coreutils-nohup</span><br><span class="line">* bash</span><br><span class="line">* curl</span><br><span class="line">* jsonfilter</span><br><span class="line">* ca-certificates</span><br><span class="line">* ipset</span><br><span class="line">* ip-full</span><br><span class="line">* iptables-mod-tproxy</span><br><span class="line">* kmod-tun(TUN模式)</span><br><span class="line">* luci-compat(Luci-19.07)</span><br><span class="line"></span><br><span class="line"><span class="comment">#上传IPK文件至您路由器的 /tmp 目录下</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#假设安装包名字为</span></span><br><span class="line">luci-app-openclash_0.33.7-beta_all.ipk</span><br><span class="line"></span><br><span class="line"><span class="comment">#执行安装命令</span></span><br><span class="line">opkg install /tmp/luci-app-openclash_0.33.7-beta_all.ipk</span><br><span class="line"></span><br><span class="line"><span class="comment">#执行卸载命令</span></span><br><span class="line"><span class="comment">#插件在卸载后会自动备份配置文件到 /tmp 目录下，除非路由器重启，在下次安装时将还原您的配置文件</span></span><br><span class="line">opkg remove luci-app-openclash</span><br><span class="line"></span><br><span class="line">安装完成后刷新LUCI页面，在菜单栏 -&gt; 服务 -&gt; OpenClash 进入插件页面</span><br></pre></td></tr></table></figure>
 
 <p>内核</p>
 <p>进入<code>OpenClash</code>插件页面时，总是下载失败。可以增加代理来完成安装</p>
-<p><img src="/2024/02/21/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-40-11-image.png"></p>
+<p><img src="/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-40-11-image.png"></p>
 <p>启动</p>
 <p>最后，上传配置文件，并启动即可。最终效果如下</p>
-<p><img src="/2024/02/21/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-41-41-image.png"></p>
+<p><img src="/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-41-41-image.png"></p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://wiki.friendlyelec.com/wiki/index.php/NanoPi_R2S/zh">https://wiki.friendlyelec.com/wiki/index.php/NanoPi_R2S/zh</a></p>
 <p><a target="_blank" rel="noopener" href="https://wiki.mbalib.com/wiki/%E8%BD%AF%E8%B7%AF%E7%94%B1">软路由 - MBA智库百科</a></p>
 <p><a target="_blank" rel="noopener" href="https://github.com/vernesong/OpenClash/releases">Releases · vernesong&#x2F;OpenClash · GitHub</a></p>
@@ -375,7 +492,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2024/01/16/%E4%BD%BF%E7%94%A8GDB%E5%AF%B9%E7%A8%8B%E5%BA%8F%E6%89%A7%E8%A1%8C%E8%BF%9B%E8%A1%8Ctrace/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/03/05/Android%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E6%A1%88%E4%BE%8B0x01/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -392,102 +509,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2024/01/16/%E4%BD%BF%E7%94%A8GDB%E5%AF%B9%E7%A8%8B%E5%BA%8F%E6%89%A7%E8%A1%8C%E8%BF%9B%E8%A1%8Ctrace/" class="post-title-link" itemprop="url">使用GDB对程序执行进行trace</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2024-01-16 12:03:26 / 修改时间：12:33:18" itemprop="dateCreated datePublished" datetime="2024-01-16T12:03:26+08:00">2024-01-16</time>
-    </span>
-
-  
-    <span id="/2024/01/16/%E4%BD%BF%E7%94%A8GDB%E5%AF%B9%E7%A8%8B%E5%BA%8F%E6%89%A7%E8%A1%8C%E8%BF%9B%E8%A1%8Ctrace/" class="post-meta-item leancloud_visitors" data-flag-title="使用GDB对程序执行进行trace" title="阅读次数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-eye"></i>
-      </span>
-      <span class="post-meta-item-text">阅读次数：</span>
-      <span class="leancloud-visitors-count"></span>
-    </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2024/01/16/%E4%BD%BF%E7%94%A8GDB%E5%AF%B9%E7%A8%8B%E5%BA%8F%E6%89%A7%E8%A1%8C%E8%BF%9B%E8%A1%8Ctrace/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2024/01/16/%E4%BD%BF%E7%94%A8GDB%E5%AF%B9%E7%A8%8B%E5%BA%8F%E6%89%A7%E8%A1%8C%E8%BF%9B%E8%A1%8Ctrace/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>静态反汇编与动态反汇编存在一个精度与广度的区别。一般来说静态反汇编可以得到更多的覆盖率，而动态反汇编则可以得到更精确的执行路径。尝试以一个类<code>gdbinit</code>的GDB启动交互过程，对可执行程序进行trace，用于同<code>IDA Pro</code>等专业反编译&#x2F;反汇编工具进行比较，更好的对程序进行分析。</p>
-<h2 id="Trace"><a href="#Trace" class="headerlink" title="Trace"></a>Trace</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">info files</span><br><span class="line"><span class="comment"># 断点在_start</span></span><br><span class="line">b _start</span><br><span class="line"><span class="built_in">set</span> pagination off</span><br><span class="line"><span class="built_in">set</span> disassembly-flavor intel</span><br><span class="line"><span class="comment"># 开启日志</span></span><br><span class="line"><span class="built_in">set</span> logging on</span><br><span class="line"><span class="built_in">set</span> logging redirect on</span><br><span class="line">r</span><br><span class="line"><span class="comment"># 每一条指令进行print</span></span><br><span class="line">display/i <span class="variable">$pc</span></span><br><span class="line"><span class="keyword">while</span> 1</span><br><span class="line">si</span><br><span class="line">end</span><br></pre></td></tr></table></figure>
-
-<p>输出很多</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ <span class="built_in">wc</span> -l gdb.txt </span><br><span class="line">459667 gdb.txt</span><br></pre></td></tr></table></figure>
-
-<p>过滤指令</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">egrep <span class="string">&#x27;^=&gt; 0x[0-9a-f]+:&#x27;</span> gdb.txt &gt; test.txt</span><br></pre></td></tr></table></figure>
-
-<p>此时，就可以获取到程序实际执行的指令</p>
-<p><img src="/2024/01/16/%E4%BD%BF%E7%94%A8GDB%E5%AF%B9%E7%A8%8B%E5%BA%8F%E6%89%A7%E8%A1%8C%E8%BF%9B%E8%A1%8Ctrace/2024-01-16-12-33-15-image.png"></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/11/25/Android%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E6%A1%88%E4%BE%8B0x01/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="w3b5h3ll">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="尘埃落定的空间站">
-    </span>
-
-    
-    
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/11/25/Android%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E6%A1%88%E4%BE%8B0x01/" class="post-title-link" itemprop="url">Android应用安全分析案例0x01</a>
+            <a href="/2024/03/05/Android%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E6%A1%88%E4%BE%8B0x01/" class="post-title-link" itemprop="url">Android应用安全分析案例0x01</a>
         </h2>
 
         <div class="post-meta-container">
@@ -498,7 +520,7 @@
       </span>
       <span class="post-meta-item-text">发表于</span>
 
-      <time title="创建时间：2023-11-25 16:07:57" itemprop="dateCreated datePublished" datetime="2023-11-25T16:07:57+08:00">2023-11-25</time>
+      <time title="创建时间：2024-03-05 14:17:25" itemprop="dateCreated datePublished" datetime="2024-03-05T14:17:25+08:00">2024-03-05</time>
     </span>
       <span class="post-meta-item">
         <span class="post-meta-item-icon">
@@ -509,7 +531,7 @@
       </span>
 
   
-    <span id="/2023/11/25/Android%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E6%A1%88%E4%BE%8B0x01/" class="post-meta-item leancloud_visitors" data-flag-title="Android应用安全分析案例0x01" title="阅读次数">
+    <span id="/2024/03/05/Android%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E6%A1%88%E4%BE%8B0x01/" class="post-meta-item leancloud_visitors" data-flag-title="Android应用安全分析案例0x01" title="阅读次数">
       <span class="post-meta-item-icon">
         <i class="far fa-eye"></i>
       </span>
@@ -524,8 +546,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2023/11/25/Android%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E6%A1%88%E4%BE%8B0x01/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2023/11/25/Android%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E6%A1%88%E4%BE%8B0x01/" itemprop="commentCount"></span>
+    <a title="valine" href="/2024/03/05/Android%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E6%A1%88%E4%BE%8B0x01/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2024/03/05/Android%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E6%A1%88%E4%BE%8B0x01/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -549,24 +571,24 @@
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">  ~/D/D/1.ab_dir  java -jar ../abe.jar unpack 1.ab 1.tar                                        (base)</span><br><span class="line">0% 1% 2% 3% 4% 5% 6% 7% 8% 9% 10% 11% 12% 13% 14% 15% 16% 17% 18% 19% 20% 21% 22% 23% 24% 25% 26% 27% 28% 29% 30% 31% 32% 33% 34% 35% 36% 37% 38% 39% 40% 41% 42% 43% 44% 45% 46% 47% 48% 49% 50% 51% 52% 53% 54% 55% 56% 57% 58% 59% 60% 61% 62% 63% 64% 65% 66% 67% 68% 69% 70% 71% 72% 73% 74% 75% 76% 77% 78% 79% 80% 81% 82% 83% 84% 85% 86% 87% 88% 89% 90% 91% 92% 93% 94% 95% 96% 97% 98% 99% 100%</span><br><span class="line">9097216 bytes written to 1.tar.</span><br><span class="line"></span><br><span class="line"><span class="comment"># 解压tar</span></span><br><span class="line">~/D/D/1.ab_dir  tar xvf 1.tar                                                                 (base)</span><br><span class="line">x apps/com.example.yaphetshan.tencentwelcome/a/base.apk</span><br><span class="line">x apps/com.example.yaphetshan.tencentwelcome/db/Demo.db</span><br><span class="line">x apps/com.example.yaphetshan.tencentwelcome/Encryto.db</span><br><span class="line">x apps/com.example.yaphetshan.tencentwelcome/_manifest </span><br><span class="line">    ~/D/D/1/a/com.example.yaphetshan.tencentwelcome  tree -NCfhl                                  (base)</span><br><span class="line">[ 192]  .</span><br><span class="line">├── [3.0K]  ./Encryto.db</span><br><span class="line">├── [1013]  ./_manifest</span><br><span class="line">├── [  96]  ./a</span><br><span class="line">│   └── [8.7M]  ./a/base.apk</span><br><span class="line">└── [  96]  ./db</span><br><span class="line">    └── [3.0K]  ./db/Demo.db</span><br><span class="line"></span><br><span class="line">3 directories, 4 files</span><br></pre></td></tr></table></figure>
 
 <p>使用<code>逍遥模拟器</code>中的低版本系统，安装base.apk。<font color="red">失败</font>，创建Androidstudio模拟器继续</p>
-<p><img src="/2023/11/25/Android%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E6%A1%88%E4%BE%8B0x01/2023-11-25-17-02-42-image.png"></p>
+<p><img src="/2024/03/05/Android%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E6%A1%88%E4%BE%8B0x01/2023-11-25-17-02-42-image.png"></p>
 <p>无加固</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">  ~/D/D/1/a/c/a  apkid base.apk                                                                 (base)</span><br><span class="line">[+] APKiD 2.1.5 :: from RedNaga :: rednaga.io</span><br><span class="line">[*] base.apk!classes.dex</span><br><span class="line"> |-&gt; compiler : dx</span><br></pre></td></tr></table></figure>
 
 <p><code>Jadx</code>静态分析</p>
 <p>可以发现登陆流程与数据库的生成过程是隔离的</p>
-<p><img src="/2023/11/25/Android%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E6%A1%88%E4%BE%8B0x01/2023-11-26-00-23-45-image.png"></p>
+<p><img src="/2024/03/05/Android%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E6%A1%88%E4%BE%8B0x01/2023-11-26-00-23-45-image.png"></p>
 <p>向表<code>TencentMicrMsg</code>中插入数据</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># objection</span></span><br><span class="line">  ~/D/Doing  frida-ps -U|grep tencent                (Python3.8)</span><br><span class="line">3551  com.example.yaphetshan.tencentwelcome</span><br><span class="line"><span class="comment"># objection explore by usb</span></span><br><span class="line">objection -g com.example.yaphetshan.tencentwelcome explore</span><br><span class="line"><span class="comment"># objection工作原理，存在进程直接attaching，没有那么进行spawned -d参数</span></span><br><span class="line">[debug] Attempting to attach to process: `com.example.yaphetshan.tencentwelcome`</span><br><span class="line">[debug] Unable to find process: `com.example.yaphetshan.tencentwelcome`, attempting spawn</span><br><span class="line">[debug] PID `4705` spawned, attaching...</span><br><span class="line">[debug] Resuming PID `4705`</span><br><span class="line"><span class="comment"># Wallbreaker进行内存dump</span></span><br></pre></td></tr></table></figure>
 
-<p><img src="/2023/11/25/Android%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E6%A1%88%E4%BE%8B0x01/2023-11-26-14-28-34-image.png"></p>
+<p><img src="/2024/03/05/Android%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E6%A1%88%E4%BE%8B0x01/2023-11-26-14-28-34-image.png"></p>
 <p>函数调用</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">onCreate() &gt;&gt; a()</span><br><span class="line">class: aVar: com.example.yaphetshan.tencentwelcome.a.a()</span><br><span class="line">    &gt;&gt; aVar.a()</span><br><span class="line">    &gt;&gt; aVar.b()</span><br></pre></td></tr></table></figure>
 
 <p>通过后续的了解，使用SQLiteCipher时，hook该函数<code>getWritableDatabase</code>获取其参数，<strong>主动调用</strong>即可拿到加密密码</p>
-<p><img src="/2023/11/25/Android%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E6%A1%88%E4%BE%8B0x01/2023-12-09-17-51-06-image.png"></p>
+<p><img src="/2024/03/05/Android%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E6%A1%88%E4%BE%8B0x01/2023-12-09-17-51-06-image.png"></p>
 <p>使用<code>ae56f99</code>打开即可</p>
-<p><img src="/2023/11/25/Android%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E6%A1%88%E4%BE%8B0x01/2023-12-09-17-54-00-image.png"></p>
+<p><img src="/2024/03/05/Android%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E6%A1%88%E4%BE%8B0x01/2023-12-09-17-54-00-image.png"></p>
 <p>Tctf{H3ll0_Do_Y0u_Lov3_Tenc3nt!}</p>
 <h2 id="SQLite与SQLCipher食用"><a href="#SQLite与SQLCipher食用" class="headerlink" title="SQLite与SQLCipher食用"></a>SQLite与SQLCipher食用</h2><p>基本的用法很简单，创建SQL语句创建数据库即可</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">createBook</span> <span class="operator">=</span> <span class="string">&quot;create table Book(&quot;</span> + <span class="string">&quot;id integer primary key autoincrement,&quot;</span> + <span class="string">&quot;author text,&quot;</span> + <span class="string">&quot;price real,&quot;</span> + <span class="string">&quot;pages integer,&quot;</span> + <span class="string">&quot;name text)&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> Context mContext;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="title function_">MyDatabaseHelper</span><span class="params">(<span class="meta">@Nullable</span> Context context, <span class="meta">@Nullable</span> String name, <span class="meta">@Nullable</span> SQLiteDatabase.CursorFactory factory, <span class="type">int</span> version)</span> &#123;</span><br><span class="line">    <span class="built_in">super</span>(context, name, factory, version);</span><br><span class="line">    mContext = context;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onCreate</span><span class="params">(SQLiteDatabase sqLiteDatabase)</span> &#123;</span><br><span class="line">    sqLiteDatabase.execSQL(createBook);</span><br><span class="line">    Toast.makeText(mContext, <span class="string">&quot;Create succeeded&quot;</span>, Toast.LENGTH_SHORT).show();</span><br><span class="line"></span><br><span class="line"><span class="comment">// MainActivity调用</span></span><br><span class="line">    <span class="type">MyDatabaseHelper</span> <span class="variable">dbHelper</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MyDatabaseHelper</span>(<span class="built_in">this</span>, <span class="string">&quot;BookStore.db&quot;</span>, <span class="literal">null</span>, <span class="number">1</span>);</span><br><span class="line">    createDatabase.setOnClickListener(view -&gt; dbHelper.getWritableDatabase());</span><br></pre></td></tr></table></figure>
@@ -579,7 +601,7 @@
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">public SQLiteDatabase <span class="function"><span class="title">getWritableDatabase</span></span>() &#123;</span><br><span class="line">    SQLiteDatabase db = super.getWritableDatabase(KEY);</span><br><span class="line">    <span class="built_in">return</span> db;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public SQLiteDatabase <span class="function"><span class="title">getReadableDatabase</span></span>() &#123;</span><br><span class="line">    SQLiteDatabase db = super.getReadableDatabase(KEY);</span><br><span class="line">    <span class="built_in">return</span> db;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>使用<code>DB Browser for SQLite</code>查看</p>
-<p><img src="/2023/11/25/Android%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E6%A1%88%E4%BE%8B0x01/2023-12-08-14-47-03-image.png"></p>
+<p><img src="/2024/03/05/Android%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E6%A1%88%E4%BE%8B0x01/2023-12-08-14-47-03-image.png"></p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>SQLCiphe，SQLite加密扩展</p>
 <p><a target="_blank" rel="noopener" href="https://www.zetetic.net/sqlcipher/">SQLCipher - Zetetic</a></p>
 <p>第一行代码Android第三版</p>
@@ -605,7 +627,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/11/14/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/03/05/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -622,7 +644,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/11/14/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" class="post-title-link" itemprop="url">USB接口安全测试</a>
+            <a href="/2024/03/05/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" class="post-title-link" itemprop="url">USB接口安全测试</a>
         </h2>
 
         <div class="post-meta-container">
@@ -633,18 +655,18 @@
       </span>
       <span class="post-meta-item-text">发表于</span>
 
-      <time title="创建时间：2023-11-14 10:17:05" itemprop="dateCreated datePublished" datetime="2023-11-14T10:17:05+08:00">2023-11-14</time>
+      <time title="创建时间：2024-03-05 14:17:25" itemprop="dateCreated datePublished" datetime="2024-03-05T14:17:25+08:00">2024-03-05</time>
     </span>
       <span class="post-meta-item">
         <span class="post-meta-item-icon">
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2024-01-11 01:22:04" itemprop="dateModified" datetime="2024-01-11T01:22:04+08:00">2024-01-11</time>
+        <time title="修改时间：2024-03-30 18:16:52" itemprop="dateModified" datetime="2024-03-30T18:16:52+08:00">2024-03-30</time>
       </span>
 
   
-    <span id="/2023/11/14/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" class="post-meta-item leancloud_visitors" data-flag-title="USB接口安全测试" title="阅读次数">
+    <span id="/2024/03/05/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" class="post-meta-item leancloud_visitors" data-flag-title="USB接口安全测试" title="阅读次数">
       <span class="post-meta-item-icon">
         <i class="far fa-eye"></i>
       </span>
@@ -659,8 +681,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2023/11/14/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2023/11/14/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" itemprop="commentCount"></span>
+    <a title="valine" href="/2024/03/05/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2024/03/05/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -744,8 +766,8 @@
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">picocom -b 115200 /dev/tty.usbmodemch0000011</span><br><span class="line">root:hak5bunny</span><br></pre></td></tr></table></figure>
 
 <p>同时其作为存储设备，如下目录</p>
-<p><img src="/2023/11/14/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/2023-11-09-16-05-30-image.png"></p>
-<h2 id="攻击面分析"><a href="#攻击面分析" class="headerlink" title="攻击面分析"></a>攻击面分析</h2><p><img src="/2023/11/14/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/2023-11-09-12-56-02-image.png"></p>
+<p><img src="/2024/03/05/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/2023-11-09-16-05-30-image.png"></p>
+<h2 id="攻击面分析"><a href="#攻击面分析" class="headerlink" title="攻击面分析"></a>攻击面分析</h2><p><img src="/2024/03/05/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/2023-11-09-12-56-02-image.png"></p>
 <h3 id="攻击负载媒介"><a href="#攻击负载媒介" class="headerlink" title="攻击负载媒介"></a>攻击负载媒介</h3><p>非常典型有震网病毒，通过U盘即突破了物理隔离，不做详细展开</p>
 <p><img src="https://s.secrss.com/anquanneican/702f33f11f8bf9226bb4185e124fefb3.jpg"></p>
 <h3 id="HID攻击"><a href="#HID攻击" class="headerlink" title="HID攻击"></a>HID攻击</h3><blockquote>
@@ -759,7 +781,7 @@
 </li>
 </ul>
 <p>常见USB HID开发平台</p>
-<p><img src="/2023/11/14/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/2023-11-09-13-17-25-image.png"></p>
+<p><img src="/2024/03/05/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/2023-11-09-13-17-25-image.png"></p>
 <p>想要实现<code>HID</code>攻击，设备需要支持<code>Keyboard</code>等人机交互接口类型。利用<code>Umap2</code>框架，可以对目标进行一个初步的USB安全评估（注：该工具需要使用<code>Python2.7</code>启动）</p>
 <ul>
 <li><a target="_blank" rel="noopener" href="https://github.com/nccgroup/umap2">GitHub - nccgroup&#x2F;umap2: Umap2 is the second revision of NCC Group’s python based USB host security assessment tool.</a></li>
@@ -787,7 +809,10 @@
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Title:         Nmapper for Bash Bunny</span></span><br><span class="line"><span class="comment"># Author:        Hak5Darren</span></span><br><span class="line"><span class="comment"># Version:       1.1</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Scans target with nmap using specified options</span></span><br><span class="line"><span class="comment"># Saves sequential logs to mass storage loot folder</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Red ...........Setup</span></span><br><span class="line"><span class="comment"># Red Blinking...Setup Failed. Target did not obtain IP address. Exit.</span></span><br><span class="line"><span class="comment"># Amber..........Scanning</span></span><br><span class="line"><span class="comment"># White..........Switching to Mass Storage (optional)</span></span><br><span class="line"><span class="comment"># Green..........Finished</span></span><br><span class="line"><span class="comment"># </span></span><br><span class="line"><span class="comment"># See nmap --help for options. Default &quot;-O --fuzzy&quot; profiles target OS.</span></span><br><span class="line">NMAP_OPTIONS=<span class="string">&quot;-O --fuzzy&quot;</span></span><br><span class="line">LOOTDIR=/root/udisk/loot/nmap</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">######## INITIALIZATION ########</span></span><br><span class="line">LED SETUP</span><br><span class="line"><span class="comment"># Use RNDIS for Windows. Mac/*nix use ECM_ETHERNET</span></span><br><span class="line">ATTACKMODE RNDIS_ETHERNET </span><br><span class="line"><span class="comment">#ATTACKMODE ECM_ETHERNET</span></span><br><span class="line">GET TARGET_IP</span><br><span class="line">GET TARGET_HOSTNAME</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">######## MAKE LOOT DIRECTORY ########</span></span><br><span class="line"><span class="comment"># Setup named logs in loot directory</span></span><br><span class="line"><span class="built_in">mkdir</span> -p <span class="variable">$LOOTDIR</span></span><br><span class="line">HOST=<span class="variable">$&#123;TARGET_HOSTNAME&#125;</span></span><br><span class="line"><span class="comment"># If hostname is blank set it to &quot;noname&quot;</span></span><br><span class="line">[[ -z <span class="string">&quot;<span class="variable">$HOST</span>&quot;</span> ]] &amp;&amp; HOST=<span class="string">&quot;noname&quot;</span></span><br><span class="line">COUNT=$(<span class="built_in">ls</span> -lad <span class="variable">$LOOTDIR</span>/<span class="variable">$HOST</span>*.<span class="built_in">log</span> | <span class="built_in">wc</span> -l)</span><br><span class="line">COUNT=$((COUNT+<span class="number">1</span>))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">######## ERROR IF NO TARGET IP ########</span></span><br><span class="line"><span class="keyword">if</span> [ -z <span class="string">&quot;<span class="variable">$&#123;TARGET_IP&#125;</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">    LED FAIL</span><br><span class="line">    <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">######## ATTACK ########</span></span><br><span class="line">LED ATTACK</span><br><span class="line">nmap <span class="variable">$NMAP_OPTIONS</span> <span class="variable">$TARGET_IP</span> &gt;&gt; <span class="variable">$LOOTDIR</span>/<span class="variable">$HOST</span>-<span class="variable">$COUNT</span>.<span class="built_in">log</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">######## CLEANUP ########</span></span><br><span class="line">LED CLEANUP</span><br><span class="line"><span class="built_in">sync</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">######## FINISH ########</span></span><br><span class="line">LED FINISH</span><br></pre></td></tr></table></figure>
 
 <p>扫描结果</p>
-<p><img src="/2023/11/14/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/2023-11-10-15-44-37-image.png"></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ <span class="built_in">pwd</span></span><br><span class="line">/Volumes/BashBunny/loot/nmap</span><br><span class="line">$ <span class="built_in">cat</span> LEHZ5202344-1.10g</span><br><span class="line">Starting Nmap 6.47 http://nmap.org at 2021-01-30 18:26 PST</span><br><span class="line">Nmap scan report <span class="keyword">for</span> 172.16.64.10</span><br><span class="line">Host is up (0.00051s latency).</span><br><span class="line">Not shown:994 filtered ports</span><br><span class="line">PORT</span><br><span class="line">STATE SERVICE</span><br><span class="line">80/tcp</span><br><span class="line">open</span><br><span class="line">http</span><br><span class="line">135/tcp</span><br><span class="line">open msrpc</span><br><span class="line">139/tcp</span><br><span class="line">open netbios-ssn</span><br><span class="line">445/tcp</span><br><span class="line">open microsoft-ds</span><br><span class="line">2701/tcp open</span><br><span class="line">sms-rcinfo</span><br><span class="line">6129/tcp open</span><br><span class="line">unknown</span><br><span class="line">MAC Address:00:11:22:33:44:55 (Cimsys)</span><br><span class="line">Warning:OSScan results may be unreliable because we could not find at least 1 open and 1 closed port</span><br><span class="line">Device <span class="built_in">type</span>:general purpose</span><br><span class="line">Running (JUST GUESSING):Microsoft Windows 2008 (85%)</span><br><span class="line">OS CPE:cpe:/o:microsoft:windows_server_2008:sp1 cpe:/o:microsoft:windows_server_2008:r2</span><br><span class="line">Aggressive os guesses:Microsoft Windows Server 2008 SP1 or Windows Server 2008 R2 (85%)</span><br><span class="line">No exact os matches <span class="keyword">for</span> host (<span class="built_in">test</span> conditions non-ideal).</span><br><span class="line">Network Distance:1 hop</span><br><span class="line">OS detection performed.Please report any incorrect results at http://nmap.org/submit/</span><br><span class="line">Nmap <span class="keyword">done</span>:1 IP address (1 host up)scanned <span class="keyword">in</span> 43.56 seconds</span><br></pre></td></tr></table></figure>
+
+
+
 <h4 id="Demo02"><a href="#Demo02" class="headerlink" title="Demo02:"></a>Demo02:</h4><p>查看、分析针对<code>Android/Linux</code>平台的payload，描绘攻击路径。（未有可直接使用<code>Android</code>平台Payload，待开发）</p>
 <h3 id="BadUSB"><a href="#BadUSB" class="headerlink" title="BadUSB"></a>BadUSB</h3><p>对USB HID技术的改进。原有技术依赖于特定的嵌入式开发版，无法在通用USB设备上实现。存在局限性：无法通用；容易被破除设备封装等检测方式发现。</p>
 <p>BadUSB攻击的基本思路是<strong>篡改USB设备中的原有固件，将含有攻击负载的内容写入到设备固件中，从而使得USB设备在接入到目标主机时，通过执行固件中的攻击负载实现攻击功能</strong>. BadUSB攻击的实现虽然需要USB设备支持固件更新这一前提，但是仍然比USB HID攻击具有更好的通用性（据Karsten Nohl称，BadUSB首次提出时可以适用的优盘占当时市场份额的50%以上另外，由于BadUSB攻击实现过程中仅对存储器芯片中存放的固件进行了篡改，并不对USB设备硬件进行任何改变，所以该类攻击的隐蔽性更高.</p>
@@ -820,6 +845,107 @@
 <li><p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/USB_On-The-Go">https://en.wikipedia.org/wiki/USB_On-The-Go</a></p>
 </li>
 </ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/01/16/%E4%BD%BF%E7%94%A8GDB%E5%AF%B9%E7%A8%8B%E5%BA%8F%E6%89%A7%E8%A1%8C%E8%BF%9B%E8%A1%8Ctrace/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="w3b5h3ll">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="尘埃落定的空间站">
+    </span>
+
+    
+    
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2024/01/16/%E4%BD%BF%E7%94%A8GDB%E5%AF%B9%E7%A8%8B%E5%BA%8F%E6%89%A7%E8%A1%8C%E8%BF%9B%E8%A1%8Ctrace/" class="post-title-link" itemprop="url">使用GDB对程序执行进行trace</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-01-16 12:03:26" itemprop="dateCreated datePublished" datetime="2024-01-16T12:03:26+08:00">2024-01-16</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2024-03-30 18:12:00" itemprop="dateModified" datetime="2024-03-30T18:12:00+08:00">2024-03-30</time>
+      </span>
+
+  
+    <span id="/2024/01/16/%E4%BD%BF%E7%94%A8GDB%E5%AF%B9%E7%A8%8B%E5%BA%8F%E6%89%A7%E8%A1%8C%E8%BF%9B%E8%A1%8Ctrace/" class="post-meta-item leancloud_visitors" data-flag-title="使用GDB对程序执行进行trace" title="阅读次数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span class="leancloud-visitors-count"></span>
+    </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2024/01/16/%E4%BD%BF%E7%94%A8GDB%E5%AF%B9%E7%A8%8B%E5%BA%8F%E6%89%A7%E8%A1%8C%E8%BF%9B%E8%A1%8Ctrace/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2024/01/16/%E4%BD%BF%E7%94%A8GDB%E5%AF%B9%E7%A8%8B%E5%BA%8F%E6%89%A7%E8%A1%8C%E8%BF%9B%E8%A1%8Ctrace/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>静态反汇编与动态反汇编存在一个精度与广度的区别。一般来说静态反汇编可以得到更多的覆盖率，而动态反汇编则可以得到更精确的执行路径。尝试以一个类<code>gdbinit</code>的GDB启动交互过程，对可执行程序进行trace，用于同<code>IDA Pro</code>等专业反编译&#x2F;反汇编工具进行比较，更好的对程序进行分析。</p>
+<h2 id="Trace"><a href="#Trace" class="headerlink" title="Trace"></a>Trace</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">info files</span><br><span class="line"><span class="comment"># 断点在_start</span></span><br><span class="line">b _start</span><br><span class="line"><span class="built_in">set</span> pagination off</span><br><span class="line"><span class="built_in">set</span> disassembly-flavor intel</span><br><span class="line"><span class="comment"># 开启日志</span></span><br><span class="line"><span class="built_in">set</span> logging on</span><br><span class="line"><span class="built_in">set</span> logging redirect on</span><br><span class="line">r</span><br><span class="line"><span class="comment"># 每一条指令进行print</span></span><br><span class="line">display/i <span class="variable">$pc</span></span><br><span class="line"><span class="keyword">while</span> 1</span><br><span class="line">si</span><br><span class="line">end</span><br></pre></td></tr></table></figure>
+
+<p>输出很多</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ <span class="built_in">wc</span> -l gdb.txt </span><br><span class="line">459667 gdb.txt</span><br></pre></td></tr></table></figure>
+
+<p>过滤指令</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">egrep <span class="string">&#x27;^=&gt; 0x[0-9a-f]+:&#x27;</span> gdb.txt &gt; test.txt</span><br></pre></td></tr></table></figure>
+
+<p>此时，就可以获取到程序实际执行的指令</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">1 =&gt; 0x7ffff7cc51a0: endbr64</span><br><span class="line">2 =&gt; 0x7ffff7cc51a4: mov rax,QWORD PTR[rip+0x153d1d]</span><br><span class="line">3 =&gt; 0x7ffff7cc5lab: mov rdx,QWORD PTR [rax+0x1c0]</span><br><span class="line">4 =&gt; 0x7ffff7cc51b2: and rdx,Oxffffffffffffff0O</span><br><span class="line">5 =&gt; 0x7ffff7cc51b9: jle 0x7ffff7cc51cf</span><br><span class="line">6 =&gt; 0x7ffff7cc51bb: mov rcx,rdx</span><br><span class="line">7 =&gt; 0x7ffff7cc51be: mov QWORD PTR [rip+0x15424b],rdx</span><br><span class="line">8 =&gt; 0x7ffff7cc51c5: sar rcx,1</span><br><span class="line">9 =&gt; 0x7ffff7cc51c8: mov QWORD PTR [rip+0x154249],rcx</span><br><span class="line">10 =&gt; 0x7ffff7cc51cf: mov rdx,QWORD PTR [rax+0x1c8]</span><br><span class="line">11 =&gt; 0x7ffff7cc51d6: and rdx,0xffffffffffffff0</span><br><span class="line">12 =&gt; 0x7ffff7cc51dd: jle 0x7ffff7cc51f3</span><br><span class="line">13 =&gt; 0x7ffff7cc51df: mov rcx,rdx</span><br><span class="line">14 =&gt; 0x7ffff7cc51e2: mov QWORD PTR [rip+0x154217],rdx</span><br><span class="line">15 =&gt; 0x7ffff7cc51e9: sar rcx,1</span><br><span class="line">16 =&gt; 0x7ffff7cc5lec: mov QWORD PTR [rip+0x154215],rcx</span><br><span class="line">17 =&gt; 0x7ffff7cc51f3: mov rdx,QWORD PTR [rax+0x1d0]</span><br><span class="line">18 =&gt; 0x7ffff7cc51fa: mov QWORD PTR [rip+0x15b3a7],rdx</span><br><span class="line">19 =&gt; 0x7ffff7cc5201: mov rdx,QWORD PTR [rax+0x1d8]</span><br><span class="line">20 =&gt; 0x7ffff7cc5208: mov QWORD PTR [rip+0x1541e9],rdx</span><br><span class="line">21 =&gt; 0x7ffff7cc520f: mov rdx,QWORD PTR [rax+0x1e8]</span><br><span class="line">22 =&gt; 0x7ffff7cc5216: mov QWORD PTR [rip+0x1541d3],rdx</span><br><span class="line">23 =&gt; 0x7ffff7cc521d: mov rdx,QWORD PTR [rax+0x1e0]</span><br><span class="line">24 =&gt; 0x7ffff7cc5224: mov QWORD PTR [rip+0x15b375],rdx</span><br><span class="line">25 =&gt; 0x7ffff7cc522b: <span class="built_in">test</span> BYTE PTR [rax+0x1a5],0x80</span><br><span class="line">26 =&gt; 0x7ffff7cc5232: je 0x7ffff7cc523b</span><br><span class="line">27 =&gt; 0x7ffff7cc523b: xor eax,eax</span><br><span class="line">28 =&gt; 0x7ffff7cc523d: ret</span><br><span class="line">29 =&gt; 0x7ffff7ca8720: endbr64</span><br><span class="line">30 =&gt; 0x7ffff7ca8724: mov rcx,QWORD PTR [rip+0x17079d]</span><br><span class="line">31 =&gt; 0x7ffff7ca872b: lea rax,[rip+0x123be]</span><br><span class="line">32 =&gt; 0x7ffff7ca8732: mov edx,DWORD PTR [rcx+0xb8]</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -876,7 +1002,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2024-01-02 20:00:19" itemprop="dateModified" datetime="2024-01-02T20:00:19+08:00">2024-01-02</time>
+        <time title="修改时间：2024-04-07 11:11:07" itemprop="dateModified" datetime="2024-04-07T11:11:07+08:00">2024-04-07</time>
       </span>
 
   
@@ -965,9 +1091,8 @@
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">adb forward tcp:31415 tcp:31415</span><br></pre></td></tr></table></figure>
 
 <p><img src="/2023/08/04/AndroidSEC%E5%B7%A5%E5%85%B7%E5%88%97%E8%A1%A8/2023-08-06-20-33-57-image.png"></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">drozer console connect</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">drozer console connect</span><br><span class="line">...</span><br><span class="line">drozer Console (v2.4.4)</span><br><span class="line">dz&gt;</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2023/08/04/AndroidSEC%E5%B7%A5%E5%85%B7%E5%88%97%E8%A1%A8/2023-08-06-20-35-21-image.png"></p>
 <blockquote>
 <p>Interesting Commands</p>
 </blockquote>
@@ -1046,7 +1171,6 @@
 <li>漏洞扫描</li>
 </ul>
 <p>python AppScannner.py -i ~&#x2F;Desktop&#x2F;sieve.apk</p>
-<p><img src="/2023/08/04/AndroidSEC%E5%B7%A5%E5%85%B7%E5%88%97%E8%A1%A8/2023-08-06-22-09-29-image.png"></p>
 <h3 id="AppShark"><a href="#AppShark" class="headerlink" title="AppShark"></a>AppShark</h3><p><a target="_blank" rel="noopener" href="https://github.com/bytedance/appshark">https://github.com/bytedance/appshark</a></p>
 <ul>
 <li><p>静态污点分析工具</p>
@@ -1056,7 +1180,8 @@
 </ul>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">java -jar build/libs/AppShark-0.1.2-all.jar  config/config.json5</span><br><span class="line"><span class="comment"># config</span></span><br><span class="line">&#123;</span><br><span class="line">  //apk to anlayze</span><br><span class="line">  <span class="string">&quot;apkPath&quot;</span>: <span class="string">&quot;/Users/tiger/Desktop/sieve.apk&quot;</span>,</span><br><span class="line">  //result output directory</span><br><span class="line">  <span class="string">&quot;out&quot;</span>: <span class="string">&quot;out&quot;</span>,</span><br><span class="line">  <span class="string">&quot;rules&quot;</span>: <span class="string">&quot;unZipSlip.json&quot;</span>,</span><br><span class="line">  <span class="string">&quot;maxPointerAnalyzeTime&quot;</span>: 600,</span><br><span class="line">  //print more info about this rule</span><br><span class="line">  <span class="string">&quot;debugRule&quot;</span>: <span class="string">&quot;unZipSlip&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2023/08/04/AndroidSEC%E5%B7%A5%E5%85%B7%E5%88%97%E8%A1%A8/2023-08-06-22-50-45-image.png"></p>
+
+
 <h3 id="APKHunt"><a href="#APKHunt" class="headerlink" title="APKHunt"></a>APKHunt</h3><p>Linux环境使用，一个go开发的工具，用于满足OWASP MASVS安全要求</p>
 <p><a target="_blank" rel="noopener" href="https://github.com/Cyber-Buddy/APKHunt">https://github.com/Cyber-Buddy/APKHunt</a></p>
 <h3 id="apk-sh"><a href="#apk-sh" class="headerlink" title="apk.sh"></a>apk.sh</h3><p>一个脚本工具，增强功能</p>
@@ -1136,7 +1261,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2024-01-06 14:38:35" itemprop="dateModified" datetime="2024-01-06T14:38:35+08:00">2024-01-06</time>
+        <time title="修改时间：2024-03-30 18:24:05" itemprop="dateModified" datetime="2024-03-30T18:24:05+08:00">2024-03-30</time>
       </span>
 
   
@@ -1338,7 +1463,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2024-01-06 02:46:07" itemprop="dateModified" datetime="2024-01-06T02:46:07+08:00">2024-01-06</time>
+        <time title="修改时间：2024-04-07 11:08:48" itemprop="dateModified" datetime="2024-04-07T11:08:48+08:00">2024-04-07</time>
       </span>
 
   
@@ -1495,146 +1620,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/30/void%E7%B1%BB%E5%9E%8B%E7%90%86%E8%A7%A3/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="w3b5h3ll">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="尘埃落定的空间站">
-    </span>
-
-    
-    
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/08/30/void%E7%B1%BB%E5%9E%8B%E7%90%86%E8%A7%A3/" class="post-title-link" itemprop="url">void类型理解</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2021-08-30 00:30:42" itemprop="dateCreated datePublished" datetime="2021-08-30T00:30:42+08:00">2021-08-30</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2023-10-17 01:01:58" itemprop="dateModified" datetime="2023-10-17T01:01:58+08:00">2023-10-17</time>
-      </span>
-
-  
-    <span id="/2021/08/30/void%E7%B1%BB%E5%9E%8B%E7%90%86%E8%A7%A3/" class="post-meta-item leancloud_visitors" data-flag-title="void类型理解" title="阅读次数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-eye"></i>
-      </span>
-      <span class="post-meta-item-text">阅读次数：</span>
-      <span class="leancloud-visitors-count"></span>
-    </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2021/08/30/void%E7%B1%BB%E5%9E%8B%E7%90%86%E8%A7%A3/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/08/30/void%E7%B1%BB%E5%9E%8B%E7%90%86%E8%A7%A3/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="void-和-void-指针"><a href="#void-和-void-指针" class="headerlink" title="void 和 void 指针"></a><code>void</code> 和 <code>void</code> 指针</h3><ul>
-<li><p><strong><code>void</code>：</strong> 代表”无类型”。<code>void*</code> 表示”无类型指针”，可以指向任何数据类型。</p>
-</li>
-<li><p><strong><code>void</code> 指针：</strong> 可以指向任意类型的数据，示例代码如下：</p>
-</li>
-</ul>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> *pint;</span><br><span class="line"><span class="type">void</span> *pvoid;</span><br><span class="line"></span><br><span class="line"><span class="comment">// pvoid 可以指向任何类型</span></span><br><span class="line">pvoid = pint;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 将 `void` 类型转为其他类型需要强制类型转换</span></span><br><span class="line">pint = (<span class="type">int</span> *)pvoid;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>在 ANSI C 标准中，不允许对 <code>void</code> 指针进行算术运算。但在 GNU C 中，<code>void*</code> 和 <code>char*</code> 视为相同，即 <code>sizeof(*pvoid) == sizeof(char)</code>。</li>
-</ul>
-<h3 id="void-关键字的作用"><a href="#void-关键字的作用" class="headerlink" title="void 关键字的作用"></a><code>void</code> 关键字的作用</h3><ul>
-<li><p><strong>对函数返回值的限定：</strong> 如果函数不需要返回值，必须使用 <code>void</code> 限定，例如 <code>void func();</code>。</p>
-</li>
-<li><p><strong>对函数参数的限定：</strong> 如果函数不允许接收参数，必须使用 <code>void</code> 限定，例如 <code>int func(void);</code>。</p>
-</li>
-</ul>
-<p><code>void</code> 指针可以指向任意类型的数据，因此可以在函数参数中使用 <code>void</code> 指针，使函数能够接受任意数据类型的指针作为参数，示例代码如下：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">void</span> *<span class="title function_">memcpy</span><span class="params">(<span class="type">void</span> *dest, <span class="type">const</span> <span class="type">void</span> *src, <span class="type">size_t</span> len)</span>;</span><br><span class="line"><span class="type">void</span> *<span class="title function_">memset</span><span class="params">(<span class="type">void</span> *buffer, <span class="type">int</span> c, <span class="type">size_t</span> num)</span>;</span><br></pre></td></tr></table></figure>
-
-<h3 id="void-的真正作用"><a href="#void-的真正作用" class="headerlink" title="void 的真正作用"></a><code>void</code> 的真正作用</h3><p><code>void</code> 的作用在于：</p>
-<ul>
-<li>对函数返回值的限定。</li>
-<li>对函数参数的限定。</li>
-</ul>
-<p>示例代码如下：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">float</span> *p1;</span><br><span class="line"><span class="type">int</span> *p2;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 错误</span></span><br><span class="line">p1 = p2;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 正确</span></span><br><span class="line">p1 = (<span class="type">float</span> *)p2;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> *p1;</span><br><span class="line"><span class="type">int</span> *p2;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 正确</span></span><br><span class="line">p1 = p2;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 错误</span></span><br><span class="line">p2 = p1;</span><br></pre></td></tr></table></figure>
-
-<h3 id="void-的使用规则"><a href="#void-的使用规则" class="headerlink" title="void 的使用规则"></a><code>void</code> 的使用规则</h3><ul>
-<li>如果函数没有返回值，应该声明为 <code>void</code> 类型。</li>
-</ul>
-<p>在 C 语言中，未加返回类型限定的函数会被默认处理为返回整型值。例如：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line">add(<span class="type">int</span> a, <span class="type">int</span> b);</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;2 + 3 = %d\n&quot;</span>, add(<span class="number">2</span>, <span class="number">3</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">add(<span class="type">int</span> a, <span class="type">int</span> b)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> a + b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>如果函数没有参数，应该声明参数为 <code>void</code>。</li>
-</ul>
-<p>在 C 语言中，可以向无参数的函数传递任何类型的参数，但在 C++ 中不行。</p>
-<ul>
-<li><p>对于 <code>void</code> 指针类型的使用：</p>
-<ul>
-<li><p>ANSI C 中不允许对 <code>void</code> 指针进行算术操作，因为 ANSI C 标准下，指针算术操作需要知道指向数据类型的大小，例如 <code>int *pint; pint++;</code> 会使 <code>pint</code> 增加 <code>sizeof(int)</code>。</p>
-</li>
-<li><p>GNU C（GNU’s Not Unix）认为 <code>void*</code> 类型与 <code>char*</code> 类型一致。</p>
-</li>
-</ul>
-</li>
-<li><p>如果函数的参数可以是任意指针，应该声明参数为 <code>void*</code>。注意，<code>void**</code> 不能代表一个真实的变量，<code>void</code> 体现了一种抽象。</p>
-</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1738,6 +1723,52 @@ if (document.querySelectorAll('.mermaid').length) {
 
 
   
+
+  
+      <script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              const target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    const script = document.createElement('script');
+    script.src = '//cdn.jsdelivr.net/npm/mathjax@3.1.0/es5/tex-mml-chtml.js';
+    script.defer = true;
+    document.head.appendChild(script);
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.typesetClear();
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
 
   
 <script>
