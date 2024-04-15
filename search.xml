@@ -6,6 +6,8 @@
     <content><![CDATA[<blockquote>
 <p>Android客户端漏洞挖掘常见工具使用，在分析时可以有一个初步的判断。测试过程还是要依靠CheckList+攻击面分析做到覆盖度，避免随机挖洞。</p>
 </blockquote>
+<span id="more"></span>
+
 <h2 id="Packer识别与脱壳"><a href="#Packer识别与脱壳" class="headerlink" title="Packer识别与脱壳"></a>Packer识别与脱壳</h2><p>甲方安全与乙方安全有很大的不同，一般外部人员进行测试需要去完成脱壳，过环境监测等一些<strong>分析环境初始化</strong>工作。这里只介绍工具使用，不对原理进行展开。</p>
 <p>尝试对改论文中提到的主流工具进行测试：<strong>《ART环境下的Android软件通用脱壳方法研究》</strong>，引用一张文章中的图，如下</p>
 <p><img src="/2023/08/04/AndroidSEC%E5%B7%A5%E5%85%B7%E5%88%97%E8%A1%A8/2023-08-08-01-31-07-image.png"></p>
@@ -279,6 +281,8 @@
     <content><![CDATA[<blockquote>
 <p>一道TCTF题目，解密db文件</p>
 </blockquote>
+<span id="more"></span>
+
 <p><strong>target</strong>: 1.ab，一个Android的备份文件</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">  ~/D/Doing  file 1.ab                                                                          (base)</span><br><span class="line">1.ab: Android Backup, version 2, Compressed, Not-Encrypted</span><br></pre></td></tr></table></figure>
 
@@ -398,7 +402,9 @@
   <entry>
     <title>Fuzzing技术文章整理</title>
     <url>/2022/12/15/Fuzzing%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0%E6%95%B4%E7%90%86/</url>
-    <content><![CDATA[<h3 id="AFL"><a href="#AFL" class="headerlink" title="AFL"></a>AFL</h3><p><a href="https://paper.seebug.org/841/">https://paper.seebug.org/841/</a></p>
+    <content><![CDATA[<h3 id="AFL"><a href="#AFL" class="headerlink" title="AFL"></a>AFL</h3><span id="more"></span>
+
+<p><a href="https://paper.seebug.org/841/">https://paper.seebug.org/841/</a></p>
 <p><a href="https://paper.seebug.org/842/">https://paper.seebug.org/842/</a></p>
 <p>AFL技术白皮书</p>
 <p><a href="https://lcamtuf.coredump.cx/afl/technical_details.txt">https://lcamtuf.coredump.cx/afl/technical_details.txt</a></p>
@@ -415,46 +421,6 @@
 ]]></content>
       <tags>
         <tag>Fuzzing</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>R2S软路由搭建指南</title>
-    <url>/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/</url>
-    <content><![CDATA[<p>在一般访问Google等网站的情况下，往往需要在每个终端安装代理软件，如<code>Clash</code>，<code>SSR</code>等。而软路由的方式让我们对其访问变得无感。百科上对软路由的定义如下，即使用软件的方案来进行路由：</p>
-<blockquote>
-<p>软路由是指利用台式机或服务器的供应商配合一定软件而形成的路由解决方案，主要靠对软件的设置，实现路由器路由器的功能，它的软件与硬件是独立分开的。软路由使用普通计算机，使用通用的操作系统，如Linux或windows，因此软路由的设置事实上是windows或linux的设置。根据使用的操作系统不同，可以分为基于windows平台和基于Linux&#x2F;bsd平台开发的软件路由器。</p>
-</blockquote>
-<h2 id="设备"><a href="#设备" class="headerlink" title="设备"></a>设备</h2><p>Nanopi R2S</p>
-<p>最低价可以买裸板，TF卡自己单买的，5v3a&#x2F;2a电源使用之前的旧设备。读卡器已有</p>
-<p><img src="/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-06-06-image.png"></p>
-<p>64GTF卡</p>
-<p><img src="/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-10-18-image.png"></p>
-<h2 id="刷机"><a href="#刷机" class="headerlink" title="刷机"></a>刷机</h2><p>使用<code>FriendlyWrt</code>系统，镜像下载：</p>
-<p><a href="https://drive.google.com/drive/folders/1W-2MLML9lkD2xAVjiwzEBNiUlPF5BgU9">01_SD card images - Google 云端硬盘</a></p>
-<ul>
-<li>rk3328-sd-friendlywrt-23.05-20231223.img.gz</li>
-</ul>
-<p><code>balenaEtcher</code>烧录至TF卡</p>
-<p><img src="/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-15-56-image.png"></p>
-<h3 id="网络拓扑"><a href="#网络拓扑" class="headerlink" title="网络拓扑"></a>网络拓扑</h3><p>网络结构比较简单，如下<br>光猫&lt;——–&gt;(WAN)R2S(LAN)&lt;——–&gt;(WAN)小米路由器</p>
-<p>等待开机后，访问<code>192.168.2.1</code>。使用<code>root/passowrd</code>即可进入FriendlyWrt的管理后台</p>
-<p><img src="/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-35-01-image.png"></p>
-<h2 id="OpenClash配置"><a href="#OpenClash配置" class="headerlink" title="OpenClash配置"></a>OpenClash配置</h2><p>如<code>OpenClash</code>描述，需要安装客户端与内核模块</p>
-<p>客户端安装</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#安装依赖</span></span><br><span class="line">* luci</span><br><span class="line">* luci-base</span><br><span class="line">* iptables</span><br><span class="line">* dnsmasq-full</span><br><span class="line">* coreutils</span><br><span class="line">* coreutils-nohup</span><br><span class="line">* bash</span><br><span class="line">* curl</span><br><span class="line">* jsonfilter</span><br><span class="line">* ca-certificates</span><br><span class="line">* ipset</span><br><span class="line">* ip-full</span><br><span class="line">* iptables-mod-tproxy</span><br><span class="line">* kmod-tun(TUN模式)</span><br><span class="line">* luci-compat(Luci-19.07)</span><br><span class="line"></span><br><span class="line"><span class="comment">#上传IPK文件至您路由器的 /tmp 目录下</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#假设安装包名字为</span></span><br><span class="line">luci-app-openclash_0.33.7-beta_all.ipk</span><br><span class="line"></span><br><span class="line"><span class="comment">#执行安装命令</span></span><br><span class="line">opkg install /tmp/luci-app-openclash_0.33.7-beta_all.ipk</span><br><span class="line"></span><br><span class="line"><span class="comment">#执行卸载命令</span></span><br><span class="line"><span class="comment">#插件在卸载后会自动备份配置文件到 /tmp 目录下，除非路由器重启，在下次安装时将还原您的配置文件</span></span><br><span class="line">opkg remove luci-app-openclash</span><br><span class="line"></span><br><span class="line">安装完成后刷新LUCI页面，在菜单栏 -&gt; 服务 -&gt; OpenClash 进入插件页面</span><br></pre></td></tr></table></figure>
-
-<p>内核</p>
-<p>进入<code>OpenClash</code>插件页面时，总是下载失败。可以增加代理来完成安装</p>
-<p><img src="/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-40-11-image.png"></p>
-<p>启动</p>
-<p>最后，上传配置文件，并启动即可。最终效果如下</p>
-<p><img src="/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-41-41-image.png"></p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://wiki.friendlyelec.com/wiki/index.php/NanoPi_R2S/zh">https://wiki.friendlyelec.com/wiki/index.php/NanoPi_R2S/zh</a></p>
-<p><a href="https://wiki.mbalib.com/wiki/%E8%BD%AF%E8%B7%AF%E7%94%B1">软路由 - MBA智库百科</a></p>
-<p><a href="https://github.com/vernesong/OpenClash/releases">Releases · vernesong&#x2F;OpenClash · GitHub</a></p>
-]]></content>
-      <tags>
-        <tag>Google</tag>
       </tags>
   </entry>
   <entry>
@@ -586,67 +552,11 @@
       </tags>
   </entry>
   <entry>
-    <title>void类型理解</title>
-    <url>/2021/08/30/void%E7%B1%BB%E5%9E%8B%E7%90%86%E8%A7%A3/</url>
-    <content><![CDATA[<h3 id="void-和-void-指针"><a href="#void-和-void-指针" class="headerlink" title="void 和 void 指针"></a><code>void</code> 和 <code>void</code> 指针</h3><ul>
-<li><p><strong><code>void</code>：</strong> 代表”无类型”。<code>void*</code> 表示”无类型指针”，可以指向任何数据类型。</p>
-</li>
-<li><p><strong><code>void</code> 指针：</strong> 可以指向任意类型的数据，示例代码如下：</p>
-</li>
-</ul>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> *pint;</span><br><span class="line"><span class="type">void</span> *pvoid;</span><br><span class="line"></span><br><span class="line"><span class="comment">// pvoid 可以指向任何类型</span></span><br><span class="line">pvoid = pint;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 将 `void` 类型转为其他类型需要强制类型转换</span></span><br><span class="line">pint = (<span class="type">int</span> *)pvoid;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>在 ANSI C 标准中，不允许对 <code>void</code> 指针进行算术运算。但在 GNU C 中，<code>void*</code> 和 <code>char*</code> 视为相同，即 <code>sizeof(*pvoid) == sizeof(char)</code>。</li>
-</ul>
-<h3 id="void-关键字的作用"><a href="#void-关键字的作用" class="headerlink" title="void 关键字的作用"></a><code>void</code> 关键字的作用</h3><ul>
-<li><p><strong>对函数返回值的限定：</strong> 如果函数不需要返回值，必须使用 <code>void</code> 限定，例如 <code>void func();</code>。</p>
-</li>
-<li><p><strong>对函数参数的限定：</strong> 如果函数不允许接收参数，必须使用 <code>void</code> 限定，例如 <code>int func(void);</code>。</p>
-</li>
-</ul>
-<p><code>void</code> 指针可以指向任意类型的数据，因此可以在函数参数中使用 <code>void</code> 指针，使函数能够接受任意数据类型的指针作为参数，示例代码如下：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">void</span> *<span class="title function_">memcpy</span><span class="params">(<span class="type">void</span> *dest, <span class="type">const</span> <span class="type">void</span> *src, <span class="type">size_t</span> len)</span>;</span><br><span class="line"><span class="type">void</span> *<span class="title function_">memset</span><span class="params">(<span class="type">void</span> *buffer, <span class="type">int</span> c, <span class="type">size_t</span> num)</span>;</span><br></pre></td></tr></table></figure>
-
-<h3 id="void-的真正作用"><a href="#void-的真正作用" class="headerlink" title="void 的真正作用"></a><code>void</code> 的真正作用</h3><p><code>void</code> 的作用在于：</p>
-<ul>
-<li>对函数返回值的限定。</li>
-<li>对函数参数的限定。</li>
-</ul>
-<p>示例代码如下：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">float</span> *p1;</span><br><span class="line"><span class="type">int</span> *p2;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 错误</span></span><br><span class="line">p1 = p2;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 正确</span></span><br><span class="line">p1 = (<span class="type">float</span> *)p2;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> *p1;</span><br><span class="line"><span class="type">int</span> *p2;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 正确</span></span><br><span class="line">p1 = p2;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 错误</span></span><br><span class="line">p2 = p1;</span><br></pre></td></tr></table></figure>
-
-<h3 id="void-的使用规则"><a href="#void-的使用规则" class="headerlink" title="void 的使用规则"></a><code>void</code> 的使用规则</h3><ul>
-<li>如果函数没有返回值，应该声明为 <code>void</code> 类型。</li>
-</ul>
-<p>在 C 语言中，未加返回类型限定的函数会被默认处理为返回整型值。例如：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line">add(<span class="type">int</span> a, <span class="type">int</span> b);</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;2 + 3 = %d\n&quot;</span>, add(<span class="number">2</span>, <span class="number">3</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">add(<span class="type">int</span> a, <span class="type">int</span> b)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> a + b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>如果函数没有参数，应该声明参数为 <code>void</code>。</li>
-</ul>
-<p>在 C 语言中，可以向无参数的函数传递任何类型的参数，但在 C++ 中不行。</p>
-<ul>
-<li><p>对于 <code>void</code> 指针类型的使用：</p>
-<ul>
-<li><p>ANSI C 中不允许对 <code>void</code> 指针进行算术操作，因为 ANSI C 标准下，指针算术操作需要知道指向数据类型的大小，例如 <code>int *pint; pint++;</code> 会使 <code>pint</code> 增加 <code>sizeof(int)</code>。</p>
-</li>
-<li><p>GNU C（GNU’s Not Unix）认为 <code>void*</code> 类型与 <code>char*</code> 类型一致。</p>
-</li>
-</ul>
-</li>
-<li><p>如果函数的参数可以是任意指针，应该声明参数为 <code>void*</code>。注意，<code>void**</code> 不能代表一个真实的变量，<code>void</code> 体现了一种抽象。</p>
-</li>
-</ul>
-]]></content>
-      <tags>
-        <tag>C/C++</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>USB接口安全测试</title>
     <url>/2024/03/05/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>USB已经成为计算机与智能设备的必备接口之一，广泛应用于社会的各个场景。近年来各类硬件产品的安全事件层出不穷，出现了多种针对USB接口的攻击手段，导致相关系统面临着严重的安全风险。简要对于<code>USB</code>接口存在的安全问题进行梳理，并进行测试。</p>
+<span id="more"></span>
+
 <h2 id="USB-101"><a href="#USB-101" class="headerlink" title="USB 101"></a>USB 101</h2><p><img src="https://www.usbzh.com/uploadimg/202105080959336094.png" alt="USB协议分层"></p>
 <p>USB设备的枚举过程如下：</p>
 <ol>
@@ -802,9 +712,71 @@
       </tags>
   </entry>
   <entry>
+    <title>void类型理解</title>
+    <url>/2021/08/30/void%E7%B1%BB%E5%9E%8B%E7%90%86%E8%A7%A3/</url>
+    <content><![CDATA[<span id="more"></span>
+
+<h3 id="void-和-void-指针"><a href="#void-和-void-指针" class="headerlink" title="void 和 void 指针"></a><code>void</code> 和 <code>void</code> 指针</h3><ul>
+<li><p><strong><code>void</code>：</strong> 代表”无类型”。<code>void*</code> 表示”无类型指针”，可以指向任何数据类型。</p>
+</li>
+<li><p><strong><code>void</code> 指针：</strong> 可以指向任意类型的数据，示例代码如下：</p>
+</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> *pint;</span><br><span class="line"><span class="type">void</span> *pvoid;</span><br><span class="line"></span><br><span class="line"><span class="comment">// pvoid 可以指向任何类型</span></span><br><span class="line">pvoid = pint;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 将 `void` 类型转为其他类型需要强制类型转换</span></span><br><span class="line">pint = (<span class="type">int</span> *)pvoid;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在 ANSI C 标准中，不允许对 <code>void</code> 指针进行算术运算。但在 GNU C 中，<code>void*</code> 和 <code>char*</code> 视为相同，即 <code>sizeof(*pvoid) == sizeof(char)</code>。</li>
+</ul>
+<h3 id="void-关键字的作用"><a href="#void-关键字的作用" class="headerlink" title="void 关键字的作用"></a><code>void</code> 关键字的作用</h3><ul>
+<li><p><strong>对函数返回值的限定：</strong> 如果函数不需要返回值，必须使用 <code>void</code> 限定，例如 <code>void func();</code>。</p>
+</li>
+<li><p><strong>对函数参数的限定：</strong> 如果函数不允许接收参数，必须使用 <code>void</code> 限定，例如 <code>int func(void);</code>。</p>
+</li>
+</ul>
+<p><code>void</code> 指针可以指向任意类型的数据，因此可以在函数参数中使用 <code>void</code> 指针，使函数能够接受任意数据类型的指针作为参数，示例代码如下：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">void</span> *<span class="title function_">memcpy</span><span class="params">(<span class="type">void</span> *dest, <span class="type">const</span> <span class="type">void</span> *src, <span class="type">size_t</span> len)</span>;</span><br><span class="line"><span class="type">void</span> *<span class="title function_">memset</span><span class="params">(<span class="type">void</span> *buffer, <span class="type">int</span> c, <span class="type">size_t</span> num)</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="void-的真正作用"><a href="#void-的真正作用" class="headerlink" title="void 的真正作用"></a><code>void</code> 的真正作用</h3><p><code>void</code> 的作用在于：</p>
+<ul>
+<li>对函数返回值的限定。</li>
+<li>对函数参数的限定。</li>
+</ul>
+<p>示例代码如下：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">float</span> *p1;</span><br><span class="line"><span class="type">int</span> *p2;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 错误</span></span><br><span class="line">p1 = p2;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 正确</span></span><br><span class="line">p1 = (<span class="type">float</span> *)p2;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> *p1;</span><br><span class="line"><span class="type">int</span> *p2;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 正确</span></span><br><span class="line">p1 = p2;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 错误</span></span><br><span class="line">p2 = p1;</span><br></pre></td></tr></table></figure>
+
+<h3 id="void-的使用规则"><a href="#void-的使用规则" class="headerlink" title="void 的使用规则"></a><code>void</code> 的使用规则</h3><ul>
+<li>如果函数没有返回值，应该声明为 <code>void</code> 类型。</li>
+</ul>
+<p>在 C 语言中，未加返回类型限定的函数会被默认处理为返回整型值。例如：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line">add(<span class="type">int</span> a, <span class="type">int</span> b);</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;2 + 3 = %d\n&quot;</span>, add(<span class="number">2</span>, <span class="number">3</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">add(<span class="type">int</span> a, <span class="type">int</span> b)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> a + b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如果函数没有参数，应该声明参数为 <code>void</code>。</li>
+</ul>
+<p>在 C 语言中，可以向无参数的函数传递任何类型的参数，但在 C++ 中不行。</p>
+<ul>
+<li><p>对于 <code>void</code> 指针类型的使用：</p>
+<ul>
+<li><p>ANSI C 中不允许对 <code>void</code> 指针进行算术操作，因为 ANSI C 标准下，指针算术操作需要知道指向数据类型的大小，例如 <code>int *pint; pint++;</code> 会使 <code>pint</code> 增加 <code>sizeof(int)</code>。</p>
+</li>
+<li><p>GNU C（GNU’s Not Unix）认为 <code>void*</code> 类型与 <code>char*</code> 类型一致。</p>
+</li>
+</ul>
+</li>
+<li><p>如果函数的参数可以是任意指针，应该声明参数为 <code>void*</code>。注意，<code>void**</code> 不能代表一个真实的变量，<code>void</code> 体现了一种抽象。</p>
+</li>
+</ul>
+]]></content>
+      <tags>
+        <tag>C/C++</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>使用GDB对程序执行进行trace</title>
     <url>/2024/01/16/%E4%BD%BF%E7%94%A8GDB%E5%AF%B9%E7%A8%8B%E5%BA%8F%E6%89%A7%E8%A1%8C%E8%BF%9B%E8%A1%8Ctrace/</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>静态反汇编与动态反汇编存在一个精度与广度的区别。一般来说静态反汇编可以得到更多的覆盖率，而动态反汇编则可以得到更精确的执行路径。尝试以一个类<code>gdbinit</code>的GDB启动交互过程，对可执行程序进行trace，用于同<code>IDA Pro</code>等专业反编译&#x2F;反汇编工具进行比较，更好的对程序进行分析。</p>
+<span id="more"></span>
+
 <h2 id="Trace"><a href="#Trace" class="headerlink" title="Trace"></a>Trace</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">info files</span><br><span class="line"><span class="comment"># 断点在_start</span></span><br><span class="line">b _start</span><br><span class="line"><span class="built_in">set</span> pagination off</span><br><span class="line"><span class="built_in">set</span> disassembly-flavor intel</span><br><span class="line"><span class="comment"># 开启日志</span></span><br><span class="line"><span class="built_in">set</span> logging on</span><br><span class="line"><span class="built_in">set</span> logging redirect on</span><br><span class="line">r</span><br><span class="line"><span class="comment"># 每一条指令进行print</span></span><br><span class="line">display/i <span class="variable">$pc</span></span><br><span class="line"><span class="keyword">while</span> 1</span><br><span class="line">si</span><br><span class="line">end</span><br></pre></td></tr></table></figure>
 
 <p>输出很多</p>
@@ -821,110 +793,11 @@
       </tags>
   </entry>
   <entry>
-    <title>灰袍推送Mark</title>
-    <url>/2021/10/02/%E7%81%B0%E8%A2%8D%E6%8E%A8%E9%80%81Mark/</url>
-    <content><![CDATA[<p>最近浏览了灰袍推送的tg频道，记录一些有意思的言论。灰袍推送中有些关于<strong>方法论</strong>、<strong>工程化</strong>、<strong>区块链</strong>的东西很有让人眼前一亮的感觉在此记录一下，方便以后查看。</p>
-<span id="more"></span>
-
-<h2 id="来自-灰袍推送"><a href="#来自-灰袍推送" class="headerlink" title="来自@灰袍推送"></a>来自@灰袍推送</h2><ol>
-<li><p>论黑客工程化是我们的追求。黑客工程化是我们的追求。黑客工程化的意思是：我们的所有技能需要成体系活动，能交给机器的都交给机器，我们控制机器“木偶们”来加速我们的效率。为了最优这个工程化，我们很明白什么技能是必须精通的，什么技能是够用就好，什么技能是拿来主义。</p>
-</li>
-<li><p>那个“安全技能树”圈子，新人太多，我一旦分享点复杂的，似乎都安静了。对于陌生的知识怎么办？先 mark，以后有机会再消化，没机会也无所谓，至少知道有这个就好。对于不陌生的，赶紧跟上实践。实战派，不废话。指的就是这个。</p>
-</li>
-<li><p>灰帽 C#，这本书很不错，玩 Win 渗透的，建议这本书实操完。</p>
-</li>
-<li><p>什么黑客技术是好技术？黑产或 APT 组织已经在实战的技术 。</p>
-</li>
-<li><p>很多人不明白什么是职业什么是业余，什么是兴趣什么是工作。举个例子，黑客攻防，是我兴趣，也是工作，更成为了职业。而玩玩比特币、打打王者荣耀、吃吃小龙虾虽也是兴趣，但很业余，我不会通过这种方式去赚钱，能赚到也是投机罢了，如果能成大事，那也是投机，命运选中了我而已。再往细了说，黑客攻防分支领域几十条，也仅某些条会是我的职业，而有不少仅仅是业余，如打 CTF、玩黑手等。</p>
-</li>
-<li><p>通读两本行业一流的书籍是最稳的入门进阶方式。</p>
-</li>
-<li><p>设计一个商业模式的快感大于设计一个软件工程，不过都小于挖到一个大 0day，因为大 0day 自带牛逼的商业模式😄。</p>
-</li>
-<li><p>那些老协议，没认证与加密设计的，都会出大问题，多个 S 多关键。<a href="https://rtpbleed.com/">https://rtpbleed.com</a></p>
-</li>
-<li><p>天天喊发干货的人，我就问你 Kali 的每个工具你都了解过没，哪怕绝大多数点开看看都没吧？都懒成这样，是懒还是蠢？</p>
-</li>
-<li><p>干货拿走，消化一年再说：<a href="https://github.com/coreb1t/awesome-pentest-cheat-sheets">https://github.com/coreb1t/awesome-pentest-cheat-sheets</a></p>
-</li>
-<li><p>钓鱼攻击类型我总结几类：普通域名钓鱼、双因素钓鱼、XSS 高级钓鱼、CSRF 高级钓鱼、浏览器扩展钓鱼、系统木马钓鱼、MITM 钓鱼。这些细节在我的硬盘里。</p>
-</li>
-<li><p>建议大家开始关注“区块链”技术，在自己的技能树上多一个这个是好事，至少可以很好避免成为投机者中的韭菜。玩安全的，可以探索这个领域的安全问题。</p>
-</li>
-<li><p>不小心连续发的都是区块链相关的观点。做安全就是这样，需要跟上时代。区块链安全里，我们会把其分为两大类：区块链本身的安全，区块链之上各类业务的安全。对于我们来说，区块链本身的安全是我们的技能短板，里面大量的安全问题是需要算法、架构、工程的整体思考。如果不能深入到区块链创造细节里去，这类的安全从何研究？</p>
-</li>
-<li><p>未来的世界是去中心化与中心化的博弈平衡，绝对不会有完美的去中心化生态，原因请自行阅读《自私的基因》…</p>
-</li>
-<li><p>安全研究第一步：<strong>目标攻击面</strong>都有哪些？第二步：<strong>攻击路径如何描绘</strong>出来？这两大步骤是最考验安全人员经验及想象力的地方。</p>
-</li>
-<li><p>区块链世界最伟大的点在于：通过技术信仰吸引一批信徒且都利益绑定了。</p>
-</li>
-<li><p>比特币网络新增两个杀手锏，一个是闪电网络，一个是 RSK。</p>
-</li>
-<li><p>《麻省理工科技评论》2018 年“全球十大突破性技术” ：<a href="http://mp.weixin.qq.com/s/_kdbSRdIwr4bIXfNtut8Fw%EF%BC%8C%E5%8C%BF%E5%90%8D%E8%B4%A7%E5%B8%81Zcash%E5%9C%A8%E5%8D%81%E5%A4%A7%E4%B9%8B%E4%B8%80%E9%87%8C%E8%A2%AB%E6%8F%90%E5%8F%8A%E3%80%82">http://mp.weixin.qq.com/s/_kdbSRdIwr4bIXfNtut8Fw，匿名货币Zcash在十大之一里被提及。</a></p>
-</li>
-<li><p>看到 bettercap 从 Ruby 改为 Go，就等着 MSF 和 BeEF 了。黑客工程化的世界，要么 Python 要么 Go，其他都是小众，JavaScript 还差些火候。</p>
-</li>
-<li><p>Google 说了“您应始终使用 HTTPS 保护您的所有网站，即使这些网站并不处理敏感的通信。</p>
-</li>
-<li><p>你猜为什么？尤其是那些区块链世界的网站，即使上面没 Web 钱包，没交易所功能。</p>
-</li>
-<li><p>DNS Rebinding 技巧用于钱包节点 HTTP RPC 的攻击确实很猥琐，上古时代的技巧到现在还是这么的帅！</p>
-</li>
-<li><p>DNS这种设计一直是信息安全头顶的一朵乌云。</p>
-</li>
-</ol>
-<p><img src="/2021/10/02/%E7%81%B0%E8%A2%8D%E6%8E%A8%E9%80%81Mark/dns.jpg" alt="文本, 电子邮件  描述已自动生成"></p>
-<ol start="24">
-<li><p>当年门罗币背后的那些人设计出这个币种时有没有预见过，这个举动无意间让网络世界和平了不少:-)</p>
-</li>
-<li><p>一次漂亮的分享最大的利己是：极其加深自己对所分享知识的印象。</p>
-</li>
-<li><p>一个好漏洞从发现到 PoC 到 Exploit 到 Attack 到 Defense 到披露，可以完美打通一次任督二脉。这样的机会不多，多珍惜。</p>
-</li>
-<li><p>过了遍比特币生态网络里的 RSK 生态解决方案及相关源码，他们对安全有不错的理解，尤其是他们应该早有意识到以太坊生态安全缺陷，这点很赞。</p>
-</li>
-<li><p>以太坊智能合约的出现让软件工程师真的可以对得起工程师称号，多好的事。</p>
-</li>
-<li><p>创业最爽的是还能亲自带队攻克两个核心能力：1. 0day；2. 黑客工程。</p>
-</li>
-<li><p>玩前端黑只需掌握 Chrome DevTools 就好:-)</p>
-</li>
-<li><p>区块链本质根本不是什么去中心，而是利益共识。明白这点就行了。而我是游走在两个极端之间的人，我只知道这里存在很多安全攻防博弈。乱，浮，和你我无关，我们改变不了。</p>
-</li>
-<li><p>最快的成长方式就是实战中成长，比如你拿到攻击者的样本，立马可以吸收其手法精髓，防御上就可以有的放矢。再比如为了突破，你死磕到底，一回头会发现：卧槽，掌握了各种技巧，而这许多是死磕前绝无法想象到的。</p>
-</li>
-<li><p>创造比纯粹的 Hacking 更重要，但 Hacking 才能促进更独特的创造。</p>
-</li>
-<li><p>探索本质这是黑客必须具备的基本素质。</p>
-</li>
-<li><p>DApp 游戏本质是一场“代码即法律”的黑客游戏。</p>
-</li>
-<li><p>黑客的初阶是逆向思维，进阶则是正向思维。</p>
-</li>
-<li><p>区块链领域的黑客几乎都不是曾经的黑客，他们几乎都是很懂区块链的技术人员，且带了点逆向思维。曾经的黑客几乎都过时了，绝大多数没机会在这个新领域开天辟地，只能费劲地跟着。</p>
-</li>
-<li><p>5G 与 IoT 时代的风险与机遇：<a href="https://threatpost.com/the-danger-and-opportunity-in-5g-connectivity-and-iot/138493/">https://threatpost.com/the-danger-and-opportunity-in-5g-connectivity-and-iot/138493/</a> 如果 IPv6 也大量启用，那对网络空间测绘来说，是个新挑战🤔。</p>
-</li>
-<li><p>我说我们在做区块链安全，其实我们在做都是公链生态的安全，慢雾的机会仅在这，如果这个生态没了，慢雾也会沉静甚至消失。是的，所谓的联盟链、私链不是我们的机会，我们的机会在自由的网络空间里:-)</p>
-</li>
-<li><p><a href="https://mp.weixin.qq.com/s/s-gxfYsGUeosiRwpXoWN6w">https://mp.weixin.qq.com/s/s-gxfYsGUeosiRwpXoWN6w</a></p>
-</li>
-<li><p>维基解密新年推文里问：2019，你认为哪些被泄露的档案最能改变我们对人类文明的理解？… 要搞大事？</p>
-</li>
-</ol>
-<h2 id="来自-Ton-OKEx中文频道"><a href="#来自-Ton-OKEx中文频道" class="headerlink" title="来自@Ton&amp;OKEx中文频道"></a>来自@<strong>Ton&amp;OKEx中文频道</strong></h2><ol>
-<li>Ton区块链继承自Telegram，旨在为数十亿用户提供服务。它拥有超快的交易速度、低廉的费用和易于使用的原生应用程序，其中一些应用程序可以直接在Telegram中使用，如 @wallet 或 @cryptobot 。</li>
-</ol>
-]]></content>
-      <tags>
-        <tag>转载</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>提问的智慧</title>
     <url>/2021/07/17/%E6%8F%90%E9%97%AE%E7%9A%84%E6%99%BA%E6%85%A7/</url>
-    <content><![CDATA[<blockquote>
+    <content><![CDATA[<span id="more"></span>
+
+<blockquote>
 <p>说明：文章来自转载</p>
 </blockquote>
 <p><a href="https://github.com/ryanhanwu/How-To-Ask-Questions-The-Smart-Way/pulls"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" alt="PRs Welcome"></a></p>
@@ -1294,6 +1167,149 @@
 ]]></content>
       <tags>
         <tag>转载</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>灰袍推送Mark</title>
+    <url>/2021/10/02/%E7%81%B0%E8%A2%8D%E6%8E%A8%E9%80%81Mark/</url>
+    <content><![CDATA[<p>最近浏览了灰袍推送的tg频道，记录一些有意思的言论。灰袍推送中有些关于<strong>方法论</strong>、<strong>工程化</strong>、<strong>区块链</strong>的东西很有让人眼前一亮的感觉在此记录一下，方便以后查看。</p>
+<span id="more"></span>
+
+<h2 id="来自-灰袍推送"><a href="#来自-灰袍推送" class="headerlink" title="来自@灰袍推送"></a>来自@灰袍推送</h2><ol>
+<li><p>论黑客工程化是我们的追求。黑客工程化是我们的追求。黑客工程化的意思是：我们的所有技能需要成体系活动，能交给机器的都交给机器，我们控制机器“木偶们”来加速我们的效率。为了最优这个工程化，我们很明白什么技能是必须精通的，什么技能是够用就好，什么技能是拿来主义。</p>
+</li>
+<li><p>那个“安全技能树”圈子，新人太多，我一旦分享点复杂的，似乎都安静了。对于陌生的知识怎么办？先 mark，以后有机会再消化，没机会也无所谓，至少知道有这个就好。对于不陌生的，赶紧跟上实践。实战派，不废话。指的就是这个。</p>
+</li>
+<li><p>灰帽 C#，这本书很不错，玩 Win 渗透的，建议这本书实操完。</p>
+</li>
+<li><p>什么黑客技术是好技术？黑产或 APT 组织已经在实战的技术 。</p>
+</li>
+<li><p>很多人不明白什么是职业什么是业余，什么是兴趣什么是工作。举个例子，黑客攻防，是我兴趣，也是工作，更成为了职业。而玩玩比特币、打打王者荣耀、吃吃小龙虾虽也是兴趣，但很业余，我不会通过这种方式去赚钱，能赚到也是投机罢了，如果能成大事，那也是投机，命运选中了我而已。再往细了说，黑客攻防分支领域几十条，也仅某些条会是我的职业，而有不少仅仅是业余，如打 CTF、玩黑手等。</p>
+</li>
+<li><p>通读两本行业一流的书籍是最稳的入门进阶方式。</p>
+</li>
+<li><p>设计一个商业模式的快感大于设计一个软件工程，不过都小于挖到一个大 0day，因为大 0day 自带牛逼的商业模式😄。</p>
+</li>
+<li><p>那些老协议，没认证与加密设计的，都会出大问题，多个 S 多关键。<a href="https://rtpbleed.com/">https://rtpbleed.com</a></p>
+</li>
+<li><p>天天喊发干货的人，我就问你 Kali 的每个工具你都了解过没，哪怕绝大多数点开看看都没吧？都懒成这样，是懒还是蠢？</p>
+</li>
+<li><p>干货拿走，消化一年再说：<a href="https://github.com/coreb1t/awesome-pentest-cheat-sheets">https://github.com/coreb1t/awesome-pentest-cheat-sheets</a></p>
+</li>
+<li><p>钓鱼攻击类型我总结几类：普通域名钓鱼、双因素钓鱼、XSS 高级钓鱼、CSRF 高级钓鱼、浏览器扩展钓鱼、系统木马钓鱼、MITM 钓鱼。这些细节在我的硬盘里。</p>
+</li>
+<li><p>建议大家开始关注“区块链”技术，在自己的技能树上多一个这个是好事，至少可以很好避免成为投机者中的韭菜。玩安全的，可以探索这个领域的安全问题。</p>
+</li>
+<li><p>不小心连续发的都是区块链相关的观点。做安全就是这样，需要跟上时代。区块链安全里，我们会把其分为两大类：区块链本身的安全，区块链之上各类业务的安全。对于我们来说，区块链本身的安全是我们的技能短板，里面大量的安全问题是需要算法、架构、工程的整体思考。如果不能深入到区块链创造细节里去，这类的安全从何研究？</p>
+</li>
+<li><p>未来的世界是去中心化与中心化的博弈平衡，绝对不会有完美的去中心化生态，原因请自行阅读《自私的基因》…</p>
+</li>
+<li><p>安全研究第一步：<strong>目标攻击面</strong>都有哪些？第二步：<strong>攻击路径如何描绘</strong>出来？这两大步骤是最考验安全人员经验及想象力的地方。</p>
+</li>
+<li><p>区块链世界最伟大的点在于：通过技术信仰吸引一批信徒且都利益绑定了。</p>
+</li>
+<li><p>比特币网络新增两个杀手锏，一个是闪电网络，一个是 RSK。</p>
+</li>
+<li><p>《麻省理工科技评论》2018 年“全球十大突破性技术” ：<a href="http://mp.weixin.qq.com/s/_kdbSRdIwr4bIXfNtut8Fw%EF%BC%8C%E5%8C%BF%E5%90%8D%E8%B4%A7%E5%B8%81Zcash%E5%9C%A8%E5%8D%81%E5%A4%A7%E4%B9%8B%E4%B8%80%E9%87%8C%E8%A2%AB%E6%8F%90%E5%8F%8A%E3%80%82">http://mp.weixin.qq.com/s/_kdbSRdIwr4bIXfNtut8Fw，匿名货币Zcash在十大之一里被提及。</a></p>
+</li>
+<li><p>看到 bettercap 从 Ruby 改为 Go，就等着 MSF 和 BeEF 了。黑客工程化的世界，要么 Python 要么 Go，其他都是小众，JavaScript 还差些火候。</p>
+</li>
+<li><p>Google 说了“您应始终使用 HTTPS 保护您的所有网站，即使这些网站并不处理敏感的通信。</p>
+</li>
+<li><p>你猜为什么？尤其是那些区块链世界的网站，即使上面没 Web 钱包，没交易所功能。</p>
+</li>
+<li><p>DNS Rebinding 技巧用于钱包节点 HTTP RPC 的攻击确实很猥琐，上古时代的技巧到现在还是这么的帅！</p>
+</li>
+<li><p>DNS这种设计一直是信息安全头顶的一朵乌云。</p>
+</li>
+</ol>
+<p><img src="/2021/10/02/%E7%81%B0%E8%A2%8D%E6%8E%A8%E9%80%81Mark/dns.jpg" alt="文本, 电子邮件  描述已自动生成"></p>
+<ol start="24">
+<li><p>当年门罗币背后的那些人设计出这个币种时有没有预见过，这个举动无意间让网络世界和平了不少:-)</p>
+</li>
+<li><p>一次漂亮的分享最大的利己是：极其加深自己对所分享知识的印象。</p>
+</li>
+<li><p>一个好漏洞从发现到 PoC 到 Exploit 到 Attack 到 Defense 到披露，可以完美打通一次任督二脉。这样的机会不多，多珍惜。</p>
+</li>
+<li><p>过了遍比特币生态网络里的 RSK 生态解决方案及相关源码，他们对安全有不错的理解，尤其是他们应该早有意识到以太坊生态安全缺陷，这点很赞。</p>
+</li>
+<li><p>以太坊智能合约的出现让软件工程师真的可以对得起工程师称号，多好的事。</p>
+</li>
+<li><p>创业最爽的是还能亲自带队攻克两个核心能力：1. 0day；2. 黑客工程。</p>
+</li>
+<li><p>玩前端黑只需掌握 Chrome DevTools 就好:-)</p>
+</li>
+<li><p>区块链本质根本不是什么去中心，而是利益共识。明白这点就行了。而我是游走在两个极端之间的人，我只知道这里存在很多安全攻防博弈。乱，浮，和你我无关，我们改变不了。</p>
+</li>
+<li><p>最快的成长方式就是实战中成长，比如你拿到攻击者的样本，立马可以吸收其手法精髓，防御上就可以有的放矢。再比如为了突破，你死磕到底，一回头会发现：卧槽，掌握了各种技巧，而这许多是死磕前绝无法想象到的。</p>
+</li>
+<li><p>创造比纯粹的 Hacking 更重要，但 Hacking 才能促进更独特的创造。</p>
+</li>
+<li><p>探索本质这是黑客必须具备的基本素质。</p>
+</li>
+<li><p>DApp 游戏本质是一场“代码即法律”的黑客游戏。</p>
+</li>
+<li><p>黑客的初阶是逆向思维，进阶则是正向思维。</p>
+</li>
+<li><p>区块链领域的黑客几乎都不是曾经的黑客，他们几乎都是很懂区块链的技术人员，且带了点逆向思维。曾经的黑客几乎都过时了，绝大多数没机会在这个新领域开天辟地，只能费劲地跟着。</p>
+</li>
+<li><p>5G 与 IoT 时代的风险与机遇：<a href="https://threatpost.com/the-danger-and-opportunity-in-5g-connectivity-and-iot/138493/">https://threatpost.com/the-danger-and-opportunity-in-5g-connectivity-and-iot/138493/</a> 如果 IPv6 也大量启用，那对网络空间测绘来说，是个新挑战🤔。</p>
+</li>
+<li><p>我说我们在做区块链安全，其实我们在做都是公链生态的安全，慢雾的机会仅在这，如果这个生态没了，慢雾也会沉静甚至消失。是的，所谓的联盟链、私链不是我们的机会，我们的机会在自由的网络空间里:-)</p>
+</li>
+<li><p><a href="https://mp.weixin.qq.com/s/s-gxfYsGUeosiRwpXoWN6w">https://mp.weixin.qq.com/s/s-gxfYsGUeosiRwpXoWN6w</a></p>
+</li>
+<li><p>维基解密新年推文里问：2019，你认为哪些被泄露的档案最能改变我们对人类文明的理解？… 要搞大事？</p>
+</li>
+</ol>
+<h2 id="来自-Ton-OKEx中文频道"><a href="#来自-Ton-OKEx中文频道" class="headerlink" title="来自@Ton&amp;OKEx中文频道"></a>来自@<strong>Ton&amp;OKEx中文频道</strong></h2><ol>
+<li>Ton区块链继承自Telegram，旨在为数十亿用户提供服务。它拥有超快的交易速度、低廉的费用和易于使用的原生应用程序，其中一些应用程序可以直接在Telegram中使用，如 @wallet 或 @cryptobot 。</li>
+</ol>
+]]></content>
+      <tags>
+        <tag>转载</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>R2S软路由搭建指南</title>
+    <url>/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/</url>
+    <content><![CDATA[<p>在一般访问Google等网站的情况下，往往需要在每个终端安装代理软件，如<code>Clash</code>，<code>SSR</code>等。而软路由的方式让我们对其访问变得无感。百科上对软路由的定义如下，即使用软件的方案来进行路由：</p>
+<blockquote>
+<p>软路由是指利用台式机或服务器的供应商配合一定软件而形成的路由解决方案，主要靠对软件的设置，实现路由器路由器的功能，它的软件与硬件是独立分开的。软路由使用普通计算机，使用通用的操作系统，如Linux或windows，因此软路由的设置事实上是windows或linux的设置。根据使用的操作系统不同，可以分为基于windows平台和基于Linux&#x2F;bsd平台开发的软件路由器。</p>
+</blockquote>
+<span id="more"></span>
+
+<h2 id="设备"><a href="#设备" class="headerlink" title="设备"></a>设备</h2><p>Nanopi R2S</p>
+<p>最低价可以买裸板，TF卡自己单买的，5v3a&#x2F;2a电源使用之前的旧设备。读卡器已有</p>
+<p><img src="/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-06-06-image.png"></p>
+<p>64GTF卡</p>
+<p><img src="/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-10-18-image.png"></p>
+<h2 id="刷机"><a href="#刷机" class="headerlink" title="刷机"></a>刷机</h2><p>使用<code>FriendlyWrt</code>系统，镜像下载：</p>
+<p><a href="https://drive.google.com/drive/folders/1W-2MLML9lkD2xAVjiwzEBNiUlPF5BgU9">01_SD card images - Google 云端硬盘</a></p>
+<ul>
+<li>rk3328-sd-friendlywrt-23.05-20231223.img.gz</li>
+</ul>
+<p><code>balenaEtcher</code>烧录至TF卡</p>
+<p><img src="/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-15-56-image.png"></p>
+<h3 id="网络拓扑"><a href="#网络拓扑" class="headerlink" title="网络拓扑"></a>网络拓扑</h3><p>网络结构比较简单，如下<br>光猫&lt;——–&gt;(WAN)R2S(LAN)&lt;——–&gt;(WAN)小米路由器</p>
+<p>等待开机后，访问<code>192.168.2.1</code>。使用<code>root/passowrd</code>即可进入FriendlyWrt的管理后台</p>
+<p><img src="/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-35-01-image.png"></p>
+<h2 id="OpenClash配置"><a href="#OpenClash配置" class="headerlink" title="OpenClash配置"></a>OpenClash配置</h2><p>如<code>OpenClash</code>描述，需要安装客户端与内核模块</p>
+<p>客户端安装</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#安装依赖</span></span><br><span class="line">* luci</span><br><span class="line">* luci-base</span><br><span class="line">* iptables</span><br><span class="line">* dnsmasq-full</span><br><span class="line">* coreutils</span><br><span class="line">* coreutils-nohup</span><br><span class="line">* bash</span><br><span class="line">* curl</span><br><span class="line">* jsonfilter</span><br><span class="line">* ca-certificates</span><br><span class="line">* ipset</span><br><span class="line">* ip-full</span><br><span class="line">* iptables-mod-tproxy</span><br><span class="line">* kmod-tun(TUN模式)</span><br><span class="line">* luci-compat(Luci-19.07)</span><br><span class="line"></span><br><span class="line"><span class="comment">#上传IPK文件至您路由器的 /tmp 目录下</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#假设安装包名字为</span></span><br><span class="line">luci-app-openclash_0.33.7-beta_all.ipk</span><br><span class="line"></span><br><span class="line"><span class="comment">#执行安装命令</span></span><br><span class="line">opkg install /tmp/luci-app-openclash_0.33.7-beta_all.ipk</span><br><span class="line"></span><br><span class="line"><span class="comment">#执行卸载命令</span></span><br><span class="line"><span class="comment">#插件在卸载后会自动备份配置文件到 /tmp 目录下，除非路由器重启，在下次安装时将还原您的配置文件</span></span><br><span class="line">opkg remove luci-app-openclash</span><br><span class="line"></span><br><span class="line">安装完成后刷新LUCI页面，在菜单栏 -&gt; 服务 -&gt; OpenClash 进入插件页面</span><br></pre></td></tr></table></figure>
+
+<p>内核</p>
+<p>进入<code>OpenClash</code>插件页面时，总是下载失败。可以增加代理来完成安装</p>
+<p><img src="/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-40-11-image.png"></p>
+<p>启动</p>
+<p>最后，上传配置文件，并启动即可。最终效果如下</p>
+<p><img src="/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-41-41-image.png"></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://wiki.friendlyelec.com/wiki/index.php/NanoPi_R2S/zh">https://wiki.friendlyelec.com/wiki/index.php/NanoPi_R2S/zh</a></p>
+<p><a href="https://wiki.mbalib.com/wiki/%E8%BD%AF%E8%B7%AF%E7%94%B1">软路由 - MBA智库百科</a></p>
+<p><a href="https://github.com/vernesong/OpenClash/releases">Releases · vernesong&#x2F;OpenClash · GitHub</a></p>
+]]></content>
+      <tags>
+        <tag>Google</tag>
       </tags>
   </entry>
 </search>

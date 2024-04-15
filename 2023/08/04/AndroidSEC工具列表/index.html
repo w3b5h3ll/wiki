@@ -22,15 +22,15 @@
 
 <script class="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"8.0.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"buttons","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"8.0.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"buttons","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
   </script>
 
-  <meta name="description" content="Android客户端漏洞挖掘常见工具使用，在分析时可以有一个初步的判断。测试过程还是要依靠CheckList+攻击面分析做到覆盖度，避免随机挖洞。  Packer识别与脱壳甲方安全与乙方安全有很大的不同，一般外部人员进行测试需要去完成脱壳，过环境监测等一些分析环境初始化工作。这里只介绍工具使用，不对原理进行展开。 尝试对改论文中提到的主流工具进行测试：《ART环境下的Android软件通用脱壳方">
+  <meta name="description" content="Android客户端漏洞挖掘常见工具使用，在分析时可以有一个初步的判断。测试过程还是要依靠CheckList+攻击面分析做到覆盖度，避免随机挖洞。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="AndroidSEC工具列表">
 <meta property="og:url" content="http://example.com/2023/08/04/AndroidSEC%E5%B7%A5%E5%85%B7%E5%88%97%E8%A1%A8/index.html">
 <meta property="og:site_name" content="尘埃落定的空间站">
-<meta property="og:description" content="Android客户端漏洞挖掘常见工具使用，在分析时可以有一个初步的判断。测试过程还是要依靠CheckList+攻击面分析做到覆盖度，避免随机挖洞。  Packer识别与脱壳甲方安全与乙方安全有很大的不同，一般外部人员进行测试需要去完成脱壳，过环境监测等一些分析环境初始化工作。这里只介绍工具使用，不对原理进行展开。 尝试对改论文中提到的主流工具进行测试：《ART环境下的Android软件通用脱壳方">
+<meta property="og:description" content="Android客户端漏洞挖掘常见工具使用，在分析时可以有一个初步的判断。测试过程还是要依靠CheckList+攻击面分析做到覆盖度，避免随机挖洞。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2023/08/04/AndroidSEC%E5%B7%A5%E5%85%B7%E5%88%97%E8%A1%A8/2023-08-08-01-31-07-image.png">
 <meta property="og:image" content="http://example.com/2023/08/04/AndroidSEC%E5%B7%A5%E5%85%B7%E5%88%97%E8%A1%A8/2023-08-08-01-32-23-image.png">
@@ -40,7 +40,7 @@
 <meta property="og:image" content="http://example.com/2023/08/04/AndroidSEC%E5%B7%A5%E5%85%B7%E5%88%97%E8%A1%A8/2023-08-06-20-55-20-image.png">
 <meta property="og:image" content="http://example.com/2023/08/04/AndroidSEC%E5%B7%A5%E5%85%B7%E5%88%97%E8%A1%A8/2023-08-06-21-59-13-image.png">
 <meta property="article:published_time" content="2023-08-03T21:55:44.000Z">
-<meta property="article:modified_time" content="2024-04-07T03:11:07.680Z">
+<meta property="article:modified_time" content="2024-04-14T11:29:58.578Z">
 <meta property="article:author" content="w3b5h3ll">
 <meta property="article:tag" content="AndroidSEC">
 <meta name="twitter:card" content="summary">
@@ -145,19 +145,14 @@
     <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
-        <li class="menu-item menu-item-about">
-
-    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
-
-  </li>
         <li class="menu-item menu-item-tags">
 
     <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
 
   </li>
-        <li class="menu-item menu-item-archives">
+        <li class="menu-item menu-item-about">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -228,8 +223,7 @@
 <div class="site-state-wrap animated">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
-          <a href="/archives/">
-        
+          <a href="/archives">
           <span class="site-state-item-count">12</span>
           <span class="site-state-item-name">日志</span>
         </a>
@@ -308,7 +302,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2024-04-07 11:11:07" itemprop="dateModified" datetime="2024-04-07T11:11:07+08:00">2024-04-07</time>
+        <time title="修改时间：2024-04-14 19:29:58" itemprop="dateModified" datetime="2024-04-14T19:29:58+08:00">2024-04-14</time>
       </span>
 
   
@@ -345,6 +339,8 @@
         <blockquote>
 <p>Android客户端漏洞挖掘常见工具使用，在分析时可以有一个初步的判断。测试过程还是要依靠CheckList+攻击面分析做到覆盖度，避免随机挖洞。</p>
 </blockquote>
+<span id="more"></span>
+
 <h2 id="Packer识别与脱壳"><a href="#Packer识别与脱壳" class="headerlink" title="Packer识别与脱壳"></a>Packer识别与脱壳</h2><p>甲方安全与乙方安全有很大的不同，一般外部人员进行测试需要去完成脱壳，过环境监测等一些<strong>分析环境初始化</strong>工作。这里只介绍工具使用，不对原理进行展开。</p>
 <p>尝试对改论文中提到的主流工具进行测试：<strong>《ART环境下的Android软件通用脱壳方法研究》</strong>，引用一张文章中的图，如下</p>
 <p><img src="/2023/08/04/AndroidSEC%E5%B7%A5%E5%85%B7%E5%88%97%E8%A1%A8/2023-08-08-01-31-07-image.png"></p>
@@ -605,7 +601,7 @@
   </span>
   <span class="author" itemprop="copyrightHolder">w3b5h3ll</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
   </div>
 
     </div>
@@ -615,7 +611,7 @@
   <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
-<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
 
   
 
