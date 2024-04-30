@@ -1,795 +1,146 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>AndroidSEC工具列表</title>
-    <url>/2023/08/04/AndroidSEC%E5%B7%A5%E5%85%B7%E5%88%97%E8%A1%A8/</url>
-    <content><![CDATA[<blockquote>
-<p>Android客户端漏洞挖掘常见工具使用，在分析时可以有一个初步的判断。测试过程还是要依靠CheckList+攻击面分析做到覆盖度，避免随机挖洞。</p>
-</blockquote>
-<span id="more"></span>
-
-<h2 id="Packer识别与脱壳"><a href="#Packer识别与脱壳" class="headerlink" title="Packer识别与脱壳"></a>Packer识别与脱壳</h2><p>甲方安全与乙方安全有很大的不同，一般外部人员进行测试需要去完成脱壳，过环境监测等一些<strong>分析环境初始化</strong>工作。这里只介绍工具使用，不对原理进行展开。</p>
-<p>尝试对改论文中提到的主流工具进行测试：<strong>《ART环境下的Android软件通用脱壳方法研究》</strong>，引用一张文章中的图，如下</p>
-<p><img src="/2023/08/04/AndroidSEC%E5%B7%A5%E5%85%B7%E5%88%97%E8%A1%A8/2023-08-08-01-31-07-image.png"></p>
-<p><img src="/2023/08/04/AndroidSEC%E5%B7%A5%E5%85%B7%E5%88%97%E8%A1%A8/2023-08-08-01-32-23-image.png"></p>
-<h3 id="Packer识别"><a href="#Packer识别" class="headerlink" title="Packer识别"></a>Packer识别</h3><p>Android应用可以使用<code>APKiD</code>与<code>GDA</code>工具进行识别</p>
-<p>APKiD</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Install</span></span><br><span class="line">pip install apkid</span><br><span class="line"></span><br><span class="line"><span class="comment"># Using</span></span><br><span class="line">➤ apkid demo.apk                                                                                                                          (base) </span><br><span class="line">[+] APKiD 2.1.5 :: from RedNaga :: rednaga.io</span><br><span class="line">[*] demo.apk</span><br><span class="line"> |-&gt; packer : Tencent<span class="string">&#x27;s Legu</span></span><br><span class="line"><span class="string">[*] demo.apk!assets/sc/sc!classes.dex</span></span><br><span class="line"><span class="string"> |-&gt; compiler : r8</span></span><br><span class="line"><span class="string"> |-&gt; obfuscator : unreadable field names, unreadable method names</span></span><br><span class="line"><span class="string">[*] demo.apk!assets/magisk!system/priv-app/WPengSystemCore/WPengSystemCore.apk!classes.dex</span></span><br><span class="line"><span class="string"> |-&gt; compiler : r8</span></span><br><span class="line"><span class="string"> |-&gt; obfuscator : unreadable field names, unreadable method names</span></span><br><span class="line"><span class="string">[*] demo.apk!lib/armeabi/libshell-super.2019.so</span></span><br><span class="line"><span class="string"> |-&gt; anti_vm : emulator file check</span></span><br><span class="line"><span class="string">[*] demo.apk!assets/libshellx-super.2019.so</span></span><br><span class="line"><span class="string"> |-&gt; anti_vm : emulator file check</span></span><br><span class="line"><span class="string">[*] demo.apk!classes.dex</span></span><br><span class="line"><span class="string"> |-&gt; anti_disassembly : non-zero link offset, non-zero link size</span></span><br><span class="line"><span class="string"> |-&gt; anti_vm : Build.TAGS check, emulator file check, possible Build.SERIAL check, possible ro.secure check</span></span><br><span class="line"><span class="string"> |-&gt; compiler : dexlib 2.x</span></span><br><span class="line"><span class="string"> |-&gt; packer : Mobile Tencent Protect</span></span><br></pre></td></tr></table></figure>
-
-<p>GDA</p>
-<p>直接将apk拖入即可识别</p>
-<h3 id="脱壳"><a href="#脱壳" class="headerlink" title="脱壳"></a>脱壳</h3><h4 id="FRIDA-DEXdump"><a href="#FRIDA-DEXdump" class="headerlink" title="FRIDA-DEXdump"></a>FRIDA-DEXdump</h4><p>objection无法加载，pip 安装使用即可。使用的环境依旧是frida12.8.0，<code>git clone + python ./setup.py install</code>安装</p>
-<p><a href="https://github.com/hluwa/frida-dexdump">https://github.com/hluwa/frida-dexdump</a></p>
-<p><a href="https://mp.weixin.qq.com/s/n2XHGhshTmvt2FhxyFfoMA">https://mp.weixin.qq.com/s/n2XHGhshTmvt2FhxyFfoMA</a></p>
-<h4 id="Fart"><a href="#Fart" class="headerlink" title="Fart"></a>Fart</h4><p><a href="https://github.com/hanbinglengyue/FART">https://github.com/hanbinglengyue/FART</a></p>
-<ul>
-<li>android6.0，android8.0</li>
-</ul>
-<h4 id="Youpk"><a href="#Youpk" class="headerlink" title="Youpk"></a>Youpk</h4><p><a href="https://github.com/Youlor/unpacker">https://github.com/Youlor/unpacker</a></p>
-<ul>
-<li><p>Pixel 1</p>
-</li>
-<li><p>android-7.1.2_r33</p>
-</li>
-</ul>
-<h4 id="BlackDex"><a href="#BlackDex" class="headerlink" title="BlackDex"></a>BlackDex</h4><p><a href="https://github.com/CodingGay/BlackDex">https://github.com/CodingGay/BlackDex</a></p>
-<ul>
-<li><p>android5.0-12</p>
-</li>
-<li><p><strong>仅支持被壳保护的dex</strong>，不支持App动态加载的dex&#x2F;jar</p>
-</li>
-</ul>
-<p>安装BlackDex.apk进行脱壳即可</p>
-<p><img src="/2023/08/04/AndroidSEC%E5%B7%A5%E5%85%B7%E5%88%97%E8%A1%A8/2023-08-08-10-42-12-image.png"></p>
-<h4 id="VMOS"><a href="#VMOS" class="headerlink" title="VMOS"></a>VMOS</h4><h2 id="Drozer"><a href="#Drozer" class="headerlink" title="Drozer"></a>Drozer</h2><h3 id="安装与基础使用"><a href="#安装与基础使用" class="headerlink" title="安装与基础使用"></a>安装与基础使用</h3><p>Mac上安装Python2.7的姿势</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 失败</span></span><br><span class="line">sudo easy_install pip</span><br><span class="line"></span><br><span class="line"><span class="comment"># 成功</span></span><br><span class="line">curl <span class="string">&#x27;https://bootstrap.pypa.io/pip/2.7/get-pip.py&#x27;</span> &gt; get-pip.py</span><br><span class="line"><span class="comment"># tiger @ mbp in ~ [10:47:37]</span></span><br><span class="line">$ <span class="built_in">which</span> pip</span><br><span class="line">/Users/tiger/Library/Python/2.7/bin/pip</span><br></pre></td></tr></table></figure>
-
-<p>建议使用<strong>conda</strong>开启Python2.7的虚拟机环境进行安装</p>
-<ul>
-<li><p>whl安装包</p>
-</li>
-<li><p>agent安装包</p>
-</li>
-<li><p>测试安装包sieve.apk（无法使用Genymotion模拟器进行安装，建议使用真机）</p>
-</li>
-</ul>
-<p><img src="/2023/08/04/AndroidSEC%E5%B7%A5%E5%85%B7%E5%88%97%E8%A1%A8/2023-08-06-19-51-11-image.png"></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo pip install drozer-2.4.4-py2-none-any.whl --ignore-installed pyOpenSSL</span><br><span class="line">sudo pip install protobuf pyOpenSSL Twisted service_identity</span><br></pre></td></tr></table></figure>
-
-<p>开启服务端并连接</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">adb forward tcp:31415 tcp:31415</span><br></pre></td></tr></table></figure>
-
-<p><img src="/2023/08/04/AndroidSEC%E5%B7%A5%E5%85%B7%E5%88%97%E8%A1%A8/2023-08-06-20-33-57-image.png"></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">drozer console connect</span><br><span class="line">...</span><br><span class="line">drozer Console (v2.4.4)</span><br><span class="line">dz&gt;</span><br></pre></td></tr></table></figure>
-
+    <title>R2S软路由搭建指南</title>
+    <url>/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/</url>
+    <content><![CDATA[<p>在一般访问Google等网站的情况下，往往需要在每个终端安装代理软件，如<code>Clash</code>，<code>SSR</code>等。而软路由的方式让我们对其访问变得无感。百科上对软路由的定义如下，即使用软件的方案来进行路由：</p>
 <blockquote>
-<p>Interesting Commands</p>
-</blockquote>
-<table>
-<thead>
-<tr>
-<th><strong>Commands</strong></th>
-<th><strong>Description</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>Help MODULE</strong></td>
-<td>Shows help of the selected module</td>
-</tr>
-<tr>
-<td><strong>list</strong></td>
-<td>Shows a list of all drozer modules that can be executed in the current session. This hides modules that you don’t have appropriate permissions to run.</td>
-</tr>
-<tr>
-<td><strong>shell</strong></td>
-<td>Start an interactive Linux shell on the device, in the context of the Agent.</td>
-</tr>
-<tr>
-<td><strong>clean</strong></td>
-<td>Remove temporary files stored by drozer on the Android device.</td>
-</tr>
-<tr>
-<td><strong>load</strong></td>
-<td>Load a file containing drozer commands and execute them in sequence.</td>
-</tr>
-<tr>
-<td><strong>module</strong></td>
-<td>Find and install additional drozer modules from the Internet.</td>
-</tr>
-<tr>
-<td><strong>unset</strong></td>
-<td>Remove a named variable that drozer passes to any Linux shells that it spawns.</td>
-</tr>
-<tr>
-<td><strong>set</strong></td>
-<td>Stores a value in a variable that will be passed as an environmental variable to any Linux shells spawned by drozer.</td>
-</tr>
-<tr>
-<td><strong>shell</strong></td>
-<td>Start an interactive Linux shell on the device, in the context of the Agent</td>
-</tr>
-<tr>
-<td><strong>run MODULE</strong></td>
-<td>Execute a drozer module</td>
-</tr>
-<tr>
-<td><strong>exploit</strong></td>
-<td>Drozer can create exploits to execute in the decide. <code>drozer exploit list</code></td>
-</tr>
-<tr>
-<td><strong>payload</strong></td>
-<td>The exploits need a payload. <code>drozer payload list</code></td>
-</tr>
-</tbody></table>
-<p>常用命令，结合sieve该app进行说明</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Package</span></span><br><span class="line"><span class="comment"># 过滤package名称</span></span><br><span class="line">run app.package.list -f sieve</span><br><span class="line"><span class="comment"># package基本信息</span></span><br><span class="line">run app.package.info -a com.mwr.example.sieve</span><br><span class="line"><span class="comment"># mainfest信息</span></span><br><span class="line">run app.package.manifest com.mwr.example.sieve</span><br><span class="line"><span class="comment"># 攻击面分析</span></span><br><span class="line">run app.package.attacksurface com.mwr.example.sieve</span><br><span class="line">dz&gt; run app.package.attacksurface com.mwr.example.sieve</span><br><span class="line">Attack Surface:</span><br><span class="line">  3 activities exported</span><br><span class="line">  0 broadcast receivers exported</span><br><span class="line">  2 content providers exported</span><br><span class="line">  2 services exported</span><br><span class="line">    is debuggable</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># Activity</span></span><br><span class="line"><span class="comment"># 获取可导出activity</span></span><br><span class="line">run app.activity.info -a com.mwr.example.sieve</span><br><span class="line"><span class="comment"># 启动activity，使用adb或者drozer</span></span><br><span class="line">adb shell am start -n com.example.demo/com.example.test.MainActivity</span><br><span class="line">run app.activity.start --component com.mwr.example.sieve com.mwr.example.sieve.PWList</span><br></pre></td></tr></table></figure>
-
-<p>可以知道，启动了另外的Activity</p>
-<p><img src="/2023/08/04/AndroidSEC%E5%B7%A5%E5%85%B7%E5%88%97%E8%A1%A8/2023-08-06-20-55-20-image.png"></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Content Providers</span></span><br><span class="line"><span class="comment"># 获取暴露的content provider信息</span></span><br><span class="line">run app.provider.info -a com.mwr.example.sieve </span><br><span class="line"><span class="comment"># 获取URI信息</span></span><br><span class="line">run scanner.provider.finduris -a com.mwr.example.sieve </span><br><span class="line"></span><br><span class="line"><span class="comment"># 基于database的content provider</span></span><br><span class="line"><span class="comment"># 查询content，数据库相关的curd，增删改查</span></span><br><span class="line">run app.provider.query content://com.mwr.example.sieve.DBContentProvider/Passwords/ --vertical</span><br><span class="line">dz&gt; run app.provider.query content://com.mwr.example.sieve.DBContentProvider/Passwords/</span><br><span class="line">| _id | service | username | password | email |</span><br><span class="line">dz&gt; run app.provider.query content://com.mwr.example.sieve.DBContentProvider/Keys/</span><br><span class="line">| Password         | pin  |</span><br><span class="line">| 1234567890qwerty | 1234 |</span><br><span class="line"></span><br><span class="line">dz&gt; run app.provider.insert content://com.mwr.example.sieve.DBContentProvider/Keys/ --string pin 1337 --string Password 123456</span><br><span class="line">Done.</span><br><span class="line"></span><br><span class="line">dz&gt; run app.provider.query content://com.mwr.example.sieve.DBContentProvider/Keys/ --vertical </span><br><span class="line">Password  1234567890qwerty</span><br><span class="line">     pin  1234</span><br><span class="line"></span><br><span class="line">Password  123456</span><br><span class="line">     pin  1337</span><br></pre></td></tr></table></figure>
-
-<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><h3 id="AppInfoScanner"><a href="#AppInfoScanner" class="headerlink" title="AppInfoScanner"></a>AppInfoScanner</h3><ul>
-<li><p>静态信息扫描</p>
-</li>
-<li><p>资产收集</p>
-</li>
-</ul>
-<p>python app.py android -i ~&#x2F;Desktop&#x2F;sieve.apk </p>
-<p><img src="/2023/08/04/AndroidSEC%E5%B7%A5%E5%85%B7%E5%88%97%E8%A1%A8/2023-08-06-21-59-13-image.png"></p>
-<h3 id="ApplicationScanner"><a href="#ApplicationScanner" class="headerlink" title="ApplicationScanner"></a>ApplicationScanner</h3><ul>
-<li>漏洞扫描</li>
-</ul>
-<p>python AppScannner.py -i ~&#x2F;Desktop&#x2F;sieve.apk</p>
-<h3 id="AppShark"><a href="#AppShark" class="headerlink" title="AppShark"></a>AppShark</h3><p><a href="https://github.com/bytedance/appshark">https://github.com/bytedance/appshark</a></p>
-<ul>
-<li><p>静态污点分析工具</p>
-</li>
-<li><p>Java11</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">java -jar build/libs/AppShark-0.1.2-all.jar  config/config.json5</span><br><span class="line"><span class="comment"># config</span></span><br><span class="line">&#123;</span><br><span class="line">  //apk to anlayze</span><br><span class="line">  <span class="string">&quot;apkPath&quot;</span>: <span class="string">&quot;/Users/tiger/Desktop/sieve.apk&quot;</span>,</span><br><span class="line">  //result output directory</span><br><span class="line">  <span class="string">&quot;out&quot;</span>: <span class="string">&quot;out&quot;</span>,</span><br><span class="line">  <span class="string">&quot;rules&quot;</span>: <span class="string">&quot;unZipSlip.json&quot;</span>,</span><br><span class="line">  <span class="string">&quot;maxPointerAnalyzeTime&quot;</span>: 600,</span><br><span class="line">  //print more info about this rule</span><br><span class="line">  <span class="string">&quot;debugRule&quot;</span>: <span class="string">&quot;unZipSlip&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="APKHunt"><a href="#APKHunt" class="headerlink" title="APKHunt"></a>APKHunt</h3><p>Linux环境使用，一个go开发的工具，用于满足OWASP MASVS安全要求</p>
-<p><a href="https://github.com/Cyber-Buddy/APKHunt">https://github.com/Cyber-Buddy/APKHunt</a></p>
-<h3 id="apk-sh"><a href="#apk-sh" class="headerlink" title="apk.sh"></a>apk.sh</h3><p>一个脚本工具，增强功能</p>
-<p><a href="https://github.com/ax/apk.sh">https://github.com/ax/apk.sh</a></p>
-<h3 id="Yaazhini"><a href="#Yaazhini" class="headerlink" title="Yaazhini"></a>Yaazhini</h3><p>APK扫描工具，UI漂亮</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://bbs.kanxue.com/thread-269196.htm">https://bbs.kanxue.com/thread-269196.htm</a></p>
-<p>Drozer</p>
-<ul>
-<li><p><a href="https://labs.withsecure.com/tools/drozer">Drozer | WithSecure™ Labs</a></p>
-</li>
-<li><p><a href="https://github.com/WithSecureLabs/drozer">https://github.com/WithSecureLabs/drozer</a></p>
-</li>
-<li><p><a href="https://book.hacktricks.xyz/mobile-pentesting/android-app-pentesting/drozer-tutorial">Drozer Tutorial - HackTricks</a></p>
-</li>
-</ul>
-<p><a href="https://mp.weixin.qq.com/s?__biz=MzI3MDQ1NDE2OA==&mid=2247487564&idx=1&sn=ba311de5fa67cc99de8885f7dc8d2de3&chksm=ead18cbbdda605ad34e32a9ef7ff45a64e89dbe5aa54118d4588d11e82465607e6b5fea91f4f&token=318214511&lang=zh_CN#rd">Android漏洞挖掘三件套</a></p>
-<p>脱壳</p>
-<ul>
-<li><p><a href="http://www.juziss.cn/2020/09/22/app%E7%9A%84%E5%8A%A0%E5%A3%B3%E4%B8%8E%E8%84%B1%E5%A3%B3/">app的加壳与脱壳 | 一只橘子的思考</a></p>
-</li>
-<li><p>《ART环境下的Android软件通用脱壳方法研究》</p>
-</li>
-</ul>
-]]></content>
-      <tags>
-        <tag>AndroidSEC</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>AndroidSEC抓包总结</title>
-    <url>/2022/11/28/AndroidSEC%E6%8A%93%E5%8C%85%E6%80%BB%E7%BB%93/</url>
-    <content><![CDATA[<p>抓包分析客户端与后台通信流量</p>
-<span id="more"></span>
-
-<h2 id="HTTP抓包简介"><a href="#HTTP抓包简介" class="headerlink" title="HTTP抓包简介"></a>HTTP抓包简介</h2><p>抓包方式：</p>
-<ul>
-<li>HTTP框架hook</li>
-<li>系统框架hook</li>
-<li>中间人代理</li>
-</ul>
-<p>常见抓包工具：</p>
-<ul>
-<li>Charles</li>
-<li>BurpSuite</li>
-<li>……</li>
-</ul>
-<p>使用<code>Charles</code>，可以发现https的包都是无法解析的，但可以抓取http</p>
-<p><img src="/2022/11/28/AndroidSEC%E6%8A%93%E5%8C%85%E6%80%BB%E7%BB%93/image-20221128215932542.png" alt="image-20221128215932542"></p>
-<p>BurpSuite同理，使用比较方便</p>
-<p>HTTP缺陷：</p>
-<ul>
-<li>通信明文，被监听</li>
-<li>不验证对方身份，造成伪装</li>
-<li>无法验证完整性，被篡改</li>
-</ul>
-<h2 id="HTTPS中间人抓包"><a href="#HTTPS中间人抓包" class="headerlink" title="HTTPS中间人抓包"></a>HTTPS中间人抓包</h2><p>核心原理：抓住包在明文的一切时机</p>
-<p>HTTPS请求过程</p>
-<ul>
-<li>验证过程属于浏览器的动作，所以需要在客户端安装代理工具的证书</li>
-</ul>
-<p><img src="https://www.ibm.com/docs/en/SSZHJ2_9.3.0/securing/graphics/hndshake.jpg"></p>
-<p>应用层HTTPS抓包原理</p>
-<p><img src="https://cheapsslsecurity.com/blog/wp-content/uploads/2021/11/ssl-stripping-types-of-man-in-the-middle-attaccks.png" alt="Types of man in the middle attacks graphic: This diagram illustrates how SSL stripping works"></p>
-<h3 id="Android10中间人抓包"><a href="#Android10中间人抓包" class="headerlink" title="Android10中间人抓包"></a>Android10中间人抓包</h3><blockquote>
-<p>在<a href="https://developer.android.com/training/articles/security-config?hl=zh-cn#CustomTrust">谷歌官网中</a>，了解到在<code>Android6.0</code>之前，应用会默认信任用户添加的CA存储区，7.0以及之后则是默认信任系统预装的CA。所以才会出现有时候即使安装了证书，依然无法抓取https流量的问题。</p>
-</blockquote>
-<p><img src="/2022/11/28/AndroidSEC%E6%8A%93%E5%8C%85%E6%80%BB%E7%BB%93/image-20221203150937497.png" alt="image-20221203150937497"></p>
-<p><strong>将证书安装至系统CA（此处以burp证书来说明）</strong></p>
-<ol>
-<li>证书格式转换</li>
-</ol>
-<p>burp导出后证书为<code>der</code>格式，将其转换为<code>pem</code>格式</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl x509 -inform DER -<span class="keyword">in</span> xxx.der -out xxx.pem</span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>计算hash值并重命名</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl x509 -inform PEM -subject_hash_old -<span class="keyword">in</span> xxx.pem</span><br><span class="line"><span class="built_in">mv</span> xxx.pem 9a5ba575.0</span><br><span class="line"></span><br><span class="line">openssl x509 -inform PEM -subject_hash_old -<span class="keyword">in</span> cacert.pem</span><br><span class="line">9a5ba575</span><br><span class="line">----BEGIN CERTIFICATE-</span><br><span class="line">MIIDyTCCArGgAWIBAgIEUOviVzANBgkqhkiG9w0BAQSFADCBijEUMBIGA1UEBhMLUG9ydFN3aWdnZXIxFDASBgNVBAgTC1BvcnRTd21nz2VyMRQwEgYDVQQHEwtQb3J0</span><br><span class="line">U3dpz2dlcjEUMBIGA1UEChMLUG9ydFN3aWdnZXIxFzAVBgNVBASTD1BvcnRTd21nZ2VyIENBMRCWFQYDVQQDEw5Qb3J0U3dpz2dlciBDQTAeFw0xNDAOMTQXMZI5MzVa</span><br><span class="line">Fw00MjAOMTQXMZI5MzVaMIGKMRQWEgYDVQQGEwtQb3J0U3dpz2dlcjEUMBIGA1UEGAJECXMOUG9ycnRTd2.CdhUxCDIhZvLJ7Pa7Ufac</span><br><span class="line">T7mcIfKS4YcE50PZ/U+okICGdtCaazfh/5Dd31UAC3taisW93UbficcRAhol+uQikJfXIuH1/hMiBza4G0x4zEanpUlv09AdTVpWilsjsvj8C/bnRIzzen3txHgHPuYJ7+hn2JGPfUDE3Jg4Z8B7tTOrg0iLTeC02</span><br><span class="line">XxKEte+1sNWy/0qKB/yUb14gFuMPrXwIDAQABozUwMzASBgNVHRMBAf8ECDAGAQH/AgEAMB0GA1UdDgQWBBRbHd8X70xgbAuh/1WHDb916MS4nDANBgkqhkiG9w0BAQSFAAOCAQEAfSag</span><br><span class="line">FORECRrOVCJVbsposU/gs8wgR8GT1/wujBorVnTr7w51XTgE6pGzMGxQ+vXkYne1tSwGoW7esJJz4IvDtdNpF0JvlBLdE010/PJHI4dCGn2dmLdIcZoXKf9VC40r2BEV</span><br><span class="line">IibdZuNq0ADaZOI5TPxQrg7/T3FpSWp6yyTFpx2eqWvxL1kINDNy2AAxtE3X10Qc5kNrgJoF/N7DoTnqr2rt4uXpPsbcvwD7GQ2Br60e9QZz4vX4ChCFDUwibPjdR7jt</span><br><span class="line">hfQinYkM2oqu+8HPViMYX83yds34MnDawU0+4KvS56Mq8S6EnpTryWZYw6N1+nHbOQruHJLlux+ek0R6uw==</span><br><span class="line">---END CERTIFICATE-----</span><br></pre></td></tr></table></figure>
-
-<ol start="3">
-<li>推送至系统CA存储区域</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">adb push 9a5ba575.0 /sdcard/</span><br><span class="line">adb shell</span><br><span class="line">su</span><br><span class="line"><span class="built_in">mv</span> /sdcard/9a5ba575.0 /system/etc/security/cacerts</span><br></pre></td></tr></table></figure>
-
-<h4 id="自动化推送证书"><a href="#自动化推送证书" class="headerlink" title="自动化推送证书"></a>自动化推送证书</h4><p>使用Magisk模块：<code>Move Certificates</code>，每次重启手机即可</p>
-<p>官方的release可能有点问题，使用：<a href="https://github.com/Magisk-Modules-Repo/movecert/issues/12">https://github.com/Magisk-Modules-Repo/movecert/issues/12</a></p>
-<p><img src="/2022/11/28/AndroidSEC%E6%8A%93%E5%8C%85%E6%80%BB%E7%BB%93/image-20221203174122097.png" alt="image-20221203174122097"></p>
-<h4 id="使用Charles进行VPN抓包"><a href="#使用Charles进行VPN抓包" class="headerlink" title="使用Charles进行VPN抓包"></a>使用Charles进行VPN抓包</h4><p>参考学习：<a href="https://www.apicloud.com/blogDetails/9198">https://www.apicloud.com/blogDetails/9198</a></p>
-<p>手机端安装<code>Postern</code>，一款Android的全局代理工具，使用此种抓包主要是绕过app的<code>NO_PROXY</code>模式。原理为：<strong>使用VPN抓包的原理是，先将手机请求导到VPN，再对VPN的网络进行Charles的代理，绕过了对App的代理检测。</strong></p>
-<p>手机端导入证书</p>
-<p><img src="/2022/11/28/AndroidSEC%E6%8A%93%E5%8C%85%E6%80%BB%E7%BB%93/image-20221203192502485.png" alt="image-20221203192502485"></p>
-<p>在手机上浏览器访问<a href="http://charlesproxy.com/getssl%EF%BC%8C%E4%B8%8B%E8%BD%BD%E5%AE%89%E8%A3%85%E8%AF%81%E4%B9%A6%EF%BC%88%E9%9C%80%E8%A6%81%E5%88%B0%E8%AE%BE%E7%BD%AE%E9%87%8C%E9%9D%A2%E5%8E%BB%E5%AE%89%E8%A3%85%EF%BC%89">http://charlesproxy.com/getssl，下载安装证书（需要到设置里面去安装）</a></p>
-<p><img src="/2022/11/28/AndroidSEC%E6%8A%93%E5%8C%85%E6%80%BB%E7%BB%93/image-20221203192630183.png" alt="image-20221203192630183"></p>
-<h2 id="检测"><a href="#检测" class="headerlink" title="检测"></a>检测</h2><ul>
-<li><p>双向校验</p>
-<ul>
-<li><p>客户端校验</p>
-</li>
-<li><p>服务端校验</p>
-</li>
-</ul>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 服务端校验客户端</span></span><br><span class="line">400 Bad Request</span><br><span class="line">No required SSL certificate was sent</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>代理检测 &gt;&gt; VPN抓包绕过 &gt;&gt; VPN检测<ul>
-<li>iptables绕过</li>
-</ul>
-</li>
-<li>root检测<ul>
-<li>编译aosp源码，修改设备指纹</li>
-</ul>
-</li>
-</ul>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://tech.meituan.com/2017/03/17/shark-sdk.html">https://tech.meituan.com/2017/03/17/shark-sdk.html</a></p>
-<p><a href="https://www.jianshu.com/p/1dd77e56cc3c">Android中Https请求如何防止中间人攻击和Charles抓包原理 - 简书</a></p>
-<p><a href="http://www.520monkey.com/archives/category/android%e6%8a%80%e6%9c%af%e7%af%87">Android技术篇 | 尼古拉斯.赵四</a></p>
-<p><a href="https://evilpan.com/2023/01/30/android-iptables/">https://evilpan.com/2023/01/30/android-iptables/</a></p>
-]]></content>
-      <tags>
-        <tag>AndroidSEC</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Android应用安全分析案例0x01</title>
-    <url>/2024/03/05/Android%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E6%A1%88%E4%BE%8B0x01/</url>
-    <content><![CDATA[<blockquote>
-<p>一道TCTF题目，解密db文件</p>
+<p>软路由是指利用台式机或服务器的供应商配合一定软件而形成的路由解决方案，主要靠对软件的设置，实现路由器路由器的功能，它的软件与硬件是独立分开的。软路由使用普通计算机，使用通用的操作系统，如Linux或windows，因此软路由的设置事实上是windows或linux的设置。根据使用的操作系统不同，可以分为基于windows平台和基于Linux&#x2F;bsd平台开发的软件路由器。</p>
 </blockquote>
 <span id="more"></span>
 
-<p><strong>target</strong>: 1.ab，一个Android的备份文件</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">  ~/D/Doing  file 1.ab                                                                          (base)</span><br><span class="line">1.ab: Android Backup, version 2, Compressed, Not-Encrypted</span><br></pre></td></tr></table></figure>
+<h2 id="设备"><a href="#设备" class="headerlink" title="设备"></a>设备</h2><p>Nanopi R2S</p>
+<p>最低价可以买裸板，TF卡自己单买的，5v3a&#x2F;2a电源使用之前的旧设备。读卡器已有</p>
+<p><img src="/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-06-06-image.png"></p>
+<p>64GTF卡</p>
+<p><img src="/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-10-18-image.png"></p>
+<h2 id="刷机"><a href="#刷机" class="headerlink" title="刷机"></a>刷机</h2><p>使用<code>FriendlyWrt</code>系统，镜像下载：</p>
+<p><a href="https://drive.google.com/drive/folders/1W-2MLML9lkD2xAVjiwzEBNiUlPF5BgU9">01_SD card images - Google 云端硬盘</a></p>
+<ul>
+<li>rk3328-sd-friendlywrt-23.05-20231223.img.gz</li>
+</ul>
+<p><code>balenaEtcher</code>烧录至TF卡</p>
+<p><img src="/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-15-56-image.png"></p>
+<h3 id="网络拓扑"><a href="#网络拓扑" class="headerlink" title="网络拓扑"></a>网络拓扑</h3><p>网络结构比较简单，如下<br>光猫&lt;——–&gt;(WAN)R2S(LAN)&lt;——–&gt;(WAN)小米路由器</p>
+<p>等待开机后，访问<code>192.168.2.1</code>。使用<code>root/passowrd</code>即可进入FriendlyWrt的管理后台</p>
+<p><img src="/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-35-01-image.png"></p>
+<h2 id="OpenClash配置"><a href="#OpenClash配置" class="headerlink" title="OpenClash配置"></a>OpenClash配置</h2><p>如<code>OpenClash</code>描述，需要安装客户端与内核模块</p>
+<p>客户端安装</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#安装依赖</span></span><br><span class="line">* luci</span><br><span class="line">* luci-base</span><br><span class="line">* iptables</span><br><span class="line">* dnsmasq-full</span><br><span class="line">* coreutils</span><br><span class="line">* coreutils-nohup</span><br><span class="line">* bash</span><br><span class="line">* curl</span><br><span class="line">* jsonfilter</span><br><span class="line">* ca-certificates</span><br><span class="line">* ipset</span><br><span class="line">* ip-full</span><br><span class="line">* iptables-mod-tproxy</span><br><span class="line">* kmod-tun(TUN模式)</span><br><span class="line">* luci-compat(Luci-19.07)</span><br><span class="line"></span><br><span class="line"><span class="comment">#上传IPK文件至您路由器的 /tmp 目录下</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#假设安装包名字为</span></span><br><span class="line">luci-app-openclash_0.33.7-beta_all.ipk</span><br><span class="line"></span><br><span class="line"><span class="comment">#执行安装命令</span></span><br><span class="line">opkg install /tmp/luci-app-openclash_0.33.7-beta_all.ipk</span><br><span class="line"></span><br><span class="line"><span class="comment">#执行卸载命令</span></span><br><span class="line"><span class="comment">#插件在卸载后会自动备份配置文件到 /tmp 目录下，除非路由器重启，在下次安装时将还原您的配置文件</span></span><br><span class="line">opkg remove luci-app-openclash</span><br><span class="line"></span><br><span class="line">安装完成后刷新LUCI页面，在菜单栏 -&gt; 服务 -&gt; OpenClash 进入插件页面</span><br></pre></td></tr></table></figure>
 
-<p>解压，使用<code>abe.jar</code></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">  ~/D/D/1.ab_dir  java -jar ../abe.jar unpack 1.ab 1.tar                                        (base)</span><br><span class="line">0% 1% 2% 3% 4% 5% 6% 7% 8% 9% 10% 11% 12% 13% 14% 15% 16% 17% 18% 19% 20% 21% 22% 23% 24% 25% 26% 27% 28% 29% 30% 31% 32% 33% 34% 35% 36% 37% 38% 39% 40% 41% 42% 43% 44% 45% 46% 47% 48% 49% 50% 51% 52% 53% 54% 55% 56% 57% 58% 59% 60% 61% 62% 63% 64% 65% 66% 67% 68% 69% 70% 71% 72% 73% 74% 75% 76% 77% 78% 79% 80% 81% 82% 83% 84% 85% 86% 87% 88% 89% 90% 91% 92% 93% 94% 95% 96% 97% 98% 99% 100%</span><br><span class="line">9097216 bytes written to 1.tar.</span><br><span class="line"></span><br><span class="line"><span class="comment"># 解压tar</span></span><br><span class="line">~/D/D/1.ab_dir  tar xvf 1.tar                                                                 (base)</span><br><span class="line">x apps/com.example.yaphetshan.tencentwelcome/a/base.apk</span><br><span class="line">x apps/com.example.yaphetshan.tencentwelcome/db/Demo.db</span><br><span class="line">x apps/com.example.yaphetshan.tencentwelcome/Encryto.db</span><br><span class="line">x apps/com.example.yaphetshan.tencentwelcome/_manifest </span><br><span class="line">    ~/D/D/1/a/com.example.yaphetshan.tencentwelcome  tree -NCfhl                                  (base)</span><br><span class="line">[ 192]  .</span><br><span class="line">├── [3.0K]  ./Encryto.db</span><br><span class="line">├── [1013]  ./_manifest</span><br><span class="line">├── [  96]  ./a</span><br><span class="line">│   └── [8.7M]  ./a/base.apk</span><br><span class="line">└── [  96]  ./db</span><br><span class="line">    └── [3.0K]  ./db/Demo.db</span><br><span class="line"></span><br><span class="line">3 directories, 4 files</span><br></pre></td></tr></table></figure>
-
-<p>使用<code>逍遥模拟器</code>中的低版本系统，安装base.apk。<font color="red">失败</font>，创建Androidstudio模拟器继续</p>
-<p><img src="/2024/03/05/Android%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E6%A1%88%E4%BE%8B0x01/2023-11-25-17-02-42-image.png"></p>
-<p>无加固</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">  ~/D/D/1/a/c/a  apkid base.apk                                                                 (base)</span><br><span class="line">[+] APKiD 2.1.5 :: from RedNaga :: rednaga.io</span><br><span class="line">[*] base.apk!classes.dex</span><br><span class="line"> |-&gt; compiler : dx</span><br></pre></td></tr></table></figure>
-
-<p><code>Jadx</code>静态分析</p>
-<p>可以发现登陆流程与数据库的生成过程是隔离的</p>
-<p><img src="/2024/03/05/Android%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E6%A1%88%E4%BE%8B0x01/2023-11-26-00-23-45-image.png"></p>
-<p>向表<code>TencentMicrMsg</code>中插入数据</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># objection</span></span><br><span class="line">  ~/D/Doing  frida-ps -U|grep tencent                (Python3.8)</span><br><span class="line">3551  com.example.yaphetshan.tencentwelcome</span><br><span class="line"><span class="comment"># objection explore by usb</span></span><br><span class="line">objection -g com.example.yaphetshan.tencentwelcome explore</span><br><span class="line"><span class="comment"># objection工作原理，存在进程直接attaching，没有那么进行spawned -d参数</span></span><br><span class="line">[debug] Attempting to attach to process: `com.example.yaphetshan.tencentwelcome`</span><br><span class="line">[debug] Unable to find process: `com.example.yaphetshan.tencentwelcome`, attempting spawn</span><br><span class="line">[debug] PID `4705` spawned, attaching...</span><br><span class="line">[debug] Resuming PID `4705`</span><br><span class="line"><span class="comment"># Wallbreaker进行内存dump</span></span><br></pre></td></tr></table></figure>
-
-<p><img src="/2024/03/05/Android%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E6%A1%88%E4%BE%8B0x01/2023-11-26-14-28-34-image.png"></p>
-<p>函数调用</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">onCreate() &gt;&gt; a()</span><br><span class="line">class: aVar: com.example.yaphetshan.tencentwelcome.a.a()</span><br><span class="line">    &gt;&gt; aVar.a()</span><br><span class="line">    &gt;&gt; aVar.b()</span><br></pre></td></tr></table></figure>
-
-<p>通过后续的了解，使用SQLiteCipher时，hook该函数<code>getWritableDatabase</code>获取其参数，<strong>主动调用</strong>即可拿到加密密码</p>
-<p><img src="/2024/03/05/Android%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E6%A1%88%E4%BE%8B0x01/2023-12-09-17-51-06-image.png"></p>
-<p>使用<code>ae56f99</code>打开即可</p>
-<p><img src="/2024/03/05/Android%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E6%A1%88%E4%BE%8B0x01/2023-12-09-17-54-00-image.png"></p>
-<p>Tctf{H3ll0_Do_Y0u_Lov3_Tenc3nt!}</p>
-<h2 id="SQLite与SQLCipher食用"><a href="#SQLite与SQLCipher食用" class="headerlink" title="SQLite与SQLCipher食用"></a>SQLite与SQLCipher食用</h2><p>基本的用法很简单，创建SQL语句创建数据库即可</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">createBook</span> <span class="operator">=</span> <span class="string">&quot;create table Book(&quot;</span> + <span class="string">&quot;id integer primary key autoincrement,&quot;</span> + <span class="string">&quot;author text,&quot;</span> + <span class="string">&quot;price real,&quot;</span> + <span class="string">&quot;pages integer,&quot;</span> + <span class="string">&quot;name text)&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> Context mContext;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="title function_">MyDatabaseHelper</span><span class="params">(<span class="meta">@Nullable</span> Context context, <span class="meta">@Nullable</span> String name, <span class="meta">@Nullable</span> SQLiteDatabase.CursorFactory factory, <span class="type">int</span> version)</span> &#123;</span><br><span class="line">    <span class="built_in">super</span>(context, name, factory, version);</span><br><span class="line">    mContext = context;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onCreate</span><span class="params">(SQLiteDatabase sqLiteDatabase)</span> &#123;</span><br><span class="line">    sqLiteDatabase.execSQL(createBook);</span><br><span class="line">    Toast.makeText(mContext, <span class="string">&quot;Create succeeded&quot;</span>, Toast.LENGTH_SHORT).show();</span><br><span class="line"></span><br><span class="line"><span class="comment">// MainActivity调用</span></span><br><span class="line">    <span class="type">MyDatabaseHelper</span> <span class="variable">dbHelper</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MyDatabaseHelper</span>(<span class="built_in">this</span>, <span class="string">&quot;BookStore.db&quot;</span>, <span class="literal">null</span>, <span class="number">1</span>);</span><br><span class="line">    createDatabase.setOnClickListener(view -&gt; dbHelper.getWritableDatabase());</span><br></pre></td></tr></table></figure>
-
-<p>SQLCipher，加密数据库</p>
-<p>添加依赖</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">implementation <span class="string">&#x27;net.zetetic:sqlcipher-android:4.5.2@aar&#x27;</span></span><br><span class="line">implementation <span class="string">&#x27;androidx.sqlite:sqlite:2.2.0&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<p>主要修改即在此增加了密码</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">public SQLiteDatabase <span class="function"><span class="title">getWritableDatabase</span></span>() &#123;</span><br><span class="line">    SQLiteDatabase db = super.getWritableDatabase(KEY);</span><br><span class="line">    <span class="built_in">return</span> db;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public SQLiteDatabase <span class="function"><span class="title">getReadableDatabase</span></span>() &#123;</span><br><span class="line">    SQLiteDatabase db = super.getReadableDatabase(KEY);</span><br><span class="line">    <span class="built_in">return</span> db;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>使用<code>DB Browser for SQLite</code>查看</p>
-<p><img src="/2024/03/05/Android%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E5%88%86%E6%9E%90%E6%A1%88%E4%BE%8B0x01/2023-12-08-14-47-03-image.png"></p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>SQLCiphe，SQLite加密扩展</p>
-<p><a href="https://www.zetetic.net/sqlcipher/">SQLCipher - Zetetic</a></p>
-<p>第一行代码Android第三版</p>
-<p><a href="https://www.52pojie.cn/thread-1291452-1-1.html">独家食用指南系列|Android端SQLCipher的攻与防新编 - 『移动安全区』 - 吾爱破解 - LCG - LSG |安卓破解|病毒分析|www.52pojie.cn</a></p>
+<p>内核</p>
+<p>进入<code>OpenClash</code>插件页面时，总是下载失败。可以增加代理来完成安装</p>
+<p><img src="/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-40-11-image.png"></p>
+<p>启动</p>
+<p>最后，上传配置文件，并启动即可。最终效果如下</p>
+<p><img src="/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-41-41-image.png"></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://wiki.friendlyelec.com/wiki/index.php/NanoPi_R2S/zh">https://wiki.friendlyelec.com/wiki/index.php/NanoPi_R2S/zh</a></p>
+<p><a href="https://wiki.mbalib.com/wiki/%E8%BD%AF%E8%B7%AF%E7%94%B1">软路由 - MBA智库百科</a></p>
+<p><a href="https://github.com/vernesong/OpenClash/releases">Releases · vernesong&#x2F;OpenClash · GitHub</a></p>
 ]]></content>
       <tags>
-        <tag>AndroidSEC</tag>
-        <tag>objection</tag>
+        <tag>Google</tag>
       </tags>
   </entry>
   <entry>
-    <title>Fuzzing101-3: TCPdump</title>
-    <url>/2024/03/15/Fuzzing101-3-TCPdump/</url>
-    <content><![CDATA[<p><a href="https://github.com/antonio-morales/Fuzzing101/tree/main/Exercise%203">https://github.com/antonio-morales/Fuzzing101/tree/main/Exercise%203</a></p>
-<blockquote>
-<p>In this exercise we will fuzz <strong>TCPdump</strong> packet analyzer. The goal is to find a crash&#x2F;PoC for <a href="https://www.cvedetails.com/cve/CVE-2017-13028/"><strong>CVE-2017-13028</strong></a> in TCPdump 4.9.2.</p>
-<p>CVE-2017-13028: <a href="https://cwe.mitre.org/data/definitions/125.html">https://cwe.mitre.org/data/definitions/125.html</a></p>
-</blockquote>
-<p>学习目标</p>
-<ul>
-<li><p>What is ASan(Address Sanitizer), a runtime memory error detection tool</p>
-</li>
-<li><p>How to use ASAN to fuzz a target</p>
-</li>
-<li><p>How much easy is to triage the creashes using ASan</p>
-</li>
-</ul>
+    <title>灰袍推送Mark</title>
+    <url>/2021/10/02/%E7%81%B0%E8%A2%8D%E6%8E%A8%E9%80%81Mark/</url>
+    <content><![CDATA[<p>最近浏览了灰袍推送的tg频道，记录一些有意思的言论。灰袍推送中有些关于<strong>方法论</strong>、<strong>工程化</strong>、<strong>区块链</strong>的东西很有让人眼前一亮的感觉在此记录一下，方便以后查看。</p>
 <span id="more"></span>
 
-<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"> $ neofetch --off</span><br><span class="line">w3b5h3ll@Fuzzing </span><br><span class="line">---------------- </span><br><span class="line">OS: Ubuntu 22.04.3 LTS x86_64 </span><br><span class="line">Host: VMware Virtual Platform None </span><br><span class="line">Kernel: 6.5.0-21-generic </span><br><span class="line">Uptime: 2 hours, 40 mins </span><br><span class="line">Packages: 2045 (dpkg), 11 (snap) </span><br><span class="line">Shell: bash 5.1.16 </span><br><span class="line">Resolution: 2159x1226 </span><br><span class="line">DE: GNOME 42.9 </span><br><span class="line">WM: Mutter </span><br><span class="line">WM Theme: Adwaita </span><br><span class="line">Theme: Yaru [GTK2/3] </span><br><span class="line">Icons: Yaru [GTK2/3] </span><br><span class="line">Terminal: x-terminal-emul </span><br><span class="line">CPU: AMD Ryzen 5 5600X (4) @ 3.693GHz </span><br><span class="line">GPU: 00:0f.0 VMware SVGA II Adapter </span><br><span class="line">Memory: 1401MiB / 5880MiB </span><br></pre></td></tr></table></figure>
-
-<p>AFL++（注意使用llvm-15以及clang-15）: <a href="https://github.com/AFLplusplus/AFLplusplus/blob/stable/docs/INSTALL.md">https://github.com/AFLplusplus/AFLplusplus/blob/stable/docs/INSTALL.md</a></p>
-<ul>
-<li>如无需<code>FRIDA mode|QEMU mode|unicorn mode|...</code>，直接<code>make all</code>即可</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt install python3-pip</span><br><span class="line"><span class="comment"># llvm mode</span></span><br><span class="line">sudo <span class="built_in">ln</span> -s /usr/bin/clang|clang++|llvm-config-15 /usr/bin/clang|clang++/llvm-config</span><br><span class="line"><span class="built_in">ulimit</span> -c unlimited</span><br><span class="line">sudo su</span><br><span class="line"><span class="built_in">echo</span> core &gt;/proc/sys/kernel/core_pattern</span><br><span class="line"><span class="built_in">exit</span></span><br><span class="line"></span><br><span class="line">779  2024-03-15 11:13:39 <span class="built_in">export</span> LLVM_CONFIG=<span class="string">&quot;llvm-config&quot;</span></span><br><span class="line">780  2024-03-15 11:13:56 <span class="built_in">cd</span> libpcap-1.8.0/</span><br><span class="line">781  2024-03-15 11:14:50 CC=afl-clang-lto ./configure --enable-shared=no --prefix=<span class="string">&quot;/home/w3b5h3ll/Desktop/Fuzzing101/Exercise\ 3/fuzzing_tcpdump/install/&quot;</span></span><br><span class="line">782  2024-03-15 11:15:21 <span class="built_in">export</span> AFL_USE_ASAN=1</span><br><span class="line">783  2024-03-15 11:15:23 make</span><br><span class="line">784  2024-03-15 11:15:33 <span class="built_in">cd</span> ../tcpdump-tcpdump-4.9.2/</span><br><span class="line">785  2024-03-15 11:15:48 CC=afl-clang-lto ./configure --prefix=<span class="string">&quot;/home/w3b5h3ll/Desktop/Fuzzing101/Exercise\ 3/fuzzing_tcpdump/install/&quot;</span></span><br><span class="line">786  2024-03-15 11:16:40 make</span><br><span class="line">787  2024-03-15 11:17:54 make install</span><br></pre></td></tr></table></figure>
-
-<h3 id="WSL性能加速"><a href="#WSL性能加速" class="headerlink" title="WSL性能加速"></a>WSL性能加速</h3><p>为了更快的性能，于WSL2.0重现了一套环境，如下</p>
-<p><img src="/2024/03/15/Fuzzing101-3-TCPdump/2024-03-30-18-25-43-image.png"></p>
-<h2 id="fuzz"><a href="#fuzz" class="headerlink" title="fuzz"></a>fuzz</h2><p>语料库精简</p>
-<p><code>afl-cmin</code>，删除达到同样路径的冗余文件</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">afl-cmin -i tcpdump-tcpdump-4.9.2/tests/ -o cmin_in/ -- ./install/sbin/tcpdump -vvvvXX -ee -nn -r @@</span><br></pre></td></tr></table></figure>
-
-<p><code>afl-tmin</code>默认只能单次执行一个输入，使用脚本循环进行处理</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">  805  2024-03-15 12:51:53 <span class="built_in">export</span> AFL_DEBUG=1</span><br><span class="line">  806  2024-03-15 12:52:23 <span class="built_in">export</span> AFL_MAP_SIZE=10000000</span><br><span class="line"></span><br><span class="line"><span class="comment"># 检查cmin_in目录是否存在</span></span><br><span class="line"><span class="keyword">if</span> [ ! -d <span class="string">&quot;cmin_in&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;Error: cmin_in directory not found.&quot;</span></span><br><span class="line">  <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 遍历cmin_in目录下的所有文件</span></span><br><span class="line"><span class="keyword">for</span> file <span class="keyword">in</span> cmin_in/*; <span class="keyword">do</span></span><br><span class="line">  <span class="comment"># 检查文件是否是普通文件</span></span><br><span class="line">  <span class="keyword">if</span> [ -f <span class="string">&quot;<span class="variable">$file</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">    <span class="comment"># 使用afl-tmin命令对文件进行处理，并输出到tmin_in目录下</span></span><br><span class="line">    output_file=<span class="string">&quot;tmin_in/<span class="subst">$(basename <span class="string">&quot;<span class="variable">$file</span>&quot;</span>)</span>&quot;</span></span><br><span class="line">    afl-tmin -i <span class="string">&quot;<span class="variable">$file</span>&quot;</span> -o <span class="string">&quot;<span class="variable">$output_file</span>&quot;</span> -- ./install/sbin/tcpdump -vvvvXX -ee -nn -r @@</span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;Processed file: <span class="variable">$file</span>&quot;</span></span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;Skipping non-regular file: <span class="variable">$file</span>&quot;</span></span><br><span class="line">  <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;All files processed.&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p><code>afl-system-config</code>: 获得最佳fuzz性能</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"> $ sudo afl-system-config </span><br><span class="line">[sudo] password <span class="keyword">for</span> w3b5h3ll: </span><br><span class="line">This reconfigures the system to have a better fuzzing performance.</span><br><span class="line">WARNING: this reduces the security of the system!</span><br><span class="line"></span><br><span class="line">Settings applied.</span><br><span class="line"></span><br><span class="line">It is recommended to boot the kernel with lots of security off - <span class="keyword">if</span> you are running a machine that is <span class="keyword">in</span> a secured network - so <span class="built_in">set</span> this:</span><br><span class="line">  /etc/default/grub:GRUB_CMDLINE_LINUX_DEFAULT=<span class="string">&quot;ibpb=off ibrs=off kpti=0 l1tf=off mds=off mitigations=off no_stf_barrier noibpb noibrs pcid nopti nospec_store_bypass_disable nospectre_v1 nospectre_v2 pcid=on pti=off spec_store_bypass_disable=off spectre_v2=off stf_barrier=off srbds=off noexec=off noexec32=off tsx=on tsx_async_abort=off arm64.nopauth audit=0 hardened_usercopy=off ssbd=force-off&quot;</span></span><br><span class="line"></span><br><span class="line">If you run fuzzing instances <span class="keyword">in</span> docker, run them with <span class="string">&quot;--security-opt seccomp=unconfined&quot;</span> <span class="keyword">for</span> more speed.</span><br></pre></td></tr></table></figure>
-
-<p>使用<code>-M|-S</code>指定多线程操作</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">afl-fuzz -m none -i ./cmin_in/ -o out/ -M master -s 32 -- ./install/sbin/tcpdump -vvvvXX -ee -nn -r @@</span><br><span class="line">afl-fuzz -m none -i ./cmin_in/ -o out/ -S slave1 -s 32 -- ./install/sbin/tcpdump -vvvvXX -ee -nn -r @@</span><br><span class="line">afl-fuzz -m none -i ./cmin_in/ -o out/ -S slave2 -s 32 -- ./install/sbin/tcpdump -vvvvXX -ee -nn -r @@</span><br></pre></td></tr></table></figure>
-
-<p>此时，均只启用了<code>havoc</code>模式</p>
-<h3 id="Keep-your-test-case-small-Why"><a href="#Keep-your-test-case-small-Why" class="headerlink" title="Keep your test case small, Why?"></a>Keep your test case small, Why?</h3><p>在执行过程中，提示我们的某些case太大，有168KB</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[!] WARNING: Some <span class="built_in">test</span> cases are huge (168 kB) - see /usr/local/share/doc/afl/fuzzing_in_depth.md<span class="comment">#i-improve-the-speed</span></span><br><span class="line">[!] WARNING: You probably have far too many input files! Consider trimming down.</span><br></pre></td></tr></table></figure>
-
-<p>AFL的性能提升建议将此条作为了<strong>最重要的第一步</strong>，减小用例大小十分必要。其假设了一个场景:</p>
-<p>如果翻转第47bit位置会导致bug，那么对于一个100字节大小的case，执行1000次发现此bug的概率，计算如下</p>
-<p>$$<br>1-(1-\frac{1}{8*100})^{1000}\approx71%<br>$$</p>
-<ul>
-<li><p>随着case的size增大，发现bug需要执行的次数会显著增加</p>
+<h2 id="来自-灰袍推送"><a href="#来自-灰袍推送" class="headerlink" title="来自@灰袍推送"></a>来自@灰袍推送</h2><ol>
+<li><p>论黑客工程化是我们的追求。黑客工程化是我们的追求。黑客工程化的意思是：我们的所有技能需要成体系活动，能交给机器的都交给机器，我们控制机器“木偶们”来加速我们的效率。为了最优这个工程化，我们很明白什么技能是必须精通的，什么技能是够用就好，什么技能是拿来主义。</p>
 </li>
-<li><p>运行时的内存，执行开销也会显著增大</p>
+<li><p>那个“安全技能树”圈子，新人太多，我一旦分享点复杂的，似乎都安静了。对于陌生的知识怎么办？先 mark，以后有机会再消化，没机会也无所谓，至少知道有这个就好。对于不陌生的，赶紧跟上实践。实战派，不废话。指的就是这个。</p>
 </li>
-</ul>
-<p>此时，我们需要使用<code>afl-cmin</code>以及<code>afl-tmin</code>工具精简语料，并设置较好的超时时间<code>-t</code>（默认1000ms），限制其每次执行的时间。</p>
-<hr>
-<p>大约进行2h，<code>slave2</code>出现了crash</p>
-<h3 id="WSL执行"><a href="#WSL执行" class="headerlink" title="WSL执行"></a>WSL执行</h3><p>在剔除大于1kb文件后，执行了1h左右出现了crash，5h后很长一段时间没有新crash，此时我停止了afl</p>
-<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>查看<code>tcpudump4.9.2</code>所有CVE信息：</p>
-<p><a href="https://www.cvedetails.com/vulnerability-list/vendor_id-6197/product_id-10494/version_id-575909/Tcpdump-Tcpdump-4.9.2.html?page=1&order=1&trc=29&sha=cc09d17caee42a5be7a0ceabc20e3190ae7d6667">https://www.cvedetails.com/vulnerability-list/vendor_id-6197/product_id-10494/version_id-575909/Tcpdump-Tcpdump-4.9.2.html?page=1&amp;order=1&amp;trc=29&amp;sha=cc09d17caee42a5be7a0ceabc20e3190ae7d6667</a></p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://afl-1.readthedocs.io/en/latest/tips.html#performance-tips">Tips &#8212; AFL 2.53b documentation</a></p>
-]]></content>
-      <tags>
-        <tag>Fuzzing</tag>
-        <tag>AFL++</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Fuzzing技术文章整理</title>
-    <url>/2022/12/15/Fuzzing%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0%E6%95%B4%E7%90%86/</url>
-    <content><![CDATA[<h3 id="AFL"><a href="#AFL" class="headerlink" title="AFL"></a>AFL</h3><span id="more"></span>
-
-<p><a href="https://paper.seebug.org/841/">https://paper.seebug.org/841/</a></p>
-<p><a href="https://paper.seebug.org/842/">https://paper.seebug.org/842/</a></p>
-<p>AFL技术白皮书</p>
-<p><a href="https://lcamtuf.coredump.cx/afl/technical_details.txt">https://lcamtuf.coredump.cx/afl/technical_details.txt</a></p>
-<p>AFL简单使用</p>
-<p><a href="https://0xfocu5.github.io/posts/2ba75ee3/">https://0xfocu5.github.io/posts/2ba75ee3/</a></p>
-<p>「afl++」fuzzing一个IoT二进制程序，文件fuzz</p>
-<p><a href="https://blog.attify.com/fuzzing-iot-devices-part-1/">https://blog.attify.com/fuzzing-iot-devices-part-1/</a></p>
-<p>「afl++」如何fuzz网络程序</p>
-<p><a href="https://blog.attify.com/fuzzing-iot-binaries-with-afl-part-ii/">https://blog.attify.com/fuzzing-iot-binaries-with-afl-part-ii/</a></p>
-<h3 id="Fuzzing技术综述"><a href="#Fuzzing技术综述" class="headerlink" title="Fuzzing技术综述"></a>Fuzzing技术综述</h3><p><a href="https://mp.weixin.qq.com/s/nREiT1Uj25igCMWu1kta9g">https://mp.weixin.qq.com/s/nREiT1Uj25igCMWu1kta9g</a></p>
-<p>无源fuzz，arm平台</p>
-<p><a href="https://mp.weixin.qq.com/s/G26MJOH4VPene1Sd_zjEQw">https://mp.weixin.qq.com/s/G26MJOH4VPene1Sd_zjEQw</a></p>
-<p><a href="https://www.anquanke.com/post/id/230811#h2-3">https://www.anquanke.com/post/id/230811#h2-3</a></p>
-]]></content>
-      <tags>
-        <tag>Fuzzing</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>UDS协议分析-Teslaaaaa</title>
-    <url>/2023/02/13/UDS%E5%8D%8F%E8%AE%AE%E5%88%86%E6%9E%90-Teslaaaaa/</url>
-    <content><![CDATA[<p>一道贴近汽车的题目，如下说明提示</p>
-<span id="more"></span>
-
-<p><img src="/2023/02/13/UDS%E5%8D%8F%E8%AE%AE%E5%88%86%E6%9E%90-Teslaaaaa/de8b3ecd94fb58757fcd6eff0d3e1066ba9ed5c9.jpg" alt="img"></p>
-<p>打开附件，附件内容为一张图片和一个CAN日志文件</p>
-<p><img src="/2023/02/13/UDS%E5%8D%8F%E8%AE%AE%E5%88%86%E6%9E%90-Teslaaaaa/3bc9d6af9076efef871be5fcaf5f9fe1a02e2bbf.png" alt="image-20230213200616854"></p>
-<p>这张图里给了几个信息</p>
-<ul>
-<li>可能正在固件升级</li>
-<li>CAN通道</li>
-</ul>
-<p>另外一个附件经检查为<code>CANoe/CANalyzer</code>记录的<code>asc</code>日志文件。</p>
-<p><img src="/2023/02/13/UDS%E5%8D%8F%E8%AE%AE%E5%88%86%E6%9E%90-Teslaaaaa/image-20230213200840377.png" alt="loading-ag-593"></p>
-<h2 id="背景知识"><a href="#背景知识" class="headerlink" title="背景知识"></a>背景知识</h2><p>参考学习链接：</p>
-<ul>
-<li><p><a href="https://blog.csdn.net/zhyongquan/article/details/80212180">https://blog.csdn.net/zhyongquan/article/details/80212180</a></p>
+<li><p>灰帽 C#，这本书很不错，玩 Win 渗透的，建议这本书实操完。</p>
 </li>
-<li><p><a href="https://blog.csdn.net/Breeze_CAT/article/details/106156567">https://blog.csdn.net/Breeze_CAT/article/details/106156567</a></p>
+<li><p>什么黑客技术是好技术？黑产或 APT 组织已经在实战的技术 。</p>
 </li>
-<li><p><a href="https://bbs.kanxue.com/thread-259472.htm">https://bbs.kanxue.com/thread-259472.htm</a></p>
+<li><p>很多人不明白什么是职业什么是业余，什么是兴趣什么是工作。举个例子，黑客攻防，是我兴趣，也是工作，更成为了职业。而玩玩比特币、打打王者荣耀、吃吃小龙虾虽也是兴趣，但很业余，我不会通过这种方式去赚钱，能赚到也是投机罢了，如果能成大事，那也是投机，命运选中了我而已。再往细了说，黑客攻防分支领域几十条，也仅某些条会是我的职业，而有不少仅仅是业余，如打 CTF、玩黑手等。</p>
 </li>
-<li><p><a href="https://blog.csdn.net/kalake/article/details/125984985">https://blog.csdn.net/kalake/article/details/125984985</a></p>
+<li><p>通读两本行业一流的书籍是最稳的入门进阶方式。</p>
 </li>
-<li><p><a href="https://blog.csdn.net/chenguigan/article/details/95884739">https://blog.csdn.net/chenguigan/article/details/95884739</a></p>
+<li><p>设计一个商业模式的快感大于设计一个软件工程，不过都小于挖到一个大 0day，因为大 0day 自带牛逼的商业模式😄。</p>
 </li>
-<li><p><a href="https://blog.csdn.net/qq_34414530/article/details/123610027">https://blog.csdn.net/qq_34414530/article/details/123610027</a></p>
+<li><p>那些老协议，没认证与加密设计的，都会出大问题，多个 S 多关键。<a href="https://rtpbleed.com/">https://rtpbleed.com</a></p>
 </li>
-<li><p><a href="https://zhuanlan.zhihu.com/p/75047334">https://zhuanlan.zhihu.com/p/75047334</a></p>
+<li><p>天天喊发干货的人，我就问你 Kali 的每个工具你都了解过没，哪怕绝大多数点开看看都没吧？都懒成这样，是懒还是蠢？</p>
 </li>
-<li><p>🌟<a href="https://blog.csdn.net/qfmzhu/article/details/105716337">https://blog.csdn.net/qfmzhu/article/details/105716337</a></p>
+<li><p>干货拿走，消化一年再说：<a href="https://github.com/coreb1t/awesome-pentest-cheat-sheets">https://github.com/coreb1t/awesome-pentest-cheat-sheets</a></p>
 </li>
-<li><p>ISO15765-2</p>
+<li><p>钓鱼攻击类型我总结几类：普通域名钓鱼、双因素钓鱼、XSS 高级钓鱼、CSRF 高级钓鱼、浏览器扩展钓鱼、系统木马钓鱼、MITM 钓鱼。这些细节在我的硬盘里。</p>
 </li>
-<li><p>ISO14229-1</p>
+<li><p>建议大家开始关注“区块链”技术，在自己的技能树上多一个这个是好事，至少可以很好避免成为投机者中的韭菜。玩安全的，可以探索这个领域的安全问题。</p>
 </li>
-<li><p>UDS诊断协议</p>
+<li><p>不小心连续发的都是区块链相关的观点。做安全就是这样，需要跟上时代。区块链安全里，我们会把其分为两大类：区块链本身的安全，区块链之上各类业务的安全。对于我们来说，区块链本身的安全是我们的技能短板，里面大量的安全问题是需要算法、架构、工程的整体思考。如果不能深入到区块链创造细节里去，这类的安全从何研究？</p>
 </li>
-<li><p>ASC文件格式</p>
+<li><p>未来的世界是去中心化与中心化的博弈平衡，绝对不会有完美的去中心化生态，原因请自行阅读《自私的基因》…</p>
 </li>
-</ul>
-<p>关于这两个标准，去看官方发布的文档是最好不过了。简单说明一下：</p>
-<ul>
-<li>15765-2是网络层与传输层的标准，与数据传输相关。比如：帧格式、流控等等</li>
-<li>14229-1是应用层的标准，定义了与诊断相关的服务。比如：会话模式、安全访问、等等一些服务定义</li>
-</ul>
-<p><img src="/2023/02/13/UDS%E5%8D%8F%E8%AE%AE%E5%88%86%E6%9E%90-Teslaaaaa/07f9bbff203f8ccc1c0af89b1fd4b76082a6f49e.png" alt="在这里插入图片描述"></p>
-<p>ASC文件是CANoe&#x2F;CANalyzer录制的报文日志，关于格式可以参考：《CAN_LOG_TRIGGER_ASC_Format.pdf》</p>
-<p><strong>抖个机灵：<font color="red">ChatGPT</font>可以帮你很多</strong>😊，<strong>还有记得标准文件的附录</strong></p>
-<h2 id="分析日志"><a href="#分析日志" class="headerlink" title="分析日志"></a>分析日志</h2><p>接下来就可以开始分析文件：ecu_can_log.asc</p>
-<h3 id="header"><a href="#header" class="headerlink" title="header"></a>header</h3><p>文件起始是文件头，说明了该log文件的基本信息</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">date</span> Thu Apr 2 10:37:15.950 am 2020</span><br><span class="line">base hex  timestamps absolute</span><br><span class="line">internal events logged</span><br><span class="line">版本号</span><br><span class="line">// version 8.2.1</span><br></pre></td></tr></table></figure>
-
-<h3 id="Event-log"><a href="#Event-log" class="headerlink" title="Event log"></a>Event log</h3><p>[3e 80]，0x3e服务用来保持与服务在进行诊断会话，[3e 80]抑制正响应</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">4.000621 1  7DF             Tx   d 8 02 3E 80 00 00 00 00 00  Length = 0 BitCount = 124 ID = 2015  // 1  OTP(01) Atom 7DF-&gt;7DF : SF Length:   02         [ 3E 80 ]</span><br><span class="line">4.005922 CAN 1 Status:chip status error active</span><br><span class="line">5.005922 CAN 1 Status:chip status error active</span><br><span class="line">6.005923 CAN 1 Status:chip status error active</span><br><span class="line">7.005923 CAN 1 Status:chip status error active</span><br><span class="line">8.000537 1  7DF             Tx   d 8 02 3E 80 00 00 00 00 00  Length = 0 BitCount = 124 ID = 2015  // 1  OTP(02) Atom 7DF-&gt;7DF : SF Length:   02         [ 3E 80 ]</span><br><span class="line">8.005923 CAN 1 Status:chip status error active</span><br><span class="line">9.005924 CAN 1 Status:chip status error active</span><br></pre></td></tr></table></figure>
-
-<p>[10 02]，开启编程会话，并得倒了正响应，Rx的02后面四个字节为数据</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">9.498709 1  7DF             Tx   d 8 02 10 02 AA AA AA AA AA  Length = 0 BitCount = 116 ID = 2015  // 1  OTP(03) Atom 7DF-&gt;7DF : SF Length:   02         [ 10 02 ]</span><br><span class="line">9.499693 1  7B0             Rx   d 8 06 50 02 00 32 01 F4 00  Length = 235910 BitCount = 122 ID = 1968</span><br></pre></td></tr></table></figure>
-
-<p>[27 05]，安全访问服务。ECU默认被保护，想要解锁进入编程会话，需要安全验证，如下流程</p>
-<ol>
-<li>Tester发送[27 05]，请求安全验证，ECU返回正响应，seed&#x3D;0x11223344</li>
-<li>Tester发送[27 06 EE DD CC BB]，key&#x3D;0xeeddccbb</li>
-<li>ECU验证后，发送正响应，验证通过。</li>
+<li><p>安全研究第一步：<strong>目标攻击面</strong>都有哪些？第二步：<strong>攻击路径如何描绘</strong>出来？这两大步骤是最考验安全人员经验及想象力的地方。</p>
+</li>
+<li><p>区块链世界最伟大的点在于：通过技术信仰吸引一批信徒且都利益绑定了。</p>
+</li>
+<li><p>比特币网络新增两个杀手锏，一个是闪电网络，一个是 RSK。</p>
+</li>
+<li><p>《麻省理工科技评论》2018 年“全球十大突破性技术” ：<a href="http://mp.weixin.qq.com/s/_kdbSRdIwr4bIXfNtut8Fw%EF%BC%8C%E5%8C%BF%E5%90%8D%E8%B4%A7%E5%B8%81Zcash%E5%9C%A8%E5%8D%81%E5%A4%A7%E4%B9%8B%E4%B8%80%E9%87%8C%E8%A2%AB%E6%8F%90%E5%8F%8A%E3%80%82">http://mp.weixin.qq.com/s/_kdbSRdIwr4bIXfNtut8Fw，匿名货币Zcash在十大之一里被提及。</a></p>
+</li>
+<li><p>看到 bettercap 从 Ruby 改为 Go，就等着 MSF 和 BeEF 了。黑客工程化的世界，要么 Python 要么 Go，其他都是小众，JavaScript 还差些火候。</p>
+</li>
+<li><p>Google 说了“您应始终使用 HTTPS 保护您的所有网站，即使这些网站并不处理敏感的通信。</p>
+</li>
+<li><p>你猜为什么？尤其是那些区块链世界的网站，即使上面没 Web 钱包，没交易所功能。</p>
+</li>
+<li><p>DNS Rebinding 技巧用于钱包节点 HTTP RPC 的攻击确实很猥琐，上古时代的技巧到现在还是这么的帅！</p>
+</li>
+<li><p>DNS这种设计一直是信息安全头顶的一朵乌云。</p>
+</li>
 </ol>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">9.740585 1  730             Tx   d 8 02 27 05 AA AA AA AA AA  Length = 222015 BitCount = 114 ID = 1840</span><br><span class="line">9.741697 1  7B0             Rx   d 8 06 67 05 11 22 33 44 00  Length = 223910 BitCount = 116 ID = 1968</span><br><span class="line">9.782739 1  730             Tx   d 8 06 27 06 EE DD CC BB AA  Length = 226244 BitCount = 116 ID = 1840</span><br><span class="line">9.783703 1  7B0             Rx   d 8 02 67 06 00 00 00 00 00  Length = 235910 BitCount = 122 ID = 1968</span><br></pre></td></tr></table></figure>
-
-<p>[10, 0D 31 01]，这不是单帧而是多帧的首帧。00D为数据长度（前一字节3-0+后一字节），0x31服务，例程控制，这里[31 00 <strong>FF 00</strong>]用来擦写内存，<font color="red">后面的格式咨询了同事，找了一些wp</font>：44表明地址和大小都是4字节。地址：0x08000000，大小：0x00002000</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">9.788131 1  730             Tx   d 8 10 0D 31 01 FF 00 44 08  Length = 232000 BitCount = 119 ID = 1840</span><br><span class="line">9.788431 1  7B0             Rx   d 8 30 08 00 00 00 00 00 00  Length = 239910 BitCount = 124 ID = 1968</span><br><span class="line">9.788947 1  730             Tx   d 8 21 00 00 00 00 00 20 00  Length = 244244 BitCount = 125 ID = 1840</span><br><span class="line">9.789707 1  7B0             Rx   d 8 05 71 01 FF 00 00 00 00  Length = 233910 BitCount = 121 ID = 1968</span><br></pre></td></tr></table></figure>
-
-<p>[34 00]同理，请求数据下载服务，地址，大小与上条相同。这里正响应：74 20 01 02，20:2表明maxNumberOfBlockLength参数字节长度，这里为01 02，即每次数据最多0x102字节</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">9.791765 1  730             Tx   d 8 10 0B 34 00 44 08 00 00  Length = 236244 BitCount = 121 ID = 1840</span><br><span class="line">9.792061 1  7B0             Rx   d 8 30 08 00 00 00 00 00 00  Length = 239910 BitCount = 124 ID = 1968</span><br><span class="line">9.792625 1  730             Tx   d 8 21 00 00 00 20 00 AA AA  Length = 234244 BitCount = 120 ID = 1840</span><br><span class="line">9.793715 1  7B0             Rx   d 8 04 74 20 01 02 00 00 00  Length = 233910 BitCount = 121 ID = 1968</span><br></pre></td></tr></table></figure>
-
-<p>[36 xx data]，0x36数据传输服务，xx为序列号，后面紧跟数据</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">9.795696 1  730             Tx   d 8 10 82 36 01 28 04 00 20  Length = 232244 BitCount = 119 ID = 1840</span><br><span class="line">9.795987 1  7B0             Rx   d 8 30 08 00 00 00 00 00 00  Length = 239910 BitCount = 124 ID = 1968</span><br><span class="line">9.796548 1  730             Tx   d 8 21 45 01 00 08 21 03 00  Length = 236244 BitCount = 121 ID = 1840</span><br><span class="line">9.796790 1  730             Tx   d 8 22 08 23 03 00 08 27 03  Length = 236244 BitCount = 121 ID = 1840</span><br><span class="line">9.797030 1  730             Tx   d 8 23 00 08 2B 03 00 08 2F  Length = 234000 BitCount = 120 ID = 1840</span><br><span class="line">9.797278 1  730             Tx   d 8 24 03 00 08 00 00 00 00  Length = 242000 BitCount = 124 ID = 1840</span><br><span class="line">9.797526 1  730             Tx   d 8 25 00 00 00 00 00 00 00  Length = 242000 BitCount = 124 ID = 1840</span><br><span class="line">9.797770 1  730             Tx   d 8 26 00 00 00 00 00 33 03  Length = 238000 BitCount = 122 ID = 1840</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-
-<p>[37 01]，下载完成，准备退出</p>
-<p>[37 01 DF FF]，执行0xDFFF标志过程，不详</p>
-<p>[11 01]，重启ECU</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">10.314499 1  730             Tx   d 8 02 37 01 AA AA AA AA AA  Length = 222259 BitCount = 114 ID = 1840</span><br><span class="line">10.315695 1  7B0             Rx   d 8 06 77 01 C6 B6 5E 10 00  Length = 225910 BitCount = 117 ID = 1968</span><br><span class="line">10.318529 1  730             Tx   d 8 04 31 01 DF FF AA AA AA  Length = 226244 BitCount = 116 ID = 1840</span><br><span class="line">10.319707 1  7B0             Rx   d 8 03 7F 31 78 00 00 00 00  Length = 233910 BitCount = 121 ID = 1968</span><br><span class="line">10.320695 1  7B0             Rx   d 8 05 71 01 DF FF 00 00 00  Length = 233910 BitCount = 121 ID = 1968</span><br><span class="line">10.322633 1  730             Tx   d 8 04 31 01 FF 01 AA AA AA  Length = 226244 BitCount = 116 ID = 1840</span><br><span class="line">10.323695 1  7B0             Rx   d 8 05 71 01 FF 01 00 00 00  Length = 233910 BitCount = 121 ID = 1968</span><br><span class="line">10.325697 1  7DF             Tx   d 8 02 11 01 AA AA AA AA AA  Length = 0 BitCount = 115 ID = 2015  // 1  OTP(04) Atom 7DF-&gt;7DF : SF Length:   02         [ 11 01 ]</span><br><span class="line">10.326689 1  7B0             Rx   d 8 03 7F 11 78 00 00 00 00  Length = 233910 BitCount = 121 ID = 1968</span><br><span class="line">11.005924 CAN 1 Status:chip status error active</span><br><span class="line">11.326752 1  7B0             Rx   d 8 02 51 01 00 00 00 00 00  Length = 235910 BitCount = 122 ID = 1968</span><br><span class="line">12.000742 1  7DF             Tx   d 8 02 3E 80 00 00 00 00 00  Length = 0 BitCount = 124 ID = 2015  // 1  OTP(05) Atom 7DF-&gt;7DF : SF Length:   02         [ 3E 80 ]</span><br><span class="line">12.005925 CAN 1 Status:chip status error active</span><br><span class="line">13.005925 CAN 1 Status:chip status error active</span><br><span class="line">14.005925 CAN 1 Status:chip status error active</span><br><span class="line">15.005926 CAN 1 Status:chip status error active</span><br><span class="line">16.000532 1  7DF             Tx   d 8 02 3E 80 00 00 00 00 00  Length = 0 BitCount = 124 ID = 2015  // 1  OTP(06) Atom 7DF-&gt;7DF : SF Length:   02         [ 3E 80 ]</span><br><span class="line">16.005926 CAN 1 Status:chip status error active</span><br></pre></td></tr></table></figure>
-
-<p>汽车ECU为ARM，0x08000000地址一般为第二BootLoader地址，载入ECU，需要关注写入0x08000000地址的数据。</p>
-<h3 id="提取数据"><a href="#提取数据" class="headerlink" title="提取数据"></a>提取数据</h3><p>首先将数据传送区域的数据筛选出来，删除Rx行已经Tx行无关数据</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">head</span> -n 10 can_log2.asc</span><br><span class="line">9.795696 1 730 Tx d81082360128040020 Length = 232244 BitCount = 119 ID = 1840</span><br><span class="line">9.795987 1 7B0 Rx d83008000000000000 Length = 239910 BitCount = 124 ID = 1968</span><br><span class="line">9.796548 1 730 Tx d82145010008210300 Length = 236244 BitCount = 121 ID = 1840</span><br><span class="line">9.796790 1 730 Tx d82208230300082703 Length = 236244 BitCount = 121 ID = 1840</span><br><span class="line">9.797030 1 730 Tx d82300082B0300082F Length = 234000 BitCount = 120 ID = 1840</span><br><span class="line">9.797278 1 730 Tx d82403000800000000 Length = 242000 BitCount = 124 ID = 1840</span><br><span class="line">9.797526 1 730 Tx d82500000000009000 Length = 242000 BitCount = 124 ID = 1840</span><br><span class="line">9.797770 1 730 Tx d82600000000003303 Length = 238000 BitCount = 122 ID = 1840</span><br><span class="line">9.798012 1 730 Tx d82700083503000800 Length = 236000 BitCount = 121 ID = 1840</span><br><span class="line">9.798256 1 730 Tx d82800000037030008 Length = 238000 BitCount = 122 ID = 1840</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<p>提取</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line"><span class="comment"># 读取文本文件</span></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;can_log2.asc&#x27;</span>, <span class="string">&#x27;r&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    lines = f.readlines()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 匹配包含 Rx 的行</span></span><br><span class="line">rx_pattern = re.<span class="built_in">compile</span>(<span class="string">&#x27;.*Rx.*&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(lines)):</span><br><span class="line">    <span class="keyword">if</span> rx_pattern.<span class="keyword">match</span>(lines[i]):</span><br><span class="line">        lines[i] = <span class="string">&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 对于每一行，提取目标字符串并写回文件</span></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;can_log2_1.asc&quot;</span>, <span class="string">&quot;w&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> lines:</span><br><span class="line">        <span class="keyword">match</span> = re.search(<span class="string">r&quot;d 8 (.*) Length&quot;</span>, line)</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">match</span>:</span><br><span class="line">            target_str = <span class="keyword">match</span>.group(<span class="number">1</span>)</span><br><span class="line">            f.write(target_str + <span class="string">&quot;\n&quot;</span>)</span><br></pre></td></tr></table></figure>
-
-<p>接着开始提取CAN数据字节流，这里有一个情况：10开头，则只有后四个字节可以写入，2x则可以写入7个字节。后续在处理时发现许多填充字节，修改：每次block只有0x80有效字节</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 打开文件并读取内容</span></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;can_log2_1.asc&#x27;</span>, <span class="string">&#x27;r&#x27;</span>) <span class="keyword">as</span> file:</span><br><span class="line">    content = file.readlines()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 处理每一行数据</span></span><br><span class="line">result = []</span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> content:</span><br><span class="line">    <span class="comment"># 去掉每行末尾的换行符</span></span><br><span class="line">    line = line.strip()</span><br><span class="line">    <span class="comment"># 将每行字符串按照空格分割成一个列表</span></span><br><span class="line">    line_list = line.split()</span><br><span class="line">    <span class="comment"># 将每行分割后的列表添加到结果列表中</span></span><br><span class="line">    result.append(line_list)</span><br><span class="line"><span class="comment"># 关闭文件</span></span><br><span class="line">file.close()</span><br><span class="line"></span><br><span class="line">result_hex = []</span><br><span class="line"><span class="keyword">for</span> line_list <span class="keyword">in</span> result:</span><br><span class="line">    <span class="keyword">if</span> line_list[<span class="number">0</span>] == <span class="string">&#x27;10&#x27;</span>:</span><br><span class="line">        <span class="keyword">for</span> line <span class="keyword">in</span> line_list[<span class="number">4</span>:<span class="number">8</span>]:</span><br><span class="line">            result_hex.append(line)</span><br><span class="line">    <span class="keyword">elif</span> line_list[<span class="number">0</span>] == <span class="string">&#x27;22&#x27;</span>:</span><br><span class="line">        <span class="keyword">for</span> line <span class="keyword">in</span> line_list[<span class="number">1</span>:<span class="number">6</span>]:</span><br><span class="line">            result_hex.append(line)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">for</span> line <span class="keyword">in</span> line_list[<span class="number">1</span>:<span class="number">8</span>]:</span><br><span class="line">            result_hex.append(line)</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;output.bin&quot;</span>, <span class="string">&quot;wb&quot;</span>) <span class="keyword">as</span> f_out:</span><br><span class="line">    <span class="keyword">for</span> data <span class="keyword">in</span> result_hex:</span><br><span class="line">        binary_data = <span class="built_in">bytes</span>.fromhex(data)</span><br><span class="line">        f_out.write(binary_data)</span><br></pre></td></tr></table></figure>
-
-<h3 id="二进制分析"><a href="#二进制分析" class="headerlink" title="二进制分析"></a>二进制分析</h3><p>以arm反汇编载入，地址0x08000000，小端序。载入后切换为<code>option+G</code>切换为THUMB模式，反汇编即可</p>
-<p>C：code</p>
-<p>D：data</p>
-<p>U：undefined</p>
-<p>P：create function</p>
-<p><img src="/2023/02/13/UDS%E5%8D%8F%E8%AE%AE%E5%88%86%E6%9E%90-Teslaaaaa/43e8c24c662faf48598cfaf64b882934e7628c26.png" alt="image-20230215104546746"></p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">void</span> __noreturn <span class="title function_">sub_8000138</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">int</span> v0; <span class="comment">// r0</span></span><br><span class="line">  _BYTE v1[<span class="number">48</span>]; <span class="comment">// [sp-30h] [bp-30h] BYREF</span></span><br><span class="line"></span><br><span class="line">  v0 = sub_800123E(v1, <span class="number">48</span>);</span><br><span class="line">  sub_800033C(v0);</span><br><span class="line">  sub_8000430(<span class="number">1073821696</span>, <span class="string">&quot;Welcome challenger!\r\n&quot;</span>);</span><br><span class="line">  sub_8000430(<span class="number">1073821696</span>, <span class="string">&quot;The flag is:\r\n&quot;</span>);</span><br><span class="line">  sub_8000168(v1);</span><br><span class="line">  sub_8000430(<span class="number">1073821696</span>, v1);</span><br><span class="line">  sub_8000430(<span class="number">1073821696</span>, <span class="string">&quot;\r\n&quot;</span>);</span><br><span class="line">  <span class="keyword">while</span> ( <span class="number">1</span> )</span><br><span class="line">    ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>很容易猜测，6行进行v1初始化，而sub_8000430是一个log函数，主要处理逻辑在：<code>sub_800168</code>里面</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> __fastcall <span class="title function_">sub_8000168</span><span class="params">(_BYTE *a1)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">int</span> result; <span class="comment">// r0</span></span><br><span class="line">  <span class="type">char</span> v3[<span class="number">52</span>]; <span class="comment">// [sp+4h] [bp-34h] BYREF</span></span><br><span class="line"></span><br><span class="line">  sub_800120C(v3, <span class="string">&quot;flag&#123;canoecr7-zd9h-1emi-or8m-f8vm2od81nfk&#125;&quot;</span>, <span class="number">44</span>);</span><br><span class="line">  <span class="comment">// 拷贝v3到a1，即是对该字符串的处理过程</span></span><br><span class="line">  sub_8001256(a1, v3);</span><br><span class="line">  a1 += <span class="number">5</span>;</span><br><span class="line">  a1[<span class="number">2</span>] -= <span class="number">13</span>;</span><br><span class="line">  a1[<span class="number">11</span>] -= <span class="number">5</span>;</span><br><span class="line">  a1[<span class="number">15</span>] -= <span class="number">44</span>;</span><br><span class="line">  a1[<span class="number">3</span>] -= <span class="number">11</span>;</span><br><span class="line">  a1[<span class="number">5</span>] -= <span class="number">48</span>;</span><br><span class="line">  a1[<span class="number">7</span>] += <span class="number">43</span>;</span><br><span class="line">  a1[<span class="number">28</span>] += <span class="number">50</span>;</span><br><span class="line">  a1[<span class="number">31</span>] += <span class="number">46</span>;</span><br><span class="line">  a1[<span class="number">19</span>] -= <span class="number">13</span>;</span><br><span class="line">  a1[<span class="number">20</span>] -= <span class="number">66</span>;</span><br><span class="line">  a1[<span class="number">1</span>] += <span class="number">3</span>;</span><br><span class="line">  a1[<span class="number">29</span>] -= <span class="number">55</span>;</span><br><span class="line">  a1[<span class="number">24</span>] -= <span class="number">51</span>;</span><br><span class="line">  a1[<span class="number">9</span>] -= <span class="number">23</span>;</span><br><span class="line">  a1[<span class="number">25</span>] -= <span class="number">6</span>;</span><br><span class="line">  a1[<span class="number">27</span>] -= <span class="number">60</span>;</span><br><span class="line">  a1[<span class="number">4</span>] -= <span class="number">52</span>;</span><br><span class="line">  a1[<span class="number">6</span>] -= <span class="number">14</span>;</span><br><span class="line">  a1[<span class="number">30</span>] -= <span class="number">52</span>;</span><br><span class="line">  a1[<span class="number">22</span>] -= <span class="number">58</span>;</span><br><span class="line">  a1[<span class="number">12</span>] -= <span class="number">48</span>;</span><br><span class="line">  a1[<span class="number">16</span>] -= <span class="number">56</span>;</span><br><span class="line">  a1[<span class="number">34</span>] -= <span class="number">53</span>;</span><br><span class="line">  *a1 -= <span class="number">48</span>;</span><br><span class="line">  a1[<span class="number">14</span>] += <span class="number">3</span>;</span><br><span class="line">  a1[<span class="number">17</span>] -= <span class="number">5</span>;</span><br><span class="line">  a1[<span class="number">33</span>] -= <span class="number">55</span>;</span><br><span class="line">  a1[<span class="number">35</span>] -= <span class="number">56</span>;</span><br><span class="line">  a1[<span class="number">10</span>] -= <span class="number">2</span>;</span><br><span class="line">  a1[<span class="number">26</span>] -= <span class="number">67</span>;</span><br><span class="line">  result = (<span class="type">unsigned</span> __int8)a1[<span class="number">21</span>] - <span class="number">6</span>;</span><br><span class="line">  a1[<span class="number">21</span>] = result;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h2><p>如下:</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// ./telsaaaaa</span></span><br><span class="line"><span class="comment">// flag:f1ag&#123;3dad13db-cb48-495d-b023-3231d80f1713&#125;</span></span><br><span class="line"><span class="comment">// (base)</span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span>&#123;</span><br><span class="line"><span class="type">char</span> org_str[] = <span class="string">&quot;canoecr7-zd9h-1emi-or8m-f8vm2od81nfk&quot;</span>;</span><br><span class="line">org_str[<span class="number">2</span>] -= <span class="number">13</span>;</span><br><span class="line">org_str[<span class="number">11</span>] -= <span class="number">5</span>;</span><br><span class="line">org_str[<span class="number">15</span>] -= <span class="number">44</span>;</span><br><span class="line">org_str[<span class="number">3</span>] -= <span class="number">11</span>;</span><br><span class="line">org_str[<span class="number">5</span>] -= <span class="number">48</span>;</span><br><span class="line">org_str[<span class="number">7</span>] += <span class="number">43</span>;</span><br><span class="line">org_str[<span class="number">28</span>] += <span class="number">50</span>;</span><br><span class="line">org_str[<span class="number">31</span>] += <span class="number">46</span>;</span><br><span class="line">org_str[<span class="number">19</span>] -= <span class="number">13</span>;</span><br><span class="line">org_str[<span class="number">20</span>] -= <span class="number">66</span>;</span><br><span class="line">org_str[<span class="number">1</span>] += <span class="number">3</span>;</span><br><span class="line">org_str[<span class="number">29</span>] -= <span class="number">55</span>;</span><br><span class="line">org_str[<span class="number">24</span>] -= <span class="number">51</span>;</span><br><span class="line">org_str[<span class="number">9</span>] -= <span class="number">23</span>;</span><br><span class="line">org_str[<span class="number">25</span>] -= <span class="number">6</span>;</span><br><span class="line">org_str[<span class="number">27</span>] -= <span class="number">60</span>;</span><br><span class="line">org_str[<span class="number">4</span>] -= <span class="number">52</span>;</span><br><span class="line">org_str[<span class="number">6</span>] -= <span class="number">14</span>;</span><br><span class="line">org_str[<span class="number">30</span>] -= <span class="number">52</span>;</span><br><span class="line">org_str[<span class="number">22</span>] -= <span class="number">58</span>;</span><br><span class="line">org_str[<span class="number">12</span>] -= <span class="number">48</span>;</span><br><span class="line">org_str[<span class="number">16</span>] -= <span class="number">56</span>;</span><br><span class="line">org_str[<span class="number">34</span>] -= <span class="number">53</span>;</span><br><span class="line">org_str[<span class="number">0</span>] -= <span class="number">48</span>;</span><br><span class="line">org_str[<span class="number">14</span>] += <span class="number">3</span>;</span><br><span class="line">org_str[<span class="number">17</span>] -= <span class="number">5</span>;</span><br><span class="line">org_str[<span class="number">33</span>] -= <span class="number">55</span>;</span><br><span class="line">org_str[<span class="number">35</span>] -= <span class="number">56</span>;</span><br><span class="line">org_str[<span class="number">10</span>] -= <span class="number">2</span>;</span><br><span class="line">org_str[<span class="number">26</span>] -= <span class="number">67</span>;</span><br><span class="line">org_str[<span class="number">21</span>] -= <span class="number">6</span>;</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;flag: %s\n&quot;</span>, org_str);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="unicorn模拟执行"><a href="#unicorn模拟执行" class="headerlink" title="unicorn模拟执行"></a>unicorn模拟执行</h3><p>需要的几个组件，有时间看一下官方文档</p>
-<ul>
-<li><p>sark</p>
+<p><img src="/2021/10/02/%E7%81%B0%E8%A2%8D%E6%8E%A8%E9%80%81Mark/dns.jpg" alt="文本, 电子邮件  描述已自动生成"></p>
+<ol start="24">
+<li><p>当年门罗币背后的那些人设计出这个币种时有没有预见过，这个举动无意间让网络世界和平了不少:-)</p>
 </li>
-<li><p>idaPython</p>
+<li><p>一次漂亮的分享最大的利己是：极其加深自己对所分享知识的印象。</p>
 </li>
-<li><p>unicorn</p>
+<li><p>一个好漏洞从发现到 PoC 到 Exploit 到 Attack 到 Defense 到披露，可以完美打通一次任督二脉。这样的机会不多，多珍惜。</p>
 </li>
-</ul>
-<hr>
-<p>2023&#x2F;06&#x2F;11更新：</p>
-<p>在了解完Qiling后，尝试使用Qiling来模拟</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>一道好题，记录一下</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://bbs.kanxue.com/thread-274828.htm">https://bbs.kanxue.com/thread-274828.htm</a></p>
-]]></content>
-      <tags>
-        <tag>AutoSec</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>USB接口安全测试</title>
-    <url>/2024/03/05/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>USB已经成为计算机与智能设备的必备接口之一，广泛应用于社会的各个场景。近年来各类硬件产品的安全事件层出不穷，出现了多种针对USB接口的攻击手段，导致相关系统面临着严重的安全风险。简要对于<code>USB</code>接口存在的安全问题进行梳理，并进行测试。</p>
-<span id="more"></span>
-
-<h2 id="USB-101"><a href="#USB-101" class="headerlink" title="USB 101"></a>USB 101</h2><p><img src="https://www.usbzh.com/uploadimg/202105080959336094.png" alt="USB协议分层"></p>
-<p>USB设备的枚举过程如下：</p>
-<ol>
-<li>USB设备插入USB接口后，主机检测D+&#x2F;D-线上的电压，确认有设备连接，USB<a href="https://www.usbzh.com/article/detail-25.html">集线器</a>通过中断<a href="https://www.usbzh.com/article/detail-450.html">IN</a>通道，向主机报告有USB设备连接。</li>
-<li>主机接到通知后，通过<a href="https://www.usbzh.com/article/detail-25.html">集线器</a>设备类请求<a href="https://www.usbzh.com/article/detail-1162.html">GetPortStatus</a>获取更多的信息。然后主机等待100ms等待设备稳定，然后发送<a href="https://www.usbzh.com/article/detail-25.html">集线器</a>设备类请求SetPortStatus,对USB设备进行复位，复位后USB设备的地址为0，这样主机就可以使用地址0与USB设备进行通信,复位后的设备可以从USB总线上获取小于100mA的电流，用于使用默认地址对管道0控制<a href="https://www.usbzh.com/article/detail-691.html">事务</a>响应。</li>
-<li>主机向地址为0（即刚插入的USB设备）的设备端点0（默认端点）发送获取<a href="https://www.usbzh.com/article/detail-104.html">设备描述符</a>的<a href="https://www.usbzh.com/article/detail-417.html">标准请求</a>GetDescriptor。</li>
-<li>USB设备收到请求后，将其预设的<a href="https://www.usbzh.com/article/detail-104.html">设备描述符</a>返回给主机。</li>
-<li>主机收到设备描述符后，返回一个0长度的数据确认包。</li>
-<li>主机对设备再次复位，复位后主机对地址为0的设备端点0发送一个设置地址SetAddress请求（新的设备地址在数据包中）。</li>
-<li>主机发送请求状态返回，设备返回0长度的状态数据包。</li>
-<li>主机收到状态数据包后，发送应答包<a href="https://www.usbzh.com/article/detail-452.html">ACK</a>给设备，设备收到<a href="https://www.usbzh.com/article/detail-452.html">ACK</a>后，启用新的设备地址。</li>
-<li>主机再次使新的地址获取设备描述符GetDescriptor，设备返回地址描述符。</li>
-<li>主机获取第一次<a href="https://www.usbzh.com/article/detail-67.html">配置描述符</a>有前18个字节，设备返回<a href="https://www.usbzh.com/article/detail-67.html">配置描述符</a>的前18个字节，其数据包中含有配置描述符的总长度。</li>
-<li>主机根据配置描述符的总长度再次获取配置描述符，设备返回全总的配置描述符。</li>
-<li>如果还有<a href="https://www.usbzh.com/article/detail-53.html">字符串描述符</a>，系统还会获取<a href="https://www.usbzh.com/article/detail-53.html">字符串描述符</a>。像<a href="https://www.usbzh.com/article/detail-76.html">HID</a>设备还有<a href="https://www.usbzh.com/article/detail-48.html">报告描述符</a>，它也需要单独获取。</li>
+<li><p>过了遍比特币生态网络里的 RSK 生态解决方案及相关源码，他们对安全有不错的理解，尤其是他们应该早有意识到以太坊生态安全缺陷，这点很赞。</p>
+</li>
+<li><p>以太坊智能合约的出现让软件工程师真的可以对得起工程师称号，多好的事。</p>
+</li>
+<li><p>创业最爽的是还能亲自带队攻克两个核心能力：1. 0day；2. 黑客工程。</p>
+</li>
+<li><p>玩前端黑只需掌握 Chrome DevTools 就好:-)</p>
+</li>
+<li><p>区块链本质根本不是什么去中心，而是利益共识。明白这点就行了。而我是游走在两个极端之间的人，我只知道这里存在很多安全攻防博弈。乱，浮，和你我无关，我们改变不了。</p>
+</li>
+<li><p>最快的成长方式就是实战中成长，比如你拿到攻击者的样本，立马可以吸收其手法精髓，防御上就可以有的放矢。再比如为了突破，你死磕到底，一回头会发现：卧槽，掌握了各种技巧，而这许多是死磕前绝无法想象到的。</p>
+</li>
+<li><p>创造比纯粹的 Hacking 更重要，但 Hacking 才能促进更独特的创造。</p>
+</li>
+<li><p>探索本质这是黑客必须具备的基本素质。</p>
+</li>
+<li><p>DApp 游戏本质是一场“代码即法律”的黑客游戏。</p>
+</li>
+<li><p>黑客的初阶是逆向思维，进阶则是正向思维。</p>
+</li>
+<li><p>区块链领域的黑客几乎都不是曾经的黑客，他们几乎都是很懂区块链的技术人员，且带了点逆向思维。曾经的黑客几乎都过时了，绝大多数没机会在这个新领域开天辟地，只能费劲地跟着。</p>
+</li>
+<li><p>5G 与 IoT 时代的风险与机遇：<a href="https://threatpost.com/the-danger-and-opportunity-in-5g-connectivity-and-iot/138493/">https://threatpost.com/the-danger-and-opportunity-in-5g-connectivity-and-iot/138493/</a> 如果 IPv6 也大量启用，那对网络空间测绘来说，是个新挑战🤔。</p>
+</li>
+<li><p>我说我们在做区块链安全，其实我们在做都是公链生态的安全，慢雾的机会仅在这，如果这个生态没了，慢雾也会沉静甚至消失。是的，所谓的联盟链、私链不是我们的机会，我们的机会在自由的网络空间里:-)</p>
+</li>
+<li><p><a href="https://mp.weixin.qq.com/s/s-gxfYsGUeosiRwpXoWN6w">https://mp.weixin.qq.com/s/s-gxfYsGUeosiRwpXoWN6w</a></p>
+</li>
+<li><p>维基解密新年推文里问：2019，你认为哪些被泄露的档案最能改变我们对人类文明的理解？… 要搞大事？</p>
+</li>
 </ol>
-<h2 id="测试工具"><a href="#测试工具" class="headerlink" title="测试工具"></a>测试工具</h2><h3 id="Facedancer"><a href="#Facedancer" class="headerlink" title="Facedancer"></a>Facedancer</h3><blockquote>
-<p>a tool for implementing USB devices in host-side Python using the GoodFET framework. Access to the USB chip is extremely low-level, so protocols may be mis-implemented in all sorts of creative ways. This allows a clever neighbor to quickly find and exploit USB driver vulnerabilities from the comfort of a modern workstation, only later porting such exploits to run standalone. Additionally, we’ll show you some nifty tricks for replacing the firmware of commercial USB devices in order to house your exploits.</p>
-</blockquote>
-<p><img src="http://farm6.staticflickr.com/5333/7397758016_7b01d44ca9.jpg" alt="Facedancer10"></p>
-<p>使用<code>GoodFET</code>框架，在主机端使用Python实现了USB</p>
-<p>使用教程</p>
-<ol>
-<li>首先更新firmware</li>
+<h2 id="来自-Ton-OKEx中文频道"><a href="#来自-Ton-OKEx中文频道" class="headerlink" title="来自@Ton&amp;OKEx中文频道"></a>来自@<strong>Ton&amp;OKEx中文频道</strong></h2><ol>
+<li>Ton区块链继承自Telegram，旨在为数十亿用户提供服务。它拥有超快的交易速度、低廉的费用和易于使用的原生应用程序，其中一些应用程序可以直接在Telegram中使用，如 @wallet 或 @cryptobot 。</li>
 </ol>
-<ul>
-<li><p><a href="https://github.com/travisgoodspeed/goodfet/">GitHub - travisgoodspeed&#x2F;goodfet: An embedded bus adapter for various microcontrollers and radios.</a></p>
-</li>
-<li><p><a href="https://github.com/greatscottgadgets/Facedancer">GitHub - greatscottgadgets&#x2F;Facedancer: modern FaceDancer core for multiple devices– including GreatFET</a></p>
-</li>
-</ul>
-<blockquote>
-<p>In Linux, the FTDI drivers are included by default. Be sure that the user has permissions for <code>/dev/ttyUSB0</code>, which will likely require adding that user to the dialout group.</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt-get install -y gcc-msp430 msp430-libc curl wget python-serial <span class="comment"># Ubuntu Xenial</span></span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>由于需要<code>/dev/ttyUSB0</code>权限，将用户加入组中</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo usermod -a -G dialout w3b5h3ll</span><br></pre></td></tr></table></figure>
-
-<p>刷写过程(环境：<code>Python2.7</code>+双头<code>USB mini</code>接口)</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">(base) w3b5h3ll@ubuntu:~/goodfet/firmware$ board=facedancer21 goodfet.bsl --dumpinfo &gt; info.txt</span><br><span class="line">Use -h <span class="keyword">for</span> <span class="built_in">help</span></span><br><span class="line">Use --fromweb to upgrade a GoodFET.</span><br><span class="line">MSP430 Bootstrap Loader Version: 1.39-goodfet-8</span><br><span class="line">Invoking BSL...</span><br><span class="line">Transmit default password ...</span><br><span class="line">Current bootstrap loader version: 2.13 (Device ID: f26f)</span><br><span class="line"></span><br><span class="line"><span class="comment"># update 2023/11</span></span><br><span class="line"><span class="built_in">export</span> board=facedancer21</span><br><span class="line">make</span><br><span class="line">goodfet.bsl ./goodfet.hex</span><br></pre></td></tr></table></figure>
-
-<h3 id="RubberDucky"><a href="#RubberDucky" class="headerlink" title="RubberDucky"></a>RubberDucky</h3><p>一款可以执行<code>HID</code>键盘注入的工具</p>
-<ul>
-<li><a href="https://docs.hak5.org/hak5-usb-rubber-ducky/">USB Rubber Ducky by Hak5 - USB Rubber Ducky</a></li>
-</ul>
-<p><img src="https://shop.hak5.org/cdn/shop/products/usb-rubber-ducky_mk2_2000x.jpg?v=1659974440" alt="USB Rubber Ducky"></p>
-<p>Hak5有自己的脚本语言<code>DuckyScript</code>，官方也提供了诸多Payloads使用</p>
-<ul>
-<li><a href="https://github.com/hak5/usbrubberducky-payloads/">GitHub - hak5&#x2F;usbrubberducky-payloads: The Official USB Rubber Ducky Payload Repository</a></li>
-</ul>
-<p>使用在线IDE进行编译，烧录，将<code>inject.bin</code>拷贝至其根目录即可。想要返回<code>Arming mode</code>：拆件，插入电脑后，按压按钮即可</p>
-<ul>
-<li><a href="https://payloadstudio.hak5.org/community/">https://payloadstudio.hak5.org/community/</a></li>
-</ul>
-<h3 id="BushBunny"><a href="#BushBunny" class="headerlink" title="BushBunny"></a>BushBunny</h3><p>同为Hak5的产品，<code>Bash Bunny</code>更贵，介绍上说比前者更加强大，是一个完整的Linux系统。</p>
-<ul>
-<li><p><a href="https://docs.hak5.org/bash-bunny/">Bash Bunny by Hak5 - Bash Bunny</a></p>
-</li>
-<li><p><a href="https://hackinglab.cz/en/blog/bash-bunny-guide/">Bash Bunny – Guide - Hacking Lab</a></p>
-</li>
-</ul>
-<p><img src="https://3076592524-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FnxJgJ9UdPfrcuL1U8DpL%2Fuploads%2FNY6fwd09yUtu3sRsbNJe%2Fimage.png?alt=media&token=d0880bb8-0e9b-41bd-809e-d3724c8fe234"></p>
-<p>切换到<code>Arming Mode</code>后，串口进入</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">picocom -b 115200 /dev/tty.usbmodemch0000011</span><br><span class="line">root:hak5bunny</span><br></pre></td></tr></table></figure>
-
-<p>同时其作为存储设备，如下目录</p>
-<p><img src="/2024/03/05/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/2023-11-09-16-05-30-image.png"></p>
-<h2 id="攻击面分析"><a href="#攻击面分析" class="headerlink" title="攻击面分析"></a>攻击面分析</h2><p><img src="/2024/03/05/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/2023-11-09-12-56-02-image.png"></p>
-<h3 id="攻击负载媒介"><a href="#攻击负载媒介" class="headerlink" title="攻击负载媒介"></a>攻击负载媒介</h3><p>非常典型有震网病毒，通过U盘即突破了物理隔离，不做详细展开</p>
-<p><img src="https://s.secrss.com/anquanneican/702f33f11f8bf9226bb4185e124fefb3.jpg"></p>
-<h3 id="HID攻击"><a href="#HID攻击" class="headerlink" title="HID攻击"></a>HID攻击</h3><blockquote>
-<p>USB人机交互设备（Human Interface Device，HID）是一种非常重要和广泛使用的USB设备类型，被广泛应用于人机交互和少量实时数据传输中，例如键盘、鼠标、游戏杆等应用场景. USB HID设备最主要的特点是可以模拟人和机器的交互过程，能够主动地向连接的主机中传输数据和命令. 同时，基于USB HID协议中的约定，USB HID设备无须安装驱动就能与主机进行交互.</p>
-</blockquote>
-<p>基于HID的攻击有如下特点：</p>
-<ul>
-<li><p>隐蔽性强。攻击原理是模仿用户按键操作，系统不会对输入进行审计。另外恶意代码被隐藏在了芯片的固件中，上层杀软无法进行检测。</p>
-</li>
-<li><p>更高权限。可以获取系统权限。</p>
-</li>
-</ul>
-<p>常见USB HID开发平台</p>
-<p><img src="/2024/03/05/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/2023-11-09-13-17-25-image.png"></p>
-<p>想要实现<code>HID</code>攻击，设备需要支持<code>Keyboard</code>等人机交互接口类型。利用<code>Umap2</code>框架，可以对目标进行一个初步的USB安全评估（注：该工具需要使用<code>Python2.7</code>启动）</p>
-<ul>
-<li><a href="https://github.com/nccgroup/umap2">GitHub - nccgroup&#x2F;umap2: Umap2 is the second revision of NCC Group’s python based USB host security assessment tool.</a></li>
-</ul>
-<p>Device Emulation</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 获取支持的设备类型</span></span><br><span class="line">↪ umap2list                                                                          (base)</span><br><span class="line">audio</span><br><span class="line">billboard</span><br><span class="line">cdc_acm</span><br><span class="line">ftdi</span><br><span class="line">hub</span><br><span class="line">keyboard</span><br><span class="line">mass_storage</span><br><span class="line">mtp</span><br><span class="line">printer</span><br><span class="line">smartcard</span><br><span class="line"><span class="comment"># emulate -C keyboard</span></span><br><span class="line">umap2emulate -P fd:/dev/tty.usbserial-A10LLJBV -C keyboard -v</span><br></pre></td></tr></table></figure>
-
-<p>Device Support Scanning</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Umap2 can attempt to detect what types of USB devices are supported by the host. </span></span><br><span class="line">umap2scan -P fd:/dev/tty.usbserial-A10LLJBV</span><br></pre></td></tr></table></figure>
-
-<p>确认一下<code>facedancer</code></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">lsusb</span><br><span class="line">Bus 020 Device 012: ID 0403:6001 Future Technology Devices International Limited FT232R USB UART  Serial: A10LLJBV</span><br></pre></td></tr></table></figure>
-
-<p>Vendor Specific Device Support Scanning 厂商设备支持扫描</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># timeout设置5s，条目间隔2s</span></span><br><span class="line">umap2vsscan -P fd:/dev/tty.usbserial-A10LLJBV -d ~/Desktop/MyRepos/umap2/data/vid_pid_db.py -t 5 -b 2</span><br></pre></td></tr></table></figure>
-
-<p>经测试，发现如下，目标支持4种类型：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Found 4 supported device(s):</span><br><span class="line">1.audio</span><br><span class="line">2.hub</span><br><span class="line">3.keyboard</span><br><span class="line">4.mass storage</span><br></pre></td></tr></table></figure>
-
-<h4 id="Demo01-Nmap扫描"><a href="#Demo01-Nmap扫描" class="headerlink" title="Demo01: Nmap扫描"></a>Demo01: Nmap扫描</h4><p>Win10支持<code>RNDIS</code>，即USB网卡，那么可以使用<code>BushBunny</code>配置为相关模式后扫描目标主机</p>
-<blockquote>
-<p>RNDIS（Remote Network Driver Interface Specification，远程网络驱动接口规范）是一个通信协议。它是<a href="https://zh.wikipedia.org/wiki/%E5%BE%AE%E8%BD%AF%E5%85%AC%E5%8F%B8" title="微软公司">微软公司</a>的<a href="https://zh.wikipedia.org/w/index.php?title=%E4%B8%93%E5%88%A9%E5%8D%8F%E8%AE%AE&action=edit&redlink=1">专利协议</a>，被大多数<a href="https://zh.wikipedia.org/wiki/Windows" title="Windows">Windows</a>、<a href="https://zh.wikipedia.org/wiki/Linux" title="Linux">Linux</a>和<a href="https://zh.wikipedia.org/wiki/Unix" title="Unix">Unix</a>系统所支持。它主要使用<a href="https://zh.wikipedia.org/wiki/USB" title="USB">USB</a>协议作为其下层传输，它向上层提供虚拟的<a href="https://zh.wikipedia.org/wiki/%E4%BB%A5%E5%A4%AA%E7%BD%91" title="以太网">以太网</a>连接。</p>
-</blockquote>
-<p>Payload如下</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Title:         Nmapper for Bash Bunny</span></span><br><span class="line"><span class="comment"># Author:        Hak5Darren</span></span><br><span class="line"><span class="comment"># Version:       1.1</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Scans target with nmap using specified options</span></span><br><span class="line"><span class="comment"># Saves sequential logs to mass storage loot folder</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Red ...........Setup</span></span><br><span class="line"><span class="comment"># Red Blinking...Setup Failed. Target did not obtain IP address. Exit.</span></span><br><span class="line"><span class="comment"># Amber..........Scanning</span></span><br><span class="line"><span class="comment"># White..........Switching to Mass Storage (optional)</span></span><br><span class="line"><span class="comment"># Green..........Finished</span></span><br><span class="line"><span class="comment"># </span></span><br><span class="line"><span class="comment"># See nmap --help for options. Default &quot;-O --fuzzy&quot; profiles target OS.</span></span><br><span class="line">NMAP_OPTIONS=<span class="string">&quot;-O --fuzzy&quot;</span></span><br><span class="line">LOOTDIR=/root/udisk/loot/nmap</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">######## INITIALIZATION ########</span></span><br><span class="line">LED SETUP</span><br><span class="line"><span class="comment"># Use RNDIS for Windows. Mac/*nix use ECM_ETHERNET</span></span><br><span class="line">ATTACKMODE RNDIS_ETHERNET </span><br><span class="line"><span class="comment">#ATTACKMODE ECM_ETHERNET</span></span><br><span class="line">GET TARGET_IP</span><br><span class="line">GET TARGET_HOSTNAME</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">######## MAKE LOOT DIRECTORY ########</span></span><br><span class="line"><span class="comment"># Setup named logs in loot directory</span></span><br><span class="line"><span class="built_in">mkdir</span> -p <span class="variable">$LOOTDIR</span></span><br><span class="line">HOST=<span class="variable">$&#123;TARGET_HOSTNAME&#125;</span></span><br><span class="line"><span class="comment"># If hostname is blank set it to &quot;noname&quot;</span></span><br><span class="line">[[ -z <span class="string">&quot;<span class="variable">$HOST</span>&quot;</span> ]] &amp;&amp; HOST=<span class="string">&quot;noname&quot;</span></span><br><span class="line">COUNT=$(<span class="built_in">ls</span> -lad <span class="variable">$LOOTDIR</span>/<span class="variable">$HOST</span>*.<span class="built_in">log</span> | <span class="built_in">wc</span> -l)</span><br><span class="line">COUNT=$((COUNT+<span class="number">1</span>))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">######## ERROR IF NO TARGET IP ########</span></span><br><span class="line"><span class="keyword">if</span> [ -z <span class="string">&quot;<span class="variable">$&#123;TARGET_IP&#125;</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">    LED FAIL</span><br><span class="line">    <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">######## ATTACK ########</span></span><br><span class="line">LED ATTACK</span><br><span class="line">nmap <span class="variable">$NMAP_OPTIONS</span> <span class="variable">$TARGET_IP</span> &gt;&gt; <span class="variable">$LOOTDIR</span>/<span class="variable">$HOST</span>-<span class="variable">$COUNT</span>.<span class="built_in">log</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">######## CLEANUP ########</span></span><br><span class="line">LED CLEANUP</span><br><span class="line"><span class="built_in">sync</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">######## FINISH ########</span></span><br><span class="line">LED FINISH</span><br></pre></td></tr></table></figure>
-
-<p>扫描结果</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ <span class="built_in">pwd</span></span><br><span class="line">/Volumes/BashBunny/loot/nmap</span><br><span class="line">$ <span class="built_in">cat</span> LEHZ5202344-1.10g</span><br><span class="line">Starting Nmap 6.47 http://nmap.org at 2021-01-30 18:26 PST</span><br><span class="line">Nmap scan report <span class="keyword">for</span> 172.16.64.10</span><br><span class="line">Host is up (0.00051s latency).</span><br><span class="line">Not shown:994 filtered ports</span><br><span class="line">PORT</span><br><span class="line">STATE SERVICE</span><br><span class="line">80/tcp</span><br><span class="line">open</span><br><span class="line">http</span><br><span class="line">135/tcp</span><br><span class="line">open msrpc</span><br><span class="line">139/tcp</span><br><span class="line">open netbios-ssn</span><br><span class="line">445/tcp</span><br><span class="line">open microsoft-ds</span><br><span class="line">2701/tcp open</span><br><span class="line">sms-rcinfo</span><br><span class="line">6129/tcp open</span><br><span class="line">unknown</span><br><span class="line">MAC Address:00:11:22:33:44:55 (Cimsys)</span><br><span class="line">Warning:OSScan results may be unreliable because we could not find at least 1 open and 1 closed port</span><br><span class="line">Device <span class="built_in">type</span>:general purpose</span><br><span class="line">Running (JUST GUESSING):Microsoft Windows 2008 (85%)</span><br><span class="line">OS CPE:cpe:/o:microsoft:windows_server_2008:sp1 cpe:/o:microsoft:windows_server_2008:r2</span><br><span class="line">Aggressive os guesses:Microsoft Windows Server 2008 SP1 or Windows Server 2008 R2 (85%)</span><br><span class="line">No exact os matches <span class="keyword">for</span> host (<span class="built_in">test</span> conditions non-ideal).</span><br><span class="line">Network Distance:1 hop</span><br><span class="line">OS detection performed.Please report any incorrect results at http://nmap.org/submit/</span><br><span class="line">Nmap <span class="keyword">done</span>:1 IP address (1 host up)scanned <span class="keyword">in</span> 43.56 seconds</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="Demo02"><a href="#Demo02" class="headerlink" title="Demo02:"></a>Demo02:</h4><p>查看、分析针对<code>Android/Linux</code>平台的payload，描绘攻击路径。（未有可直接使用<code>Android</code>平台Payload，待开发）</p>
-<h3 id="BadUSB"><a href="#BadUSB" class="headerlink" title="BadUSB"></a>BadUSB</h3><p>对USB HID技术的改进。原有技术依赖于特定的嵌入式开发版，无法在通用USB设备上实现。存在局限性：无法通用；容易被破除设备封装等检测方式发现。</p>
-<p>BadUSB攻击的基本思路是<strong>篡改USB设备中的原有固件，将含有攻击负载的内容写入到设备固件中，从而使得USB设备在接入到目标主机时，通过执行固件中的攻击负载实现攻击功能</strong>. BadUSB攻击的实现虽然需要USB设备支持固件更新这一前提，但是仍然比USB HID攻击具有更好的通用性（据Karsten Nohl称，BadUSB首次提出时可以适用的优盘占当时市场份额的50%以上另外，由于BadUSB攻击实现过程中仅对存储器芯片中存放的固件进行了篡改，并不对USB设备硬件进行任何改变，所以该类攻击的隐蔽性更高.</p>
-<p>BadUSB攻击的出现，不仅仅是在通用性和隐蔽性上对USB HID攻击进行了改进，而且通过篡改设备固件，为攻击者提供了更多的攻击选择. 一方面，攻击者通过修改固件，能够执行的操作不仅仅局限在模拟HID操作，通过借助USB设备控制器可以实现更多的复杂操作；另一方面，具有不同类型和功能配置的USB设备给攻击者提供了更多可能性，例如<strong>攻击者通过对设备固件的篡改，可控制USB网卡设备中本身具备的网络适配器，从而可实现对目标主机网络流量的劫持和监控；还可以通过控制USB存储设备的存储器，实现对目标主机敏感信息的提取和隐蔽存储等.</strong></p>
-<h3 id="驱动漏洞利用"><a href="#驱动漏洞利用" class="headerlink" title="驱动漏洞利用"></a>驱动漏洞利用</h3><p>此部分涉及USB模糊测试相关内容</p>
-<h3 id="USB接口监听"><a href="#USB接口监听" class="headerlink" title="USB接口监听"></a>USB接口监听</h3><p>想要对USB接口流量进行<code>sniff</code>，一般<code>Linux</code>系统需要通过<code>usbmon</code>来实现</p>
-<ul>
-<li><p><a href="https://www.kernel.org/doc/html/latest/usb/usbmon.html">usbmon — The Linux Kernel documentation</a></p>
-</li>
-<li><p><a href="https://www.cnblogs.com/qiynet/p/17754131.html">Linux下USB抓包工具UsbMon的使用和包数据格式解析 - 瘋耔 - 博客园</a></p>
-</li>
-<li><p><a href="https://zhuanlan.zhihu.com/p/267820933">https://zhuanlan.zhihu.com/p/267820933</a></p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 关闭SELinux</span></span><br><span class="line">setenforce 0</span><br><span class="line"><span class="comment"># 可抓包接口list</span></span><br><span class="line">:/data/local/tmp <span class="comment"># ./tcpdump -D</span></span><br><span class="line">1.dummy0 [Up, Running]</span><br><span class="line">2.eth0 [Up, Running, Connected]</span><br><span class="line">3.eth1 [Up, Running, Connected]</span><br><span class="line">4.vlan3 [Up, Running, Connected]</span><br><span class="line">5.vlan5 [Up, Running, Connected]</span><br><span class="line">6.vlan7 [Up, Running, Connected]</span><br><span class="line">7.vlan8 [Up, Running, Connected]</span><br><span class="line">8.vlan9 [Up, Running, Connected]</span><br><span class="line">9.vlan67 [Up, Running, Connected]</span><br><span class="line">10.any (Pseudo-device that captures on all interfaces) [Up, Running]</span><br><span class="line">11.lo [Up, Running, Loopback]</span><br><span class="line">12.wlan0 [Up, Wireless]</span><br><span class="line">13.sit0 [none]</span><br><span class="line">14.p2p0 [Wireless]</span><br><span class="line">15.nflog (Linux netfilter <span class="built_in">log</span> (NFLOG) interface) [none]</span><br><span class="line">16.nfqueue (Linux netfilter queue (NFQUEUE) interface) [none]</span><br><span class="line">17.bond0 [none, Disconnected]</span><br><span class="line"><span class="comment"># 查看驱动安装情况</span></span><br><span class="line">:/data/local/tmp <span class="comment"># lsmod</span></span><br><span class="line">Module                  Size  Used by</span><br><span class="line">ptp_virtual            16384  0</span><br><span class="line">wlan                 6107136  0</span><br><span class="line">emac_dwc_eqos         200704  0</span><br><span class="line">v4l2loopback           40960  4</span><br><span class="line">machine_dlkm          208896  0</span><br><span class="line">stub_dlkm              16384  1</span><br><span class="line">native_dlkm           159744  0</span><br><span class="line">platform_dlkm        3186688  77 native_dlkm</span><br><span class="line">q6_dlkm              1282048  5 machine_dlkm,native_dlkm,platform_dlkm</span><br><span class="line">adsp_loader_dlkm       16384  0</span><br><span class="line">apr_dlkm              229376  4 machine_dlkm,platform_dlkm,q6_dlkm,adsp_loader_dlkm</span><br><span class="line">snd_event_dlkm         16384  3 machine_dlkm,q6_dlkm,apr_dlkm</span><br><span class="line">q6_notifier_dlkm       16384  1 apr_dlkm</span><br></pre></td></tr></table></figure>
-
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><p><a href="https://www.secrss.com/articles/16837">针对USB接口的安全测试方法研究 - 安全内参 | 决策者的网络安全知识库</a></p>
-</li>
-<li><p>USB设备安全问题及防御方法综述</p>
-</li>
-<li><p><a href="https://www.usbzh.com/article/detail-607.html">USB规范分类大全和USB协议关系树 - USB中文网</a></p>
-</li>
-<li><p><a href="https://evilpan.com/2021/01/24/usb-fun/">USB 协议核心概念与实践 - evilpan</a></p>
-</li>
-<li><p><a href="https://www.usbzh.com/article/detail-110.html">USB 枚举&#x2F;断开过程 - USB中文网</a></p>
-</li>
-<li><p><a href="https://zh.wikipedia.org/wiki/USB%E5%A4%A7%E5%AE%B9%E9%87%8F%E5%AD%98%E5%82%A8%E8%AE%BE%E5%A4%87">USB大容量存储设备 - 维基百科，自由的百科全书</a></p>
-</li>
-<li><p><a href="https://en.wikipedia.org/wiki/USB_On-The-Go">https://en.wikipedia.org/wiki/USB_On-The-Go</a></p>
-</li>
-</ul>
 ]]></content>
       <tags>
-        <tag>IoT</tag>
-        <tag>Hardware</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>void类型理解</title>
-    <url>/2021/08/30/void%E7%B1%BB%E5%9E%8B%E7%90%86%E8%A7%A3/</url>
-    <content><![CDATA[<span id="more"></span>
-
-<h3 id="void-和-void-指针"><a href="#void-和-void-指针" class="headerlink" title="void 和 void 指针"></a><code>void</code> 和 <code>void</code> 指针</h3><ul>
-<li><p><strong><code>void</code>：</strong> 代表”无类型”。<code>void*</code> 表示”无类型指针”，可以指向任何数据类型。</p>
-</li>
-<li><p><strong><code>void</code> 指针：</strong> 可以指向任意类型的数据，示例代码如下：</p>
-</li>
-</ul>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> *pint;</span><br><span class="line"><span class="type">void</span> *pvoid;</span><br><span class="line"></span><br><span class="line"><span class="comment">// pvoid 可以指向任何类型</span></span><br><span class="line">pvoid = pint;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 将 `void` 类型转为其他类型需要强制类型转换</span></span><br><span class="line">pint = (<span class="type">int</span> *)pvoid;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>在 ANSI C 标准中，不允许对 <code>void</code> 指针进行算术运算。但在 GNU C 中，<code>void*</code> 和 <code>char*</code> 视为相同，即 <code>sizeof(*pvoid) == sizeof(char)</code>。</li>
-</ul>
-<h3 id="void-关键字的作用"><a href="#void-关键字的作用" class="headerlink" title="void 关键字的作用"></a><code>void</code> 关键字的作用</h3><ul>
-<li><p><strong>对函数返回值的限定：</strong> 如果函数不需要返回值，必须使用 <code>void</code> 限定，例如 <code>void func();</code>。</p>
-</li>
-<li><p><strong>对函数参数的限定：</strong> 如果函数不允许接收参数，必须使用 <code>void</code> 限定，例如 <code>int func(void);</code>。</p>
-</li>
-</ul>
-<p><code>void</code> 指针可以指向任意类型的数据，因此可以在函数参数中使用 <code>void</code> 指针，使函数能够接受任意数据类型的指针作为参数，示例代码如下：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">void</span> *<span class="title function_">memcpy</span><span class="params">(<span class="type">void</span> *dest, <span class="type">const</span> <span class="type">void</span> *src, <span class="type">size_t</span> len)</span>;</span><br><span class="line"><span class="type">void</span> *<span class="title function_">memset</span><span class="params">(<span class="type">void</span> *buffer, <span class="type">int</span> c, <span class="type">size_t</span> num)</span>;</span><br></pre></td></tr></table></figure>
-
-<h3 id="void-的真正作用"><a href="#void-的真正作用" class="headerlink" title="void 的真正作用"></a><code>void</code> 的真正作用</h3><p><code>void</code> 的作用在于：</p>
-<ul>
-<li>对函数返回值的限定。</li>
-<li>对函数参数的限定。</li>
-</ul>
-<p>示例代码如下：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">float</span> *p1;</span><br><span class="line"><span class="type">int</span> *p2;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 错误</span></span><br><span class="line">p1 = p2;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 正确</span></span><br><span class="line">p1 = (<span class="type">float</span> *)p2;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> *p1;</span><br><span class="line"><span class="type">int</span> *p2;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 正确</span></span><br><span class="line">p1 = p2;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 错误</span></span><br><span class="line">p2 = p1;</span><br></pre></td></tr></table></figure>
-
-<h3 id="void-的使用规则"><a href="#void-的使用规则" class="headerlink" title="void 的使用规则"></a><code>void</code> 的使用规则</h3><ul>
-<li>如果函数没有返回值，应该声明为 <code>void</code> 类型。</li>
-</ul>
-<p>在 C 语言中，未加返回类型限定的函数会被默认处理为返回整型值。例如：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line">add(<span class="type">int</span> a, <span class="type">int</span> b);</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;2 + 3 = %d\n&quot;</span>, add(<span class="number">2</span>, <span class="number">3</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">add(<span class="type">int</span> a, <span class="type">int</span> b)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> a + b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>如果函数没有参数，应该声明参数为 <code>void</code>。</li>
-</ul>
-<p>在 C 语言中，可以向无参数的函数传递任何类型的参数，但在 C++ 中不行。</p>
-<ul>
-<li><p>对于 <code>void</code> 指针类型的使用：</p>
-<ul>
-<li><p>ANSI C 中不允许对 <code>void</code> 指针进行算术操作，因为 ANSI C 标准下，指针算术操作需要知道指向数据类型的大小，例如 <code>int *pint; pint++;</code> 会使 <code>pint</code> 增加 <code>sizeof(int)</code>。</p>
-</li>
-<li><p>GNU C（GNU’s Not Unix）认为 <code>void*</code> 类型与 <code>char*</code> 类型一致。</p>
-</li>
-</ul>
-</li>
-<li><p>如果函数的参数可以是任意指针，应该声明参数为 <code>void*</code>。注意，<code>void**</code> 不能代表一个真实的变量，<code>void</code> 体现了一种抽象。</p>
-</li>
-</ul>
-]]></content>
-      <tags>
-        <tag>C/C++</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>使用GDB对程序执行进行trace</title>
-    <url>/2024/01/16/%E4%BD%BF%E7%94%A8GDB%E5%AF%B9%E7%A8%8B%E5%BA%8F%E6%89%A7%E8%A1%8C%E8%BF%9B%E8%A1%8Ctrace/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>静态反汇编与动态反汇编存在一个精度与广度的区别。一般来说静态反汇编可以得到更多的覆盖率，而动态反汇编则可以得到更精确的执行路径。尝试以一个类<code>gdbinit</code>的GDB启动交互过程，对可执行程序进行trace，用于同<code>IDA Pro</code>等专业反编译&#x2F;反汇编工具进行比较，更好的对程序进行分析。</p>
-<span id="more"></span>
-
-<h2 id="Trace"><a href="#Trace" class="headerlink" title="Trace"></a>Trace</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">info files</span><br><span class="line"><span class="comment"># 断点在_start</span></span><br><span class="line">b _start</span><br><span class="line"><span class="built_in">set</span> pagination off</span><br><span class="line"><span class="built_in">set</span> disassembly-flavor intel</span><br><span class="line"><span class="comment"># 开启日志</span></span><br><span class="line"><span class="built_in">set</span> logging on</span><br><span class="line"><span class="built_in">set</span> logging redirect on</span><br><span class="line">r</span><br><span class="line"><span class="comment"># 每一条指令进行print</span></span><br><span class="line">display/i <span class="variable">$pc</span></span><br><span class="line"><span class="keyword">while</span> 1</span><br><span class="line">si</span><br><span class="line">end</span><br></pre></td></tr></table></figure>
-
-<p>输出很多</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ <span class="built_in">wc</span> -l gdb.txt </span><br><span class="line">459667 gdb.txt</span><br></pre></td></tr></table></figure>
-
-<p>过滤指令</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">egrep <span class="string">&#x27;^=&gt; 0x[0-9a-f]+:&#x27;</span> gdb.txt &gt; test.txt</span><br></pre></td></tr></table></figure>
-
-<p>此时，就可以获取到程序实际执行的指令</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">1 =&gt; 0x7ffff7cc51a0: endbr64</span><br><span class="line">2 =&gt; 0x7ffff7cc51a4: mov rax,QWORD PTR[rip+0x153d1d]</span><br><span class="line">3 =&gt; 0x7ffff7cc5lab: mov rdx,QWORD PTR [rax+0x1c0]</span><br><span class="line">4 =&gt; 0x7ffff7cc51b2: and rdx,Oxffffffffffffff0O</span><br><span class="line">5 =&gt; 0x7ffff7cc51b9: jle 0x7ffff7cc51cf</span><br><span class="line">6 =&gt; 0x7ffff7cc51bb: mov rcx,rdx</span><br><span class="line">7 =&gt; 0x7ffff7cc51be: mov QWORD PTR [rip+0x15424b],rdx</span><br><span class="line">8 =&gt; 0x7ffff7cc51c5: sar rcx,1</span><br><span class="line">9 =&gt; 0x7ffff7cc51c8: mov QWORD PTR [rip+0x154249],rcx</span><br><span class="line">10 =&gt; 0x7ffff7cc51cf: mov rdx,QWORD PTR [rax+0x1c8]</span><br><span class="line">11 =&gt; 0x7ffff7cc51d6: and rdx,0xffffffffffffff0</span><br><span class="line">12 =&gt; 0x7ffff7cc51dd: jle 0x7ffff7cc51f3</span><br><span class="line">13 =&gt; 0x7ffff7cc51df: mov rcx,rdx</span><br><span class="line">14 =&gt; 0x7ffff7cc51e2: mov QWORD PTR [rip+0x154217],rdx</span><br><span class="line">15 =&gt; 0x7ffff7cc51e9: sar rcx,1</span><br><span class="line">16 =&gt; 0x7ffff7cc5lec: mov QWORD PTR [rip+0x154215],rcx</span><br><span class="line">17 =&gt; 0x7ffff7cc51f3: mov rdx,QWORD PTR [rax+0x1d0]</span><br><span class="line">18 =&gt; 0x7ffff7cc51fa: mov QWORD PTR [rip+0x15b3a7],rdx</span><br><span class="line">19 =&gt; 0x7ffff7cc5201: mov rdx,QWORD PTR [rax+0x1d8]</span><br><span class="line">20 =&gt; 0x7ffff7cc5208: mov QWORD PTR [rip+0x1541e9],rdx</span><br><span class="line">21 =&gt; 0x7ffff7cc520f: mov rdx,QWORD PTR [rax+0x1e8]</span><br><span class="line">22 =&gt; 0x7ffff7cc5216: mov QWORD PTR [rip+0x1541d3],rdx</span><br><span class="line">23 =&gt; 0x7ffff7cc521d: mov rdx,QWORD PTR [rax+0x1e0]</span><br><span class="line">24 =&gt; 0x7ffff7cc5224: mov QWORD PTR [rip+0x15b375],rdx</span><br><span class="line">25 =&gt; 0x7ffff7cc522b: <span class="built_in">test</span> BYTE PTR [rax+0x1a5],0x80</span><br><span class="line">26 =&gt; 0x7ffff7cc5232: je 0x7ffff7cc523b</span><br><span class="line">27 =&gt; 0x7ffff7cc523b: xor eax,eax</span><br><span class="line">28 =&gt; 0x7ffff7cc523d: ret</span><br><span class="line">29 =&gt; 0x7ffff7ca8720: endbr64</span><br><span class="line">30 =&gt; 0x7ffff7ca8724: mov rcx,QWORD PTR [rip+0x17079d]</span><br><span class="line">31 =&gt; 0x7ffff7ca872b: lea rax,[rip+0x123be]</span><br><span class="line">32 =&gt; 0x7ffff7ca8732: mov edx,DWORD PTR [rcx+0xb8]</span><br></pre></td></tr></table></figure>
-]]></content>
-      <tags>
-        <tag>Reverse</tag>
+        <tag>转载</tag>
       </tags>
   </entry>
   <entry>
@@ -1167,149 +518,6 @@
 ]]></content>
       <tags>
         <tag>转载</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>灰袍推送Mark</title>
-    <url>/2021/10/02/%E7%81%B0%E8%A2%8D%E6%8E%A8%E9%80%81Mark/</url>
-    <content><![CDATA[<p>最近浏览了灰袍推送的tg频道，记录一些有意思的言论。灰袍推送中有些关于<strong>方法论</strong>、<strong>工程化</strong>、<strong>区块链</strong>的东西很有让人眼前一亮的感觉在此记录一下，方便以后查看。</p>
-<span id="more"></span>
-
-<h2 id="来自-灰袍推送"><a href="#来自-灰袍推送" class="headerlink" title="来自@灰袍推送"></a>来自@灰袍推送</h2><ol>
-<li><p>论黑客工程化是我们的追求。黑客工程化是我们的追求。黑客工程化的意思是：我们的所有技能需要成体系活动，能交给机器的都交给机器，我们控制机器“木偶们”来加速我们的效率。为了最优这个工程化，我们很明白什么技能是必须精通的，什么技能是够用就好，什么技能是拿来主义。</p>
-</li>
-<li><p>那个“安全技能树”圈子，新人太多，我一旦分享点复杂的，似乎都安静了。对于陌生的知识怎么办？先 mark，以后有机会再消化，没机会也无所谓，至少知道有这个就好。对于不陌生的，赶紧跟上实践。实战派，不废话。指的就是这个。</p>
-</li>
-<li><p>灰帽 C#，这本书很不错，玩 Win 渗透的，建议这本书实操完。</p>
-</li>
-<li><p>什么黑客技术是好技术？黑产或 APT 组织已经在实战的技术 。</p>
-</li>
-<li><p>很多人不明白什么是职业什么是业余，什么是兴趣什么是工作。举个例子，黑客攻防，是我兴趣，也是工作，更成为了职业。而玩玩比特币、打打王者荣耀、吃吃小龙虾虽也是兴趣，但很业余，我不会通过这种方式去赚钱，能赚到也是投机罢了，如果能成大事，那也是投机，命运选中了我而已。再往细了说，黑客攻防分支领域几十条，也仅某些条会是我的职业，而有不少仅仅是业余，如打 CTF、玩黑手等。</p>
-</li>
-<li><p>通读两本行业一流的书籍是最稳的入门进阶方式。</p>
-</li>
-<li><p>设计一个商业模式的快感大于设计一个软件工程，不过都小于挖到一个大 0day，因为大 0day 自带牛逼的商业模式😄。</p>
-</li>
-<li><p>那些老协议，没认证与加密设计的，都会出大问题，多个 S 多关键。<a href="https://rtpbleed.com/">https://rtpbleed.com</a></p>
-</li>
-<li><p>天天喊发干货的人，我就问你 Kali 的每个工具你都了解过没，哪怕绝大多数点开看看都没吧？都懒成这样，是懒还是蠢？</p>
-</li>
-<li><p>干货拿走，消化一年再说：<a href="https://github.com/coreb1t/awesome-pentest-cheat-sheets">https://github.com/coreb1t/awesome-pentest-cheat-sheets</a></p>
-</li>
-<li><p>钓鱼攻击类型我总结几类：普通域名钓鱼、双因素钓鱼、XSS 高级钓鱼、CSRF 高级钓鱼、浏览器扩展钓鱼、系统木马钓鱼、MITM 钓鱼。这些细节在我的硬盘里。</p>
-</li>
-<li><p>建议大家开始关注“区块链”技术，在自己的技能树上多一个这个是好事，至少可以很好避免成为投机者中的韭菜。玩安全的，可以探索这个领域的安全问题。</p>
-</li>
-<li><p>不小心连续发的都是区块链相关的观点。做安全就是这样，需要跟上时代。区块链安全里，我们会把其分为两大类：区块链本身的安全，区块链之上各类业务的安全。对于我们来说，区块链本身的安全是我们的技能短板，里面大量的安全问题是需要算法、架构、工程的整体思考。如果不能深入到区块链创造细节里去，这类的安全从何研究？</p>
-</li>
-<li><p>未来的世界是去中心化与中心化的博弈平衡，绝对不会有完美的去中心化生态，原因请自行阅读《自私的基因》…</p>
-</li>
-<li><p>安全研究第一步：<strong>目标攻击面</strong>都有哪些？第二步：<strong>攻击路径如何描绘</strong>出来？这两大步骤是最考验安全人员经验及想象力的地方。</p>
-</li>
-<li><p>区块链世界最伟大的点在于：通过技术信仰吸引一批信徒且都利益绑定了。</p>
-</li>
-<li><p>比特币网络新增两个杀手锏，一个是闪电网络，一个是 RSK。</p>
-</li>
-<li><p>《麻省理工科技评论》2018 年“全球十大突破性技术” ：<a href="http://mp.weixin.qq.com/s/_kdbSRdIwr4bIXfNtut8Fw%EF%BC%8C%E5%8C%BF%E5%90%8D%E8%B4%A7%E5%B8%81Zcash%E5%9C%A8%E5%8D%81%E5%A4%A7%E4%B9%8B%E4%B8%80%E9%87%8C%E8%A2%AB%E6%8F%90%E5%8F%8A%E3%80%82">http://mp.weixin.qq.com/s/_kdbSRdIwr4bIXfNtut8Fw，匿名货币Zcash在十大之一里被提及。</a></p>
-</li>
-<li><p>看到 bettercap 从 Ruby 改为 Go，就等着 MSF 和 BeEF 了。黑客工程化的世界，要么 Python 要么 Go，其他都是小众，JavaScript 还差些火候。</p>
-</li>
-<li><p>Google 说了“您应始终使用 HTTPS 保护您的所有网站，即使这些网站并不处理敏感的通信。</p>
-</li>
-<li><p>你猜为什么？尤其是那些区块链世界的网站，即使上面没 Web 钱包，没交易所功能。</p>
-</li>
-<li><p>DNS Rebinding 技巧用于钱包节点 HTTP RPC 的攻击确实很猥琐，上古时代的技巧到现在还是这么的帅！</p>
-</li>
-<li><p>DNS这种设计一直是信息安全头顶的一朵乌云。</p>
-</li>
-</ol>
-<p><img src="/2021/10/02/%E7%81%B0%E8%A2%8D%E6%8E%A8%E9%80%81Mark/dns.jpg" alt="文本, 电子邮件  描述已自动生成"></p>
-<ol start="24">
-<li><p>当年门罗币背后的那些人设计出这个币种时有没有预见过，这个举动无意间让网络世界和平了不少:-)</p>
-</li>
-<li><p>一次漂亮的分享最大的利己是：极其加深自己对所分享知识的印象。</p>
-</li>
-<li><p>一个好漏洞从发现到 PoC 到 Exploit 到 Attack 到 Defense 到披露，可以完美打通一次任督二脉。这样的机会不多，多珍惜。</p>
-</li>
-<li><p>过了遍比特币生态网络里的 RSK 生态解决方案及相关源码，他们对安全有不错的理解，尤其是他们应该早有意识到以太坊生态安全缺陷，这点很赞。</p>
-</li>
-<li><p>以太坊智能合约的出现让软件工程师真的可以对得起工程师称号，多好的事。</p>
-</li>
-<li><p>创业最爽的是还能亲自带队攻克两个核心能力：1. 0day；2. 黑客工程。</p>
-</li>
-<li><p>玩前端黑只需掌握 Chrome DevTools 就好:-)</p>
-</li>
-<li><p>区块链本质根本不是什么去中心，而是利益共识。明白这点就行了。而我是游走在两个极端之间的人，我只知道这里存在很多安全攻防博弈。乱，浮，和你我无关，我们改变不了。</p>
-</li>
-<li><p>最快的成长方式就是实战中成长，比如你拿到攻击者的样本，立马可以吸收其手法精髓，防御上就可以有的放矢。再比如为了突破，你死磕到底，一回头会发现：卧槽，掌握了各种技巧，而这许多是死磕前绝无法想象到的。</p>
-</li>
-<li><p>创造比纯粹的 Hacking 更重要，但 Hacking 才能促进更独特的创造。</p>
-</li>
-<li><p>探索本质这是黑客必须具备的基本素质。</p>
-</li>
-<li><p>DApp 游戏本质是一场“代码即法律”的黑客游戏。</p>
-</li>
-<li><p>黑客的初阶是逆向思维，进阶则是正向思维。</p>
-</li>
-<li><p>区块链领域的黑客几乎都不是曾经的黑客，他们几乎都是很懂区块链的技术人员，且带了点逆向思维。曾经的黑客几乎都过时了，绝大多数没机会在这个新领域开天辟地，只能费劲地跟着。</p>
-</li>
-<li><p>5G 与 IoT 时代的风险与机遇：<a href="https://threatpost.com/the-danger-and-opportunity-in-5g-connectivity-and-iot/138493/">https://threatpost.com/the-danger-and-opportunity-in-5g-connectivity-and-iot/138493/</a> 如果 IPv6 也大量启用，那对网络空间测绘来说，是个新挑战🤔。</p>
-</li>
-<li><p>我说我们在做区块链安全，其实我们在做都是公链生态的安全，慢雾的机会仅在这，如果这个生态没了，慢雾也会沉静甚至消失。是的，所谓的联盟链、私链不是我们的机会，我们的机会在自由的网络空间里:-)</p>
-</li>
-<li><p><a href="https://mp.weixin.qq.com/s/s-gxfYsGUeosiRwpXoWN6w">https://mp.weixin.qq.com/s/s-gxfYsGUeosiRwpXoWN6w</a></p>
-</li>
-<li><p>维基解密新年推文里问：2019，你认为哪些被泄露的档案最能改变我们对人类文明的理解？… 要搞大事？</p>
-</li>
-</ol>
-<h2 id="来自-Ton-OKEx中文频道"><a href="#来自-Ton-OKEx中文频道" class="headerlink" title="来自@Ton&amp;OKEx中文频道"></a>来自@<strong>Ton&amp;OKEx中文频道</strong></h2><ol>
-<li>Ton区块链继承自Telegram，旨在为数十亿用户提供服务。它拥有超快的交易速度、低廉的费用和易于使用的原生应用程序，其中一些应用程序可以直接在Telegram中使用，如 @wallet 或 @cryptobot 。</li>
-</ol>
-]]></content>
-      <tags>
-        <tag>转载</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>R2S软路由搭建指南</title>
-    <url>/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/</url>
-    <content><![CDATA[<p>在一般访问Google等网站的情况下，往往需要在每个终端安装代理软件，如<code>Clash</code>，<code>SSR</code>等。而软路由的方式让我们对其访问变得无感。百科上对软路由的定义如下，即使用软件的方案来进行路由：</p>
-<blockquote>
-<p>软路由是指利用台式机或服务器的供应商配合一定软件而形成的路由解决方案，主要靠对软件的设置，实现路由器路由器的功能，它的软件与硬件是独立分开的。软路由使用普通计算机，使用通用的操作系统，如Linux或windows，因此软路由的设置事实上是windows或linux的设置。根据使用的操作系统不同，可以分为基于windows平台和基于Linux&#x2F;bsd平台开发的软件路由器。</p>
-</blockquote>
-<span id="more"></span>
-
-<h2 id="设备"><a href="#设备" class="headerlink" title="设备"></a>设备</h2><p>Nanopi R2S</p>
-<p>最低价可以买裸板，TF卡自己单买的，5v3a&#x2F;2a电源使用之前的旧设备。读卡器已有</p>
-<p><img src="/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-06-06-image.png"></p>
-<p>64GTF卡</p>
-<p><img src="/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-10-18-image.png"></p>
-<h2 id="刷机"><a href="#刷机" class="headerlink" title="刷机"></a>刷机</h2><p>使用<code>FriendlyWrt</code>系统，镜像下载：</p>
-<p><a href="https://drive.google.com/drive/folders/1W-2MLML9lkD2xAVjiwzEBNiUlPF5BgU9">01_SD card images - Google 云端硬盘</a></p>
-<ul>
-<li>rk3328-sd-friendlywrt-23.05-20231223.img.gz</li>
-</ul>
-<p><code>balenaEtcher</code>烧录至TF卡</p>
-<p><img src="/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-15-56-image.png"></p>
-<h3 id="网络拓扑"><a href="#网络拓扑" class="headerlink" title="网络拓扑"></a>网络拓扑</h3><p>网络结构比较简单，如下<br>光猫&lt;——–&gt;(WAN)R2S(LAN)&lt;——–&gt;(WAN)小米路由器</p>
-<p>等待开机后，访问<code>192.168.2.1</code>。使用<code>root/passowrd</code>即可进入FriendlyWrt的管理后台</p>
-<p><img src="/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-35-01-image.png"></p>
-<h2 id="OpenClash配置"><a href="#OpenClash配置" class="headerlink" title="OpenClash配置"></a>OpenClash配置</h2><p>如<code>OpenClash</code>描述，需要安装客户端与内核模块</p>
-<p>客户端安装</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#安装依赖</span></span><br><span class="line">* luci</span><br><span class="line">* luci-base</span><br><span class="line">* iptables</span><br><span class="line">* dnsmasq-full</span><br><span class="line">* coreutils</span><br><span class="line">* coreutils-nohup</span><br><span class="line">* bash</span><br><span class="line">* curl</span><br><span class="line">* jsonfilter</span><br><span class="line">* ca-certificates</span><br><span class="line">* ipset</span><br><span class="line">* ip-full</span><br><span class="line">* iptables-mod-tproxy</span><br><span class="line">* kmod-tun(TUN模式)</span><br><span class="line">* luci-compat(Luci-19.07)</span><br><span class="line"></span><br><span class="line"><span class="comment">#上传IPK文件至您路由器的 /tmp 目录下</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#假设安装包名字为</span></span><br><span class="line">luci-app-openclash_0.33.7-beta_all.ipk</span><br><span class="line"></span><br><span class="line"><span class="comment">#执行安装命令</span></span><br><span class="line">opkg install /tmp/luci-app-openclash_0.33.7-beta_all.ipk</span><br><span class="line"></span><br><span class="line"><span class="comment">#执行卸载命令</span></span><br><span class="line"><span class="comment">#插件在卸载后会自动备份配置文件到 /tmp 目录下，除非路由器重启，在下次安装时将还原您的配置文件</span></span><br><span class="line">opkg remove luci-app-openclash</span><br><span class="line"></span><br><span class="line">安装完成后刷新LUCI页面，在菜单栏 -&gt; 服务 -&gt; OpenClash 进入插件页面</span><br></pre></td></tr></table></figure>
-
-<p>内核</p>
-<p>进入<code>OpenClash</code>插件页面时，总是下载失败。可以增加代理来完成安装</p>
-<p><img src="/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-40-11-image.png"></p>
-<p>启动</p>
-<p>最后，上传配置文件，并启动即可。最终效果如下</p>
-<p><img src="/2024/03/05/R2S%E8%BD%AF%E8%B7%AF%E7%94%B1%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/2024-02-21-21-41-41-image.png"></p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://wiki.friendlyelec.com/wiki/index.php/NanoPi_R2S/zh">https://wiki.friendlyelec.com/wiki/index.php/NanoPi_R2S/zh</a></p>
-<p><a href="https://wiki.mbalib.com/wiki/%E8%BD%AF%E8%B7%AF%E7%94%B1">软路由 - MBA智库百科</a></p>
-<p><a href="https://github.com/vernesong/OpenClash/releases">Releases · vernesong&#x2F;OpenClash · GitHub</a></p>
-]]></content>
-      <tags>
-        <tag>Google</tag>
       </tags>
   </entry>
 </search>
