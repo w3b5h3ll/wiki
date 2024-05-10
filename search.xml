@@ -53,7 +53,7 @@
 <ul>
 <li><code>Linux GUI</code></li>
 <li>VSCode</li>
-<li>ssh -i <code>private key</code> <a href="mailto:&#x68;&#x61;&#99;&#107;&#101;&#x72;&#x40;&#x64;&#111;&#106;&#111;&#46;&#112;&#119;&#110;&#x2e;&#99;&#x6f;&#108;&#108;&#x65;&#x67;&#x65;">&#x68;&#x61;&#99;&#107;&#101;&#x72;&#x40;&#x64;&#111;&#106;&#111;&#46;&#112;&#119;&#110;&#x2e;&#99;&#x6f;&#108;&#108;&#x65;&#x67;&#x65;</a></li>
+<li>ssh -i <code>private key</code> <a href="mailto:&#104;&#x61;&#99;&#x6b;&#x65;&#x72;&#x40;&#x64;&#x6f;&#106;&#111;&#x2e;&#x70;&#x77;&#110;&#x2e;&#x63;&#x6f;&#108;&#x6c;&#101;&#x67;&#x65;">&#104;&#x61;&#99;&#x6b;&#x65;&#x72;&#x40;&#x64;&#x6f;&#106;&#111;&#x2e;&#x70;&#x77;&#110;&#x2e;&#x63;&#x6f;&#108;&#x6c;&#101;&#x67;&#x65;</a></li>
 </ul>
 <p>提供了一些交流平台</p>
 <ul>
@@ -72,11 +72,6 @@
 
 <h3 id="Persistent-Home-Directories-Two"><a href="#Persistent-Home-Directories-Two" class="headerlink" title="Persistent Home Directories - Two"></a>Persistent Home Directories - Two</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hacker@welcome~persistent-home-directories-two:/challenge$ ./solve</span><br><span class="line">                  .===</span><br><span class="line">                 / __)        _</span><br><span class="line">                 (  ||_.<span class="string">&#x27;&#x27;</span>.  &#123;_&#125;</span><br><span class="line">       ----       | =/ \   /<span class="string">&#x27; :</span></span><br><span class="line"><span class="string">   WELCOME       /\_~/() \__.&#x27;</span>     ____</span><br><span class="line">      ---- TO   |_   \   //  |<span class="string">&#x27;&#x27;</span><span class="string">&#x27;&#x27;</span>`    |-<span class="string">&#x27;8,</span></span><br><span class="line"><span class="string">         --   _ :  |_ &#x27;</span>-[]___/   <span class="string">&#x27;.....\--.O</span></span><br><span class="line"><span class="string">       THE   &#123;_&#125;&#x27;</span><span class="string">&#x27; .&#x27;</span>\ //  |<span class="string">&#x27;:````</span></span><br><span class="line"><span class="string">        DOJO  &#x27;</span>...<span class="string">&#x27;   /\\_/    `,</span></span><br><span class="line"><span class="string">                     //|\ &#x27;</span>.._.<span class="string">&#x27;</span></span><br><span class="line"><span class="string">            snd     // //</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Congratulations! The file that you created in the last challenge is still</span></span><br><span class="line"><span class="string">present in your home directory! Please keep in mind that, though the contents</span></span><br><span class="line"><span class="string">of /home/hacker persist, other areas (such as /tmp, /challenge, and so on) do</span></span><br><span class="line"><span class="string">not.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Anyways, here is your flag:</span></span><br><span class="line"><span class="string">pwn.college&#123;YTZ_OK0U1WyNRq1vyzpH-QzHiQd.0lMzczMsMjM0YzW&#125;</span></span><br></pre></td></tr></table></figure>
 ]]></content>
-  </entry>
-  <entry>
-    <title></title>
-    <url>/wiki/2024/05/09/PwnCollege-ProgramInteraction/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title></title>
@@ -113,6 +108,11 @@
 <li><a href="https://github.com/Alekseyyy/phineas-philes">From Phineas Fisher</a></li>
 </ul>
 ]]></content>
+  </entry>
+  <entry>
+    <title></title>
+    <url>/wiki/2024/05/09/PwnCollege-ProgramInteraction/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title></title>
