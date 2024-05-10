@@ -32,15 +32,15 @@
 <meta property="og:site_name" content="尘埃落定的WIKI">
 <meta property="og:description" content="Linux Command Line一些资源  https:&#x2F;&#x2F;overthewire.org&#x2F;wargames&#x2F;bandit&#x2F; man or help Ask for help on discord.  文件类型 -  is a regular filed is a directory (yes, directories are actually just special files!)l is">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://w3b5h3ll.github.io/w3b5h3ll.github.io/wiki/2024/05/09/PwnCollege-ProgramMisuse/2023-12-22-14-47-13-image.png">
-<meta property="og:image" content="https://w3b5h3ll.github.io/w3b5h3ll.github.io/wiki/2024/05/09/PwnCollege-ProgramMisuse/image-20240509142058672.png">
-<meta property="og:image" content="https://w3b5h3ll.github.io/w3b5h3ll.github.io/wiki/2024/05/09/PwnCollege-ProgramMisuse/2023-12-22-15-42-07-image.png">
-<meta property="og:image" content="https://w3b5h3ll.github.io/w3b5h3ll.github.io/wiki/2024/05/09/PwnCollege-ProgramMisuse/2023-12-22-15-40-33-image.png">
+<meta property="og:image" content="https://w3b5h3ll.github.io/wiki/2024/05/09/PwnCollege-ProgramMisuse/undefined2023-12-22-14-47-13-image.png">
+<meta property="og:image" content="https://w3b5h3ll.github.io/wiki/2024/05/09/PwnCollege-ProgramMisuse/undefinedimage-20240509142058672.png">
+<meta property="og:image" content="https://w3b5h3ll.github.io/wiki/2024/05/09/PwnCollege-ProgramMisuse/undefined2023-12-22-15-42-07-image.png">
+<meta property="og:image" content="https://w3b5h3ll.github.io/wiki/2024/05/09/PwnCollege-ProgramMisuse/undefined2023-12-22-15-40-33-image.png">
 <meta property="article:published_time" content="2024-05-09T15:52:51.979Z">
 <meta property="article:modified_time" content="2024-05-09T12:28:39.073Z">
 <meta property="article:author" content="w3b5h3ll">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://w3b5h3ll.github.io/w3b5h3ll.github.io/wiki/2024/05/09/PwnCollege-ProgramMisuse/2023-12-22-14-47-13-image.png">
+<meta name="twitter:image" content="https://w3b5h3ll.github.io/wiki/2024/05/09/PwnCollege-ProgramMisuse/undefined2023-12-22-14-47-13-image.png">
 
 
 <link rel="canonical" href="https://w3b5h3ll.github.io/wiki/2024/05/09/PwnCollege-ProgramMisuse/">
@@ -348,7 +348,7 @@
 <li><p>group</p>
 </li>
 </ul>
-<p><img src="/w3b5h3ll.github.io/wiki/2024/05/09/PwnCollege-ProgramMisuse/2023-12-22-14-47-13-image.png"></p>
+<p><img src="undefined2023-12-22-14-47-13-image.png"></p>
 <p>权限提升的关键：SUID</p>
 <p><strong>SUID</strong>: execute with the <code>eUID</code> of the file owner rather than the parent process.</p>
 <p><strong>SGID</strong>: execute with the <code>eGID</code> of the file owner rather than the parent process.</p>
@@ -512,12 +512,12 @@
 <h3 id="level32"><a href="#level32" class="headerlink" title="level32"></a>level32</h3><p><code>socat</code></p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">socat EXEC:<span class="string">&#x27;COMMAND&#x27;</span>,pty,ctty,setsid</span><br></pre></td></tr></table></figure>
 
-<p><img src="/w3b5h3ll.github.io/wiki/2024/05/09/PwnCollege-ProgramMisuse/image-20240509142058672.png" alt="image-20240509142058672"></p>
+<p><img src="undefinedimage-20240509142058672.png" alt="image-20240509142058672"></p>
 <h3 id="level33"><a href="#level33" class="headerlink" title="level33"></a>level33</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hacker@program-misuse-level-33:/challenge$ ./babysuid_level33 </span><br><span class="line">Welcome to ./babysuid_level33!</span><br><span class="line"></span><br><span class="line">This challenge is part of a series of programs that</span><br><span class="line">will require some light programming to <span class="built_in">read</span> the flag..</span><br><span class="line"></span><br><span class="line">I just <span class="built_in">set</span> the SUID bit on /usr/bin/whiptail.</span><br><span class="line">Try to use it to <span class="built_in">read</span> the flag!</span><br><span class="line"></span><br><span class="line">IMPORTANT: make sure to run me (./babysuid_level33) every time that you restart</span><br><span class="line">this challenge container to make sure that I <span class="built_in">set</span> the SUID bit on /usr/bin/whiptail!</span><br></pre></td></tr></table></figure>
 
 <p><code>whiptail</code>命令不常使用，文本对话框</p>
-<p><img src="/w3b5h3ll.github.io/wiki/2024/05/09/PwnCollege-ProgramMisuse/2023-12-22-15-42-07-image.png"></p>
-<p><img src="/w3b5h3ll.github.io/wiki/2024/05/09/PwnCollege-ProgramMisuse/2023-12-22-15-40-33-image.png"></p>
+<p><img src="undefined2023-12-22-15-42-07-image.png"></p>
+<p><img src="undefined2023-12-22-15-40-33-image.png"></p>
 <h3 id="level34"><a href="#level34" class="headerlink" title="level34"></a>level34</h3><p><code>awk</code></p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hacker@program-misuse-level-34:/challenge$ awk <span class="string">&#x27;&#123;print&#125;&#x27;</span> /flag</span><br><span class="line">pwn.college&#123;0x4I7MlhzCb0UEQc78Er5q-O9WF.QX2cTMsMjM0YzW&#125;</span><br></pre></td></tr></table></figure>
 
