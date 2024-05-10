@@ -32,13 +32,13 @@
 <meta property="og:site_name" content="尘埃落定的WIKI">
 <meta property="og:description" content="Challengeslevel1continue: c level2p&#x2F;x $r12  level3For example, &#96;x&#x2F;8i $rip&#96; will print the next 8 instructions from the current instruction pointer. &#96;x&#x2F;16i main&#96; willprint the first 16 instructions of">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://w3b5h3ll.github.io/wiki/PwnCollege-Debugging/2023-12-26-18-38-11-image.png">
+<meta property="og:image" content="https://w3b5h3ll.github.io/wiki//w3b5h3ll.github.io/wiki/2024/03/05/PwnCollege-Debugging/2023-12-26-18-38-11-image.png">
 <meta property="article:published_time" content="2024-03-05T06:17:25.138Z">
 <meta property="article:modified_time" content="2024-05-10T04:01:55.327Z">
 <meta property="article:author" content="w3b5h3ll">
 <meta property="article:tag" content="Fundamentals">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://w3b5h3ll.github.io/wiki/PwnCollege-Debugging/2023-12-26-18-38-11-image.png">
+<meta name="twitter:image" content="https://w3b5h3ll.github.io/wiki//w3b5h3ll.github.io/wiki/2024/03/05/PwnCollege-Debugging/2023-12-26-18-38-11-image.png">
 
 
 <link rel="canonical" href="https://w3b5h3ll.github.io/wiki/2024/03/05/PwnCollege-Debugging/">
@@ -331,7 +331,7 @@
 
 <p>检查<code>read</code>调用可知道位置<code>[rbp-0x18]</code></p>
 <p><code>set disassembly-flavor intel</code>，查看汇编，intel的更舒服</p>
-<p><img src="/wiki/PwnCollege-Debugging/2023-12-26-18-38-11-image.png"></p>
+<p><img src="/wiki//w3b5h3ll.github.io/wiki/2024/03/05/PwnCollege-Debugging/2023-12-26-18-38-11-image.png"></p>
 <p>pwn.college{4cRKNRkThqWCUq7VWQeLA2djaIj.QX2QjMsMjM0YzW}</p>
 <h3 id="level4"><a href="#level4" class="headerlink" title="level4"></a>level4</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">There are a number of ways to move forward <span class="keyword">in</span> the program<span class="string">&#x27;s execution. You can use the `stepi &lt;n&gt;` command, or `si &lt;n&gt;`</span></span><br><span class="line"><span class="string">for short, in order to step forward one instruction. You can use the `nexti &lt;n&gt;` command, or `ni &lt;n&gt;` for short, in</span></span><br><span class="line"><span class="string">order to step forward one instruction, while stepping over any function calls. The `&lt;n&gt;` parameter is optional, but</span></span><br><span class="line"><span class="string">allows you to perform multiple steps at once. You can use the `finish` command in order to finish the currently</span></span><br><span class="line"><span class="string">executing function. You can use the `break *&lt;address&gt;` parameterized command in order to set a breakpoint at the</span></span><br><span class="line"><span class="string">specified-address. You have already used the `continue` command, which will continue execution until the program hits a</span></span><br><span class="line"><span class="string">breakpoint.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">While stepping through a program, you may find it useful to have some values displayed to you at all times. There are</span></span><br><span class="line"><span class="string">multiple ways to do this. The simplest way is to use the `display/&lt;n&gt;&lt;u&gt;&lt;f&gt;` parameterized command, which follows</span></span><br><span class="line"><span class="string">exactly the same format as the `x/&lt;n&gt;&lt;u&gt;&lt;f&gt;` parameterized command. For example, `display/8i $rip` will always show you</span></span><br><span class="line"><span class="string">the next 8 instructions. On the other hand, `display/4gx $rsp` will always show you the first 4 values on the stack.</span></span><br><span class="line"><span class="string">Another option is to use the `layout regs` command. This will put gdb into its TUI mode and show you the contents of all</span></span><br><span class="line"><span class="string">of the registers, as well as nearby instructions.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">In order to solve this level, you must figure out a series of random values which will be placed on the stack. You are</span></span><br><span class="line"><span class="string">highly encouraged to try using combinations of `stepi`, `nexti`, `break`, `continue`, and `finish` to make sure you have</span></span><br><span class="line"><span class="string">a good internal understanding of these commands. The commands are all absolutely critical to navigating a program&#x27;</span>s</span><br><span class="line">execution.</span><br></pre></td></tr></table></figure>
 
