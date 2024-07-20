@@ -1,12 +1,557 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>CS 106L: Standard C++ Programming课程总结</title>
+    <url>/wiki/2024/06/25/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/</url>
+    <content><![CDATA[<h2 id="Namespace"><a href="#Namespace" class="headerlink" title="Namespace"></a>Namespace</h2><ul>
+<li><p>推荐使用<code>std::</code>前缀，而不是<code>using namespace std</code>，这是一种相对不好的编程风格。</p>
+</li>
+<li><p>使用<code>auto</code>关键字，自动推导变量类型，不需要自己去指定</p>
+</li>
+</ul>
+<p>方法重载</p>
+<ul>
+<li>相同的函数名</li>
+<li>不同的参数类型和参数个数</li>
+</ul>
+<h3 id="返回多个信息"><a href="#返回多个信息" class="headerlink" title="返回多个信息"></a>返回多个信息</h3><p>Any given function can only have exactly <strong>one return type</strong></p>
+<ul>
+<li>使用<strong>结构体</strong>，就可以传递，返回多个信息</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Student</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="built_in">string</span> name;</span><br><span class="line">    <span class="built_in">string</span> state;</span><br><span class="line">    <span class="type">int</span> age;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>STL structs, <code>std:: pair</code>:, 这是一个模板 template</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">std::pair&lt;<span class="type">int</span>, string&gt; numSuffix = &#123;<span class="number">1</span>, <span class="string">&quot;st&quot;</span>&#125;;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>std::make_pair</code> 是 C++ 标准库中的一个函数模板，用于快速创建一个 <code>std::pair</code> 对象，而不需要显式指定其中元素的类型。<code>std::pair</code> 是一个结构，它可以存储两个可能不同类型的值。这个函数模板在 <code>&lt;utility&gt;</code> 头文件中定义。</p>
+</blockquote>
+<p>一个简洁的例子，使用 <code>std::pair</code> 进行返回</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function">std::pair&lt;<span class="type">bool</span>, Student&gt; <span class="title">lookupStudent</span><span class="params">(string name)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Student blank;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">notFound</span>(name)) <span class="keyword">return</span> std::<span class="built_in">make_pair</span>(<span class="literal">false</span>, blank);</span><br><span class="line">    Student result = <span class="built_in">getStudent</span>(name);</span><br><span class="line">    <span class="keyword">return</span> std::<span class="built_in">make_pair</span>(<span class="literal">true</span>, result);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">auto</span> ouput = <span class="built_in">lookupStudent</span>(<span class="string">&quot;Julie&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="Initialization-Reference"><a href="#Initialization-Reference" class="headerlink" title="Initialization &amp;&amp; Reference"></a>Initialization &amp;&amp; Reference</h2><p>初始化操作</p>
+<blockquote>
+<p>Provides initial values at the time of construction - cppreference.com</p>
+</blockquote>
+<p>C++ it doesn’t type check with <strong>direct initialization.</strong></p>
+<p>引起缩小转换范围，narrowing conversion, 例如</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">criticalSystemValue</span><span class="params">(<span class="number">42.5</span>)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>编译器给出了提示</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"> $ clang++ ./narrow_convert.cpp -o narrow_convert     </span><br><span class="line">./narrow_convert.cpp:5:29: warning: implicit conversion from <span class="string">&#x27;double&#x27;</span> to <span class="string">&#x27;int&#x27;</span> changes value from 42.5 to 42 [-Wliteral-conversion]</span><br><span class="line">    5 |     int criticalSystemValue(42.5);</span><br><span class="line">      |         ~~~~~~~~~~~~~~~~~~~ ^~~~</span><br><span class="line">1 warning generated.</span><br><span class="line">[  1:16PM ]  [ c0r3dump@ArchLinux:~/Workspace/CS106L/code(master✗) ]</span><br><span class="line"> $ ./narrow_convert </span><br><span class="line">critical system value: 42</span><br></pre></td></tr></table></figure>
+
+<h3 id="Uniform-initalization-C-11"><a href="#Uniform-initalization-C-11" class="headerlink" title="Uniform initalization (C++11)"></a>Uniform initalization (C++11)</h3><p>使用大括号进行初始化</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> numOne&#123;<span class="number">12.0</span>&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>安全，不允许 narrowing conversion: `.&#x2F;narrow_convert.cpp: 6:16: error: type ‘double’ cannot be narrowed to ‘int’ in initializer list [-Wc++11-narrowing]<br>6 | int numOne{12.5};</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">|                ^~~~`</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用在多个地方，vector, maps, 等等</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">std::map&lt;std::string, <span class="type">int</span>&gt; ages</span><br><span class="line">&#123;</span><br><span class="line">  &#123;<span class="string">&quot;Alice&quot;</span>, <span class="number">25</span>&#125;,</span><br><span class="line">  &#123;<span class="string">&quot;Bob&quot;</span>, <span class="number">30</span>&#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>结构体初始化：Student s{“Haven”, “AR”, 21};</p>
+<h3 id="Structured-Binding-C-17"><a href="#Structured-Binding-C-17" class="headerlink" title="Structured Binding (C++17)"></a>Structured Binding (C++17)</h3><p>有点像Python中的变量解析，如下</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function">std::tuple&lt;std::string, std::string, std::string&gt; <span class="title">getClassInfo</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="keyword">return</span> &#123;className, buildingName, language&#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 初始化变量，从数据结构中</span></span><br><span class="line">    <span class="comment">// 从函数的返回中，获取多个值</span></span><br><span class="line">    <span class="keyword">auto</span> [className, buildingName, language] = <span class="built_in">getClassInfo</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// another way</span></span><br><span class="line">    <span class="keyword">auto</span> classInfo = <span class="built_in">getClassInfo</span>();</span><br><span class="line">    std::string className = std::<span class="built_in">get</span>&lt;<span class="number">0</span>&gt;(classInfo);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>引用：提高了性能，建议普遍使用<code>&amp;</code>，可以对原值进行操作，而不是拷贝，进而操作临时对象。</p>
+<h2 id="IO-Streams"><a href="#IO-Streams" class="headerlink" title="IO Streams"></a>IO Streams</h2><p><code>std:: stringstream</code></p>
+<ul>
+<li><p>一种将 string 作为 strams 的方式</p>
+</li>
+<li><p><code>&gt;&gt;</code> 会一直读取，知道遇见空字符</p>
+<ul>
+<li>“”, \n, \t 都是空字符</li>
+<li>使用 <code>getline()</code> 可以一直读取，直到 <code>\n</code></li>
+</ul>
+</li>
+</ul>
+<p>std:: cin, std:: count 是<strong>line-buffered</strong>, 知道 flush 时候才会输出</p>
+<p>cerr and clong</p>
+<ul>
+<li>cerr 输出 error, unbufferd</li>
+<li>clog: 日志输出， bufferd</li>
+</ul>
+<p>文件相关流</p>
+<ul>
+<li><p>std::ofstream</p>
+</li>
+<li><p>std::ifstream</p>
+</li>
+</ul>
+<p><img src="/wiki/wiki/2024/06/25/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/2024-06-27-23-33-37-image.png"></p>
+<h2 id="容器"><a href="#容器" class="headerlink" title="容器"></a>容器</h2><p>容器</p>
+<p>vectors, stacks, queues</p>
+<p>重排列相关的数据</p>
+<p>标准化</p>
+<ul>
+<li><p>允许存储多个对象，相同类型</p>
+</li>
+<li><p>允许访问对象</p>
+</li>
+<li><p>允许，读写对象</p>
+</li>
+</ul>
+<p>STL 有许多的容器</p>
+<ul>
+<li>Vector</li>
+<li>Stack</li>
+<li>Queue</li>
+<li>Set</li>
+<li>Map</li>
+</ul>
+<p>…</p>
+<ul>
+<li>Array, 固定大小的 vector</li>
+<li>Deque，双端 queue</li>
+<li>List， doubly linked list</li>
+<li>Unordered set</li>
+<li>Unordered map</li>
+</ul>
+<p>有两种类型的容器</p>
+<p>Sequence</p>
+<ul>
+<li>可顺序访问的容器</li>
+</ul>
+<p><img src="/wiki/wiki/2024/06/25/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/2024-06-27-23-51-14-image.png"></p>
+<p>Associative 关联类型</p>
+<ul>
+<li>容器不必有顺序</li>
+<li>查找方便</li>
+<li>例如 Maps 和 sets</li>
+</ul>
+<h3 id="Container-Adaptors"><a href="#Container-Adaptors" class="headerlink" title="Container Adaptors"></a>Container Adaptors</h3><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">Map</span><br><span class="line"></span><br><span class="line">std:: pair &lt;<span class="type">const</span> key, value&gt;</span><br></pre></td></tr></table></figure>
+
+<p>是对容器的<strong>包装</strong>，<strong>增加&#x2F;限制了原有容器的接口</strong>的访问</p>
+<p>例如，stack_deque 是对 deque 的包装</p>
+<p>stack_list 是对 list 的包装</p>
+<ul>
+<li>可以更加满足某些场景需求</li>
+<li>可以根据用途选择不同的容器类型</li>
+</ul>
+<h3 id="Iterator-访问容器的方式"><a href="#Iterator-访问容器的方式" class="headerlink" title="Iterator: 访问容器的方式"></a>Iterator: 访问容器的方式</h3><p>使用迭代器，来访问容器内的元素，容器实现了Iterators来做这些事情</p>
+<ul>
+<li>访问所有数据</li>
+<li>知道顺序，next</li>
+</ul>
+<p>一些基本的操作</p>
+<ul>
+<li><p>初始化，<code>iter = s.begin()</code></p>
+</li>
+<li><p>递增，<code>++iter</code></p>
+</li>
+<li><p>解引用，<code>*iter</code></p>
+</li>
+<li><p>比较，<code>iter != s.end()</code></p>
+</li>
+<li><p>拷贝，<code>new_iter = iter</code></p>
+</li>
+</ul>
+<p>不同类型的<code>iterator</code></p>
+<p><img src="/wiki/wiki/2024/06/25/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/2024-06-28-00-01-45-image.png"></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">// Input</span><br><span class="line">auto elem = *it;</span><br><span class="line"></span><br><span class="line">// Output</span><br><span class="line">*elem = value;</span><br><span class="line"></span><br><span class="line">// 双向Bidirectional</span><br><span class="line">--iter;</span><br><span class="line"></span><br><span class="line">// 随机，Random</span><br><span class="line">iter += 5;</span><br><span class="line">// 例如，vec[1], vec[7]</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/wiki/2024/06/25/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/2024-06-28-00-05-33-image.png"></p>
+<p>for-range循环</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">auto</span> iter=set.<span class="built_in">begin</span>(); iter!=set.<span class="built_in">end</span>(); ++iter)</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span>&amp; elem = *iter;</span><br></pre></td></tr></table></figure>
+
+<h3 id="指针"><a href="#指针" class="headerlink" title="指针"></a>指针</h3><p>迭代器iterator,就是一种指针</p>
+<ul>
+<li><p>迭代器只能指向容器中的元素，但是指针可以指向任何对象，迭代器作用域有限</p>
+</li>
+<li><p>这里就会出现一个问题，超出作用域后，迭代器失效的问题</p>
+</li>
+</ul>
+<h2 id="类"><a href="#类" class="headerlink" title="类"></a>类</h2><p>Classes 类，C语言缺乏OOP机制，</p>
+<ul>
+<li>类允许用户封装数据和功能</li>
+</ul>
+<p><img src="/wiki/wiki/2024/06/25/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/9626c7d8a2ef779174905f670570d533122d07a8.png"></p>
+<h3 id="OOP"><a href="#OOP" class="headerlink" title="OOP"></a>OOP</h3><ul>
+<li>一切围绕对象展开</li>
+<li>关注类设计与实现</li>
+<li>类对象</li>
+</ul>
+<p>容器就是一些定义在STL中的类</p>
+<p>struct和class的对比</p>
+<ul>
+<li>struct没有<strong>访问控制</strong>，class有</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Student</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="comment">// fields</span></span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">string</span> name;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">string</span> state;</span><br><span class="line">    <span class="type">int</span> age;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// 所有的field是public,可以被用户进行修改</span></span><br><span class="line"><span class="comment">// 导致一些未定义行为，如下</span></span><br><span class="line">s.age = <span class="number">-2345</span>;</span><br><span class="line"><span class="comment">// 修改为负数</span></span><br></pre></td></tr></table></figure>
+
+<p>类, public, private关键字</p>
+<ul>
+<li>限制对private域的访问</li>
+</ul>
+<p><strong>类型</strong>重定义</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">using</span> String = std::string;</span><br><span class="line"><span class="comment">// 此时String类型就代表了std::string</span></span><br></pre></td></tr></table></figure>
+
+<p>class 设计</p>
+<ul>
+<li>constructor</li>
+<li>private member function&#x2F;variables</li>
+<li>publice member fuction &#x2F; 接口 for a user</li>
+<li>Destructor</li>
+</ul>
+<p>容器适配器（stack …）和子类的对比</p>
+<ul>
+<li><p>子类：主要用于继承和扩展现有类的功能，通过重用父类的代码实现多态性和代码复用。</p>
+</li>
+<li><p>容器适配器：主要用于提供简化和特定用途的接口，通过<strong>封装现有的容器</strong>并限制其操作集来实现特定的行为。</p>
+</li>
+</ul>
+<h2 id="Special-Member-Functions"><a href="#Special-Member-Functions" class="headerlink" title="Special Member Functions"></a>Special Member Functions</h2><p>6个特殊成员函数，某些情况下，由编译器自动生成。</p>
+<ul>
+<li>default constructor</li>
+<li>copy constructor</li>
+<li>copy assignment operator</li>
+<li>destructor</li>
+<li>move constructor</li>
+<li>move assignment operator</li>
+</ul>
+<p><strong>设计哲学</strong></p>
+<ul>
+<li><p>如果SMF(Special Member Functions)可以正常工作，那就不要自己定义</p>
+</li>
+<li><p>同时定义<code>destructor, copy constructor copy assignment operator</code></p>
+<ul>
+<li>尤其是需要手动管理资源的时候</li>
+</ul>
+</li>
+</ul>
+<h3 id="默认构造函数"><a href="#默认构造函数" class="headerlink" title="默认构造函数"></a>默认构造函数</h3><p>成员初始化，可以通过成员初始化表达式列表进行初始化，<strong>会在构造函数主体运行之前初始化类成员</strong>。(即通过<code>Initializer Lists</code>进行初始化)</p>
+<ul>
+<li><p>同时完成了使用默认值初始化以及重新赋值两件事，更加高效</p>
+<ul>
+<li><strong>指针的特殊情况，只是创建一个指向相同位置的指针</strong></li>
+</ul>
+</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Box</span>(<span class="type">int</span> width, <span class="type">int</span> length, <span class="type">int</span> height): <span class="built_in">m_width</span>(width), <span class="built_in">m_length</span>(lenght), <span class="built_in">m_height</span>(height)&#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>默认构造函数：不带参数的构造函数，如</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Box</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// default constructor</span></span><br><span class="line">    <span class="built_in">Box</span>();</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>如果类中未声明，编译器提供隐式<code>inline</code>默认构造函数。</p>
+<ul>
+<li><p>使用<code>delete</code>关键字，将默认构造函数定义为已删除，阻止编译器生成</p>
+</li>
+<li><p>使用<code>default</code>关键字，则可以显示指定默认的构造函数（如果有其它的自定义的构造函数，默认构造函数会时效，此时<code>default</code>就可以派上用处）</p>
+</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Box</span>() = <span class="keyword">delete</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 显式声明默认构造函数</span></span><br><span class="line"><span class="built_in">Box</span>() = <span class="keyword">default</span>;</span><br><span class="line"><span class="comment">// 自定义构造函数</span></span><br><span class="line"><span class="built_in">Box</span>(<span class="type">int</span> value) : <span class="built_in">value_</span>(value) &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="析构函数"><a href="#析构函数" class="headerlink" title="析构函数"></a>析构函数</h3><p>对象超出作用域，或使用<code>delete</code>显式销毁对象时，自动调用析构函数</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">~<span class="built_in">Box</span>();</span><br></pre></td></tr></table></figure>
+
+<p>需要关注的点</p>
+<ul>
+<li><p>默认情况，编译器生成的已足够</p>
+</li>
+<li><p>如果要显式释放资源，需要自定义</p>
+</li>
+</ul>
+<h3 id="复制构造函数与复制赋值运算符"><a href="#复制构造函数与复制赋值运算符" class="headerlink" title="复制构造函数与复制赋值运算符"></a>复制构造函数与复制赋值运算符</h3><p>复制构造函数通过从相同类型的对象，复制其成员值来初始化对象。</p>
+<ul>
+<li><p>成员为简单类型，编译器生成即可</p>
+</li>
+<li><p><strong>如果类成员为指针，需要自己定义复制构造函数来分配内存，并复制值（这里是一个深拷贝，deep copy）</strong></p>
+</li>
+<li><p>复制构造函数与复制赋值运算符都是独立的，只声明复制构造函数，编译器还是会生成复制赋值运算符。所以，如果有一方是自定义的，那么也建议自定义另外一方。</p>
+</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Box</span>(Box&amp; other);</span><br><span class="line"><span class="built_in">Box</span>(<span class="type">const</span> Box&amp; other);</span><br><span class="line"><span class="built_in">Box</span>(<span class="keyword">volatile</span> Box&amp; other);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Additional parameters</span></span><br><span class="line"><span class="built_in">Box</span>(Box&amp; other, <span class="type">int</span> i = <span class="number">42</span>, string label = <span class="string">&quot;Box&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Declare copy assignment</span></span><br><span class="line">Box&amp; <span class="keyword">operator</span>=(Box&amp; other);</span><br></pre></td></tr></table></figure>
+
+<h3 id="移动构造函数和移动赋值运算符"><a href="#移动构造函数和移动赋值运算符" class="headerlink" title="移动构造函数和移动赋值运算符"></a>移动构造函数和移动赋值运算符</h3><p>提高性能，资源无需复制，使用应用声明符:<code>&amp;&amp;</code></p>
+<p>其生成的条件</p>
+<ul>
+<li><p>没有复制赋值运算符被声明</p>
+</li>
+<li><p>没有移动赋值运算符被声明</p>
+</li>
+<li><p>没有析构函数被声明</p>
+</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">MemoryBlock&amp; <span class="keyword">operator</span>=(MemoryBlock&amp;&amp; other)</span><br><span class="line">&#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="理解移动语义"><a href="#理解移动语义" class="headerlink" title="理解移动语义"></a>理解移动语义</h4><p>L-value, R-value理解</p>
+<ul>
+<li><p>左值即可以在左边，也可以在右边，其在作用域内都是有效的</p>
+</li>
+<li><p>右值只能在右边，往往是常量，生命周期为语句的这一行</p>
+</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// l-value: x</span></span><br><span class="line"><span class="type">int</span> y = x;</span><br><span class="line">x = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// r-value: 21</span></span><br><span class="line"><span class="type">int</span> y = <span class="number">21</span>;</span><br></pre></td></tr></table></figure>
+
+<p>使用<code>std::move(x)</code>将一个l-value转为r-value，此时马上就可以获得资源所有权</p>
+<p>设计哲学</p>
+<ul>
+<li>如果你定义了<code>copy constructor/copy assignment operator</code>，那么你应该同时定义<code>move constructor/move assignment operator</code>（更多关注性能，复制是比较慢的）</li>
+</ul>
+<h2 id="Type-Safety"><a href="#Type-Safety" class="headerlink" title="Type Safety"></a>Type Safety</h2><p>类型安全</p>
+<ul>
+<li><p>The extent to which a language prevents <strong>typing errors.</strong></p>
+</li>
+<li><p>The extent to which a language <strong>guarantees the behavior of programs</strong></p>
+</li>
+<li><p>The extent to which a <strong>function signature</strong> guarantees <strong>the behavior of function</strong></p>
+</li>
+</ul>
+<p>如下，可能引起<code>undefined behavior</code></p>
+<ul>
+<li><p>定义了一个空的vector</p>
+</li>
+<li><p>执行了<code>empty % 2</code></p>
+</li>
+</ul>
+<p><img src="/wiki/wiki/2024/06/25/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/2024-06-26-22-21-38-image.png"></p>
+<p>修复</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">removeOddsFromEnd</span><span class="params">(std::vector&lt;<span class="type">int</span>&gt; &amp;vec)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 判空操作</span></span><br><span class="line">    <span class="keyword">while</span> (!vec.<span class="built_in">empty</span>() &amp;&amp; vec.<span class="built_in">back</span>() % <span class="number">2</span> == <span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        vec.<span class="built_in">pop_back</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="std-optional"><a href="#std-optional" class="headerlink" title="std::optional"></a>std::optional</h3><p>C++17引入的一个模板类，用于表示一个可能包含或不包含值的对象。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function">std::optional&lt;T&gt;</span></span><br><span class="line"><span class="function">std::optional&lt;<span class="type">int</span>&gt; <span class="title">find_even</span><span class="params">(<span class="type">int</span> num)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(num % <span class="number">2</span> == <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> num;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 表示没有找到</span></span><br><span class="line">        <span class="keyword">return</span> std::<span class="literal">nullopt</span>;    </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>std::optional</code>接口</p>
+<ul>
+<li><p>.value(), 返回值，或者抛出异常<code>bad_optional_access</code></p>
+</li>
+<li><p>.value_or(T val), 返回值，或者返回默认值<code>val</code></p>
+</li>
+<li><p>.has_value(), 判断是否包含值</p>
+</li>
+</ul>
+<p>如下，对<code>removeOddsFromEnd</code>的优化</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">removeOddsFromEnd</span><span class="params">(std::vector&lt;<span class="type">int</span>&gt; &amp;vec)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 判空操作</span></span><br><span class="line">    <span class="keyword">while</span> (vec.<span class="built_in">back</span>().<span class="built_in">value_or</span>(<span class="number">2</span>) % <span class="number">2</span> == <span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        vec.<span class="built_in">pop_back</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>使用<code>optional</code>是比较慢的，所以大多数STL数据结构没有使用</li>
+</ul>
+<h3 id="C-设计哲学"><a href="#C-设计哲学" class="headerlink" title="C++设计哲学"></a>C++设计哲学</h3><ul>
+<li><p>只有解决实际问题时，才添加新功能</p>
+</li>
+<li><p>开发者是自由的</p>
+</li>
+<li><p>隔离是关键</p>
+</li>
+<li><p>允许开发者完全控制他们想做的</p>
+</li>
+<li><p>性能优先，除非万不得以</p>
+</li>
+<li><p>尽可能在编译时确保安全</p>
+</li>
+</ul>
+<p><img src="/wiki/wiki/2024/06/25/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/2024-06-26-22-55-40-image.png"></p>
+<h2 id="RAII-Smart-Pointers…"><a href="#RAII-Smart-Pointers…" class="headerlink" title="RAII, Smart Pointers…"></a>RAII, Smart Pointers…</h2><h3 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h3><blockquote>
+<p>异常是一个可能超出程序的控制范围的错误条件，它会阻止程序继续沿其常规执行路径执行。 某些操作（包括对象创建、文件输入&#x2F;输出以及从其他模块中进行的函数调用）都可能是异常的来源，即便程序正常运行也是如此。 可靠代码可预见并处理异常</p>
+</blockquote>
+<p>使用<code>try, throw, catch</code>捕获并处理异常</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">MyData md;</span><br><span class="line"><span class="keyword">try</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 抛出异常，throw an exception</span></span><br><span class="line">    md = <span class="built_in">GetNetworkResource</span>();</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// catch，捕获异常后的处理块</span></span><br><span class="line"><span class="comment">// 由该 const引用捕获</span></span><br><span class="line"><span class="built_in">catch</span> (<span class="type">const</span> networkIOException&amp; e)</span><br><span class="line">&#123;</span><br><span class="line">    /...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">MyData <span class="title">GetNetworkResource</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (IOSucess == <span class="literal">false</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="built_in">networkIOException</span>(<span class="string">&quot;Unable to connect&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可使用<code>catch(...)</code>，则会处理所有类型的异常</p>
+<h3 id="RAII"><a href="#RAII" class="headerlink" title="RAII"></a>RAII</h3><p>由异常引出的问题，异常往往与资源申请，释放有关。手动资源管理是一件是十分复制的工作（<strong>尤其是出现异常的时候，我们如何确保之前申请的资源的确被释放了</strong>）可能导致遗漏。如下资源：</p>
+<p><img src="/wiki/wiki/2024/06/25/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/2024-06-26-13-40-14-image.png"></p>
+<p>RAII: Resource Acquisition is Initialization</p>
+<ul>
+<li><p>类使用的资源，在构造函数中获取</p>
+</li>
+<li><p>类使用的资源，在析构函数中释放</p>
+</li>
+</ul>
+<p>具体说明</p>
+<ul>
+<li>通过遵守 RAII策略，避免了half-valid状态</li>
+<li>当资源不再scope时候，析构函数被调用</li>
+</ul>
+<p>一个符合RAII的wrapper，<code>lock_guard</code>，如下</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">cleanDatabase</span><span class="params">(mutex&amp; databaseLock, map&lt;<span class="type">int</span>, <span class="type">int</span>&gt;&amp; db)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 尝试获取传入的lock，当超出作用域时，释放锁</span></span><br><span class="line">    <span class="function">lock_guard&lt;mutex&gt; <span class="title">lg</span><span class="params">(databaseLock)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="智能指针"><a href="#智能指针" class="headerlink" title="智能指针"></a>智能指针</h3><p>RAII for locks: <code>lock_guard</code></p>
+<p>RAII for <strong>memory</strong>?</p>
+<ul>
+<li>原始指针，<code>*ptr</code>需要手动分配和释放内存</li>
+<li>是的，同意存在对指针的wrapper，那就是<code>smart pointer</code></li>
+</ul>
+<p>对于内存资源的管理</p>
+<ul>
+<li>避免使用<code>new</code>，<code>delete</code>关键字</li>
+<li>智能指针超出作用域后，会自动释放资源</li>
+</ul>
+<p>三种智能指针</p>
+<p>unique_ptr</p>
+<p><code>unique_ptr</code>不共享指针，<strong>只能移动</strong>。（这意味着内存资源所有权的转移）可以使用<code>make_unique</code>构造<code>unique_ptr</code></p>
+<p><img src="https://learn.microsoft.com/zh-cn/cpp/cpp/media/unique_ptr.png?view=msvc-170" alt="Diagram that shows moving the ownership of a unique pointer."></p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">rawPtrFn</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function">std::unique_ptr&lt;Node&gt; <span class="title">n</span><span class="params">(<span class="keyword">new</span> Node)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>shared_ptr</p>
+<p><code>shared_ptr</code>像是有计数器，直到所有的shared pointers都超出作用域，才释放</p>
+<ul>
+<li><p>多个所有者管理对象生命周期</p>
+</li>
+<li><p>所有指针指向同一个对象，共享一个控制块</p>
+</li>
+</ul>
+<p><img src="https://learn.microsoft.com/zh-cn/cpp/cpp/media/shared_ptr.png?view=msvc-170" alt="显示指向一个内存位置的两个 shared_ptr 实例的示意图。"></p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Use make_shared function when possible.</span></span><br><span class="line"><span class="keyword">auto</span> sp1 = <span class="built_in">make_shared</span>&lt;Song&gt;(<span class="string">L&quot;The Beatles&quot;</span>, <span class="string">L&quot;Im Happy Just to Dance With You&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Ok, but slightly less efficient. </span></span><br><span class="line"><span class="comment">// Note: Using new expression as constructor argument</span></span><br><span class="line"><span class="comment">// creates no named variable for other code to access.</span></span><br><span class="line"><span class="function">shared_ptr&lt;Song&gt; <span class="title">sp2</span><span class="params">(<span class="keyword">new</span> Song(<span class="string">L&quot;Lady Gaga&quot;</span>, <span class="string">L&quot;Just Dance&quot;</span>))</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// When initialization must be separate from declaration, e.g. class members, </span></span><br><span class="line"><span class="comment">// initialize with nullptr to make your programming intent explicit.</span></span><br><span class="line"><span class="function">shared_ptr&lt;Song&gt; <span class="title">sp5</span><span class="params">(<span class="literal">nullptr</span>)</span></span>;</span><br><span class="line"><span class="comment">//Equivalent to: shared_ptr&lt;Song&gt; sp5;</span></span><br><span class="line"><span class="comment">//...</span></span><br><span class="line">sp5 = <span class="built_in">make_shared</span>&lt;Song&gt;(<span class="string">L&quot;Elton John&quot;</span>, <span class="string">L&quot;I&#x27;m Still Standing&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>weak_ptr</p>
+<p><code>std::weak_ptr</code>是C++11引入的智能指针，主要与<code>shared_ptr</code>配合使用。</p>
+<blockquote>
+<p>它的主要作用是解决<strong>循环引用</strong>问题、观察std::shared_ptr对象而不影响引用计数，以及在需要时提供对底层资源的访问。</p>
+</blockquote>
+<ul>
+<li><code>weak_ptr</code>本身不参与引用计数（当两个以上的<code>shared_ptr</code>对象相互引用，其引用计数永不为0，导致内存泄漏）</li>
+<li>是对 <code>shared_ptr</code>的一种弱引用（可以观察<code>shared_ptr</code>对象的生命周期）</li>
+</ul>
+<p><code>weak_ptr</code>的资源所有权问题</p>
+<ul>
+<li>一些场景：不具有对象所有权，但是想安全访问对象的情况</li>
+</ul>
+<p><img src="/wiki/wiki/2024/06/25/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/2024-06-26-21-13-58-image.png"></p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;memory&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">B</span>;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">A</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    std::shared_ptr&lt;B&gt; ptrB;</span><br><span class="line">    ~<span class="built_in">A</span>() &#123; std::cout &lt;&lt; <span class="string">&quot;A destory!&quot;</span> &lt;&lt; std::endl; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">B</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// std::shared_ptr&lt;A&gt; ptrA;</span></span><br><span class="line">    std::weak_ptr&lt;A&gt; ptrA;</span><br><span class="line">    ~<span class="built_in">B</span>() &#123; std::cout &lt;&lt; <span class="string">&quot;B destory!&quot;</span> &lt;&lt; std::endl; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> a = std::<span class="built_in">make_shared</span>&lt;A&gt;();</span><br><span class="line">    <span class="keyword">auto</span> b = std::<span class="built_in">make_shared</span>&lt;B&gt;();</span><br><span class="line">    a-&gt;ptrB = b;</span><br><span class="line">    b-&gt;ptrA = a;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/wiki/2024/06/25/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/2024-06-26-21-16-42-image.png"></p>
+<h2 id="Template"><a href="#Template" class="headerlink" title="Template"></a>Template</h2><p>存在3中template</p>
+<ul>
+<li><p>template class</p>
+</li>
+<li><p>template function</p>
+</li>
+<li><p>template member function</p>
+</li>
+</ul>
+<p>模板类, 利用模板编译器生成类</p>
+<p>使得类更加<strong>通用</strong></p>
+<ul>
+<li>类型参数化</li>
+<li>组合多种通用类型</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// only for int</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">IntContainer</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">IntContainer</span>(<span class="type">int</span> val);</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">getValue</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">    <span class="type">int</span> value;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// general,多种类型</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Container</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Container</span>(T val);</span><br><span class="line">    <span class="function">T <span class="title">getValue</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">    T value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Const-Correctness"><a href="#Const-Correctness" class="headerlink" title="Const Correctness"></a>Const Correctness</h2><p>常量正确性</p>
+<blockquote>
+<p>在C++中，const correctness是指使用const关键字来保证代码的正确性和安全性，确保对象在不应修改的情况下不会被修改。通过适当地使用const，可以提高代码的可读性、可维护性和可靠性。下面详细解释const correctness的各个方面。</p>
+</blockquote>
+<p>变量：声明为const，防止变量被修改。<br>指针：指向常量的指针、常量指针、指向常量的常量指针。<br>成员函数：声明为const，保证函数不修改成员变量。<br>函数参数：声明为const，防止函数修改参数。<br>返回值：返回const指针或引用，防止通过返回值修改对象。<br>通过在适当的地方使用const，可以确保代码的const correctness，提高代码的稳定性和可维护性。</p>
+<p>const object 仅仅可以与 const interface进行交互</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 添加const关键字, 如果类实例化为cosnt类型，成员函数需要cosnt,否则编译器报错</span></span><br><span class="line"><span class="function">std::string <span class="title">Student::getName</span><span class="params">()</span> <span class="type">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>-&gt;name;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>类型转换，将<code>const</code>类型转为非<code>const</code>类型</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const_cast</span>&lt;target-type&gt;</span><br><span class="line">    <span class="comment">// 可以将非const类型转为const类型</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="操作符重载"><a href="#操作符重载" class="headerlink" title="操作符重载"></a>操作符重载</h2><p>&#x2F;&#x2F; To-do</p>
+<p>!global overloading,将会影响所有</p>
+<p>操作符重载overloading 策略</p>
+<ul>
+<li><p>不要过度使用</p>
+</li>
+<li><p>最好看起来有直接明显的意图</p>
+</li>
+<li><p>最后与实际的操作相似</p>
+</li>
+</ul>
+<h3 id="Lambda表达式与闭包"><a href="#Lambda表达式与闭包" class="headerlink" title="Lambda表达式与闭包"></a>Lambda表达式与闭包</h3><p>functor就是一个实现了<code>()</code>操作符的类，提供operator()实现的类</p>
+<ul>
+<li><p>创建闭包，定制功能</p>
+</li>
+<li><p>闭包</p>
+<ul>
+<li>一个functor object的单例</li>
+</ul>
+</li>
+<li><p>也叫做函数对象，仿函数</p>
+</li>
+<li><p>c++引入类lambda表达式，是得闭包成为可能</p>
+</li>
+</ul>
+<p>Lambda 表达式是 C++11 引入的一种简洁的函数定义方式，可以捕获其所在作用域的变量，从而实现闭包。</p>
+<p>闭包：一个函数以及相关环境捆绑在一起的实体，是得函数拥有获取外部变量的能力</p>
+<p>强大的特性</p>
+<p>基本语法</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">[capture](parameters) -&gt; return_type &#123;</span><br><span class="line">    body</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>capture：指定哪些外部变量可以被捕获以及如何捕获。</li>
+<li>parameters：函数的参数列表。</li>
+<li>return_type：返回类型（可以省略，编译器会自动推导）。</li>
+<li>body：函数体。</li>
+</ul>
+<p>lambda使用场景</p>
+<ul>
+<li>STL算法库</li>
+<li>事件处理和回调函数</li>
+<li>并发编程中，可用作线程函数</li>
+</ul>
+<h3 id="友元函数friend"><a href="#友元函数friend" class="headerlink" title="友元函数friend"></a>友元函数friend</h3><p>friend关键字</p>
+<ul>
+<li>允许非成员函数或类在其他类中访问private信息</li>
+</ul>
+<p>注意事项</p>
+<ul>
+<li>友元函数破坏封装性：使用友元函数会破坏类的封装性，因为它允许外部函数访问类的私有成员。因此，友元函数应慎重使用，只有在确实需要的时候才使用。</li>
+<li>不能通过对象调用：由于友元函数不是类的成员函数，所以不能通过对象来调用，而是直接调用。</li>
+<li>作用范围：友元函数的声明是在类中，而定义可以在类的外部进行。<br>理解友元函数的概念和使用方法，对于在C++编程中处理需要跨类访问数据的场景非常有帮助。</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">friend</span> <span class="keyword">class</span> [name];</span><br></pre></td></tr></table></figure>
+
+<h2 id="Assignment后记"><a href="#Assignment后记" class="headerlink" title="Assignment后记"></a>Assignment后记</h2><blockquote>
+<p>这个代码在逻辑上有几个潜在的问题，特别是由于在循环中删除元素时没有正确处理迭代器失效的问题。以下是具体的问题及其解决方法：</p>
+</blockquote>
+<ul>
+<li>问题 1: 迭代器失效</li>
+</ul>
+<p>在遍历 vector_of_courses 时，如果你删除了当前正在访问的元素，会导致当前迭代器失效，进而可能导致未定义行为。</p>
+<ul>
+<li>问题 2: delete_elem_from_vector 函数中的迭代器处理</li>
+</ul>
+<p>delete_elem_from_vector 函数在找到元素后直接调用 erase，但并没有返回新的有效迭代器供循环使用。</p>
+<p><strong>解决方法</strong> 可以通过在循环中<strong>手动管理迭代器</strong>来避免迭代器失效的问题。一个常见的解决方案是使用显式迭代器，并在删除元素后更新迭代器。</p>
+<p>以下是修正后的代码示例：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">delete_elem_from_vector</span><span class="params">(std::vector &amp;v, <span class="type">const</span> Course &amp;elem)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"> <span class="keyword">auto</span> it = std::<span class="built_in">find</span>(v.<span class="built_in">begin</span>(), v.<span class="built_in">end</span>(), elem);</span><br><span class="line"> <span class="keyword">if</span> (it != v.<span class="built_in">end</span>())</span><br><span class="line"> &#123;</span><br><span class="line"> v.<span class="built_in">erase</span>(it);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">process_courses</span><span class="params">(std::vector &amp;vector_of_courses)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"> <span class="keyword">for</span> (<span class="keyword">auto</span> it = vector_of_courses.<span class="built_in">begin</span>(); it != vector_of_courses.<span class="built_in">end</span>(); )</span><br><span class="line"> &#123;</span><br><span class="line"> <span class="keyword">if</span> (it-&gt;quarter == <span class="string">&quot;null&quot;</span>)</span><br><span class="line"> &#123;</span><br><span class="line"> it = vector_of_courses.<span class="built_in">erase</span>(it); <span class="comment">// erase 返回下一个有效的迭代器</span></span><br><span class="line"> &#125;</span><br><span class="line"> <span class="keyword">else</span></span><br><span class="line"> &#123;</span><br><span class="line"> ++it; <span class="comment">// 只有在没有删除元素时才递增迭代器</span></span><br><span class="line"> &#125;</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>解释<br>显式迭代器管理：在 process_courses 函数中，使用显式迭代器遍历 vector_of_courses。<br>删除元素后更新迭代器：</p>
+<p>当删除元素时，erase 返回一个指向下一个元素的迭代器，这个新的迭代器在下一次循环中使用。仅在不删除时递增迭代器：当不删除元素时，显式递增迭代器。这确保了每个元素都被正确处理。<br>通过这种方式，可以避免在循环中删除元素时迭代器失效的问题，从而使代码更加稳健和可靠。</p>
+<h2 id="QA"><a href="#QA" class="headerlink" title="QA"></a>QA</h2><h3 id="std-move-函数"><a href="#std-move-函数" class="headerlink" title="std::move()函数"></a>std::move()函数</h3><blockquote>
+<p><code>std::move</code> 是 C++ 标准库中的一个实用函数，位于头文件 <code>&lt;utility&gt;</code> 中。它的作用是将对象转换为右值引用，从而允许对该对象使用移动语义。</p>
+</blockquote>
+<p><code>std::move</code> 的唯一作用是将其参数转换为右值引用。注意，它本身并不移动对象，而只是标记对象可以被移动。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;utility&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 返回该参数的右值引用</span></span><br><span class="line"><span class="function">T&amp;&amp; <span class="title">std::move</span><span class="params">(T&amp; arg)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>主要用途</p>
+<ol>
+<li><strong>触发移动构造函数和移动赋值运算符</strong>：<ul>
+<li>在实现类的移动语义时，使用 <code>std::move</code> 可以显式地将对象标记为右值，从而<strong>触发移动构造函数或移动赋值运算符</strong>。</li>
+</ul>
+</li>
+<li><strong>避免不必要的拷贝</strong>：<ul>
+<li>使用 <code>std::move</code> 可以避免临时对象的拷贝，从而提高程序的性能。</li>
+</ul>
+</li>
+</ol>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><p><a href="https://learncs.me/stanford/cs106l">https://learncs.me/stanford/cs106l</a></p>
+</li>
+<li><p><a href="https://learncs.me/">https://learncs.me/</a></p>
+</li>
+<li><p><a href="https://learn.microsoft.com/zh-cn/cpp/cpp/special-member-functions?view=msvc-170">特殊成员函数 | Microsoft Learn</a></p>
+</li>
+<li><p><a href="https://csguide.cn/cpp/memory/how_to_understand_weak_ptr.html#weak-ptr-%E6%98%AF%E4%BB%80%E4%B9%88">深入理解 C++ weak_ptr | 编程指北</a></p>
+</li>
+</ul>
+]]></content>
+      <tags>
+        <tag>C++</tag>
+        <tag>Programing</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>USB接口安全测试</title>
     <url>/wiki/2024/06/29/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>USB已经成为计算机与智能设备的必备接口之一，广泛应用于社会的各个场景。近年来各类硬件产品的安全事件层出不穷，出现了多种针对USB接口的攻击手段，导致相关系统面临着严重的安全风险。简要对于<code>USB</code>接口存在的安全问题进行梳理，并进行测试。</p>
 <span id="more"></span>
 
-<h2 id="USB-101"><a href="#USB-101" class="headerlink" title="USB 101"></a>USB 101</h2><p><img src="202105080959336094.png" alt="USB协议分层"></p>
+<h2 id="USB-101"><a href="#USB-101" class="headerlink" title="USB 101"></a>USB 101</h2><p><img src="https://www.usbzh.com/uploadimg/202105080959336094.png" alt="USB协议分层"></p>
 <p>USB设备的枚举过程如下：</p>
 <ol>
 <li>USB设备插入USB接口后，主机检测D+&#x2F;D-线上的电压，确认有设备连接，USB<a href="https://www.usbzh.com/article/detail-25.html">集线器</a>通过中断<a href="https://www.usbzh.com/article/detail-450.html">IN</a>通道，向主机报告有USB设备连接。</li>
@@ -25,7 +570,7 @@
 <h2 id="测试工具"><a href="#测试工具" class="headerlink" title="测试工具"></a>测试工具</h2><h3 id="Facedancer"><a href="#Facedancer" class="headerlink" title="Facedancer"></a>Facedancer</h3><blockquote>
 <p>a tool for implementing USB devices in host-side Python using the GoodFET framework. Access to the USB chip is extremely low-level, so protocols may be mis-implemented in all sorts of creative ways. This allows a clever neighbor to quickly find and exploit USB driver vulnerabilities from the comfort of a modern workstation, only later porting such exploits to run standalone. Additionally, we’ll show you some nifty tricks for replacing the firmware of commercial USB devices in order to house your exploits.</p>
 </blockquote>
-<p><img src="7397758016_7b01d44ca9.jpg" alt="Facedancer10"></p>
+<p><img src="http://farm6.staticflickr.com/5333/7397758016_7b01d44ca9.jpg" alt="Facedancer10"></p>
 <p>使用<code>GoodFET</code>框架，在主机端使用Python实现了USB</p>
 <p>使用教程</p>
 <ol>
@@ -54,7 +599,7 @@
 <ul>
 <li><a href="https://docs.hak5.org/hak5-usb-rubber-ducky/">USB Rubber Ducky by Hak5 - USB Rubber Ducky</a></li>
 </ul>
-<p><img src="usb-rubber-ducky_mk2_2000x.jpg?v=1659974440" alt="USB Rubber Ducky"></p>
+<p><img src="https://shop.hak5.org/cdn/shop/products/usb-rubber-ducky_mk2_2000x.jpg?v=1659974440" alt="USB Rubber Ducky"></p>
 <p>Hak5有自己的脚本语言<code>DuckyScript</code>，官方也提供了诸多Payloads使用</p>
 <ul>
 <li><a href="https://github.com/hak5/usbrubberducky-payloads/">GitHub - hak5&#x2F;usbrubberducky-payloads: The Official USB Rubber Ducky Payload Repository</a></li>
@@ -70,15 +615,15 @@
 <li><p><a href="https://hackinglab.cz/en/blog/bash-bunny-guide/">Bash Bunny – Guide - Hacking Lab</a></p>
 </li>
 </ul>
-<p><img src="spaces%2FnxJgJ9UdPfrcuL1U8DpL%2Fuploads%2FNY6fwd09yUtu3sRsbNJe%2Fimage.png?alt=media&token=d0880bb8-0e9b-41bd-809e-d3724c8fe234"></p>
+<p><img src="https://3076592524-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FnxJgJ9UdPfrcuL1U8DpL%2Fuploads%2FNY6fwd09yUtu3sRsbNJe%2Fimage.png?alt=media&token=d0880bb8-0e9b-41bd-809e-d3724c8fe234"></p>
 <p>切换到<code>Arming Mode</code>后，串口进入</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">picocom -b 115200 /dev/tty.usbmodemch0000011</span><br><span class="line">root:hak5bunny</span><br></pre></td></tr></table></figure>
 
 <p>同时其作为存储设备，如下目录</p>
-<p><img src="2023-11-09-16-05-30-image.png"></p>
-<h2 id="攻击面分析"><a href="#攻击面分析" class="headerlink" title="攻击面分析"></a>攻击面分析</h2><p><img src="2023-11-09-12-56-02-image.png"></p>
+<p><img src="/wiki/wiki/2024/06/29/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/2023-11-09-16-05-30-image.png"></p>
+<h2 id="攻击面分析"><a href="#攻击面分析" class="headerlink" title="攻击面分析"></a>攻击面分析</h2><p><img src="/wiki/wiki/2024/06/29/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/2023-11-09-12-56-02-image.png"></p>
 <h3 id="攻击负载媒介"><a href="#攻击负载媒介" class="headerlink" title="攻击负载媒介"></a>攻击负载媒介</h3><p>非常典型有震网病毒，通过U盘即突破了物理隔离，不做详细展开</p>
-<p><img src="702f33f11f8bf9226bb4185e124fefb3.jpg"></p>
+<p><img src="https://s.secrss.com/anquanneican/702f33f11f8bf9226bb4185e124fefb3.jpg"></p>
 <h3 id="HID攻击"><a href="#HID攻击" class="headerlink" title="HID攻击"></a>HID攻击</h3><blockquote>
 <p>USB人机交互设备（Human Interface Device，HID）是一种非常重要和广泛使用的USB设备类型，被广泛应用于人机交互和少量实时数据传输中，例如键盘、鼠标、游戏杆等应用场景. USB HID设备最主要的特点是可以模拟人和机器的交互过程，能够主动地向连接的主机中传输数据和命令. 同时，基于USB HID协议中的约定，USB HID设备无须安装驱动就能与主机进行交互.</p>
 </blockquote>
@@ -90,7 +635,7 @@
 </li>
 </ul>
 <p>常见USB HID开发平台</p>
-<p><img src="2023-11-09-13-17-25-image.png"></p>
+<p><img src="/wiki/wiki/2024/06/29/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/2023-11-09-13-17-25-image.png"></p>
 <p>想要实现<code>HID</code>攻击，设备需要支持<code>Keyboard</code>等人机交互接口类型。利用<code>Umap2</code>框架，可以对目标进行一个初步的USB安全评估（注：该工具需要使用<code>Python2.7</code>启动）</p>
 <ul>
 <li><a href="https://github.com/nccgroup/umap2">GitHub - nccgroup&#x2F;umap2: Umap2 is the second revision of NCC Group’s python based USB host security assessment tool.</a></li>
@@ -154,7 +699,311 @@
 </ul>
 ]]></content>
       <tags>
-        <tag>IoT</tag>
+        <tag>IoT Security</tag>
+        <tag>USB</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>x86架构数据类型探究</title>
+    <url>/wiki/2024/07/16/x86%E6%9E%B6%E6%9E%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%8E%A2%E7%A9%B6/</url>
+    <content><![CDATA[<h2 id="基本类型"><a href="#基本类型" class="headerlink" title="基本类型"></a>基本类型</h2><p>使用<code>sizeof()/%zu</code>打印相关类型大小，如下</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"> $ gcc -g -m32 -o check_size_32 check_size_32.c &amp;&amp; ./check_size_32 &amp;&amp; gcc -g -o check_size check_size.c &amp;&amp; ./check_size </span><br><span class="line"></span><br><span class="line">__x86__</span><br><span class="line">Size of char: 1 bytes</span><br><span class="line">Size of unsigned char: 1 bytes</span><br><span class="line">Size of signed char: 1 bytes</span><br><span class="line">____</span><br><span class="line">Size of short int: 2 bytes</span><br><span class="line">Size of unsigned short int: 2 bytes</span><br><span class="line">Size of int: 4 bytes</span><br><span class="line">Size of unsigned int: 4 bytes</span><br><span class="line">Size of long int: 4 bytes</span><br><span class="line">Size of unsigned long int: 4 bytes</span><br><span class="line">Size of long long int: 8 bytes</span><br><span class="line">Size of unsigned long long int: 8 bytes</span><br><span class="line">____</span><br><span class="line">Size of <span class="built_in">float</span>: 4 bytes</span><br><span class="line">Size of double: 8 bytes</span><br><span class="line">Size of long double: 12 bytes</span><br><span class="line">____</span><br><span class="line">Size of void* (pointer): 4 bytes</span><br><span class="line">Size of char* (pointer): 4 bytes</span><br><span class="line"></span><br><span class="line">__x86_64__</span><br><span class="line">Size of char: 1 bytes</span><br><span class="line">Size of unsigned char: 1 bytes</span><br><span class="line">Size of signed char: 1 bytes</span><br><span class="line">____</span><br><span class="line">Size of short int: 2 bytes</span><br><span class="line">Size of unsigned short int: 2 bytes</span><br><span class="line">Size of int: 4 bytes</span><br><span class="line">Size of unsigned int: 4 bytes</span><br><span class="line">Size of long int: 8 bytes</span><br><span class="line">Size of unsigned long int: 8 bytes</span><br><span class="line">Size of long long int: 8 bytes</span><br><span class="line">Size of unsigned long long int: 8 bytes</span><br><span class="line">____</span><br><span class="line">Size of <span class="built_in">float</span>: 4 bytes</span><br><span class="line">Size of double: 8 bytes</span><br><span class="line">Size of long double: 16 bytes</span><br><span class="line">____</span><br><span class="line">Size of void* (pointer): 8 bytes</span><br><span class="line">Size of char* (pointer): 8 bytes</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，<code>long/pointer</code>随着平台而变化，其他类型保持不变</p>
+<h2 id="算术边界"><a href="#算术边界" class="headerlink" title="算术边界"></a>算术边界</h2><p>无符号</p>
+<ul>
+<li>加法上溢</li>
+<li>乘法上溢</li>
+<li>减法下溢</li>
+</ul>
+<p>实例</p>
+<p>case01:</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">u_char *<span class="title function_">make_table</span><span class="params">(<span class="type">unsigned</span> <span class="type">int</span> width, <span class="type">unsigned</span> <span class="type">int</span> height, u_char *init_row)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">int</span> n;</span><br><span class="line">    <span class="type">int</span> i;</span><br><span class="line">    u_char *buf;</span><br><span class="line">    n = width * height;</span><br><span class="line">    buf = (<span class="type">char</span> *)<span class="built_in">malloc</span>(n);</span><br><span class="line">    <span class="keyword">if</span> (!buf)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; height; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">memcpy</span>(&amp;buf[i * width], init_row, width);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> buf;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如果这里的width和height可控，即<font color="red">ACID(Attacker Control Input Data)</font></li>
+<li>那么会污染到变量n，此时已经可以发生乘法上溢了</li>
+<li>这里实际分配的内存少于后面copy所需的空间</li>
+</ul>
+<p>case02: openssh3.1</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">u_int nresp;</span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line">nresp = packet_get_int();</span><br><span class="line"><span class="keyword">if</span> (nresp &gt; <span class="number">0</span>)</span><br><span class="line">&#123;</span><br><span class="line">    response = xmalloc(nresp * <span class="keyword">sizeof</span>(<span class="type">char</span> *));</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; nresp; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        response[i] = packet_get_string(<span class="literal">NULL</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>这里的<code>nresp</code>用户可控，那么就会乘法上溢</li>
+</ul>
+<h3 id="减法"><a href="#减法" class="headerlink" title="减法"></a>减法</h3><p>计算机世界的减法是如何完成的？</p>
+<ul>
+<li>原码、反码和补码是计算机系统中用于表示<strong>有符号整数</strong>的三种方法。</li>
+</ul>
+<p>Why?</p>
+<ul>
+<li>从基础运算来说，为了设计简单，不用识别符号位，而是让符号位也参与运算</li>
+</ul>
+<p>如1, -1, 假设为8bit二进制</p>
+<ul>
+<li>原：符号位+数值位</li>
+<li>反：针对负数来说，符号位不变，数值位取反</li>
+<li>补：针对负数来说，反码+1</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>原</th>
+<th>反</th>
+<th>补</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>00000001</td>
+<td>00000001</td>
+<td>00000001</td>
+</tr>
+<tr>
+<td>-1</td>
+<td>10000001</td>
+<td>11111110</td>
+<td>11111111</td>
+</tr>
+</tbody></table>
+<p>使用原码做减法，结果-2，不正确</p>
+<p>使用反码：结果为：11111111，对应的原码为10000000，数值正确，但是引入了符号，即-0，但-0 &#x3D; +0 &#x3D; 0</p>
+<ul>
+<li>一个0拥有了两个表示</li>
+</ul>
+<p>引入<strong>补码</strong>（当前最佳解决方案）</p>
+<ul>
+<li>1-1, 结果为00000000, 对应的原码为00000000，正确</li>
+</ul>
+<p>-128 &#x3D; 10000000, 只有在<strong>补码的形式下存在</strong>，且无原码与反码</p>
+<ul>
+<li>故，n位二进制数的范围应是[-2^(n-1), 2^(n-1) -1]</li>
+<li>补码即为其无符号二进制数与补码真值关于2^n的同余</li>
+</ul>
+<hr>
+<p>回到溢出，减法下溢</p>
+<p>case03:</p>
+<p>这里的例子，只是说了一下sign与unsinged的不同</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">header</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="type">unsigned</span> <span class="type">int</span> lenghth;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">int</span> message_type;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="type">char</span> *<span class="title function_">read_packet</span><span class="params">(<span class="type">int</span> sockfd)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> n;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">int</span> length;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">header</span> <span class="title">hdr</span>;</span></span><br><span class="line">    <span class="type">static</span> <span class="type">char</span> buffer[<span class="number">1024</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(full_read(sockfd， (<span class="type">void</span> *)&amp;hdr， <span class="keyword">sizeof</span>(hdr))&lt;=<span class="number">0</span>) &#123;</span><br><span class="line">        error (<span class="string">&quot; full_read: %m&quot;</span>) ;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NULL</span> ;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    length = ntohl (hdr. length) ;</span><br><span class="line">    <span class="keyword">if</span>(length &gt; (l024 + <span class="keyword">sizeof</span>(<span class="keyword">struct</span> header) - <span class="number">1</span>)) &#123;</span><br><span class="line">        error(<span class="string">&quot;not enough room in buffer\n&quot;</span>) ;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NULL</span> ;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(full_read(sockfd, buffer, length-<span class="keyword">sizeof</span>(<span class="keyword">struct</span> header))&lt;=<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        error(<span class="string">&quot;read: %m&quot;</span>) ;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NULL</span> ;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如果length可控，可设置较小的值</li>
+<li>之后减去一个sizeof(struct header)，由于是unsigned int，那么就会造成越界读</li>
+</ul>
+<p>带符号整数边界</p>
+<ul>
+<li>符号位变化<ul>
+<li>导致可用绕过条件判断，正数变负数</li>
+<li>熟悉read(fd, buf, lengh)， 没错length是一个unsigned int</li>
+</ul>
+</li>
+</ul>
+<h2 id="类型转换"><a href="#类型转换" class="headerlink" title="类型转换"></a>类型转换</h2><h3 id="Value-preserving-Conversion"><a href="#Value-preserving-Conversion" class="headerlink" title="Value-preserving Conversion"></a>Value-preserving Conversion</h3><p>保值转换：新类型可代表旧类型所有值，即旧类型可看作新类型子集，那么转换不会导致值变化或丢失</p>
+<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><p>窄类型转为宽类型</p>
+<ul>
+<li>unsigned type: zero extension, 即高位填充0</li>
+<li>signed type: sign extension, 高位填充符号位</li>
+</ul>
+<h3 id="截断"><a href="#截断" class="headerlink" title="截断"></a>截断</h3><p>宽类型转为窄类型</p>
+<ul>
+<li>变值转换，精度会丢失</li>
+</ul>
+<p>总结</p>
+<ul>
+<li>从窄的<strong>带符号类型</strong>转换为宽的无符号类型，编译器会生成汇编指令执行<strong>符号位扩展</strong>，对象的值可能<br>会改变。</li>
+<li>从窄的<strong>带符号类型</strong>转换为宽的带符号类型，编译器会生成汇编指令执行<strong>符号位扩展</strong>，对象的值不变</li>
+<li>从窄的无符号类型转换为宽的类型，编译器会生成汇编指令执行零扩展，对象的值不变</li>
+<li>从宽类型转换为窄号类型，编译器会生成汇编指令执行截断，对象的值可能改变</li>
+<li>相同宽度无符号类型和带符号类型之间的转换，编译器实际上不会做任何事，在位级别下是相同<br>的，但对象的值可能会改变</li>
+</ul>
+<h3 id="简单类型转换"><a href="#简单类型转换" class="headerlink" title="简单类型转换"></a>简单类型转换</h3><ul>
+<li>cast</li>
+<li>赋值</li>
+<li>函数传参</li>
+<li>返回值</li>
+<li>整数提升<ul>
+<li>如果一个类型比int窄，整数提升将其转为int</li>
+</ul>
+</li>
+</ul>
+<h3 id="算术类型转换"><a href="#算术类型转换" class="headerlink" title="算术类型转换"></a>算术类型转换</h3><ul>
+<li><strong>浮点优先</strong></li>
+<li>整数提升<ul>
+<li>如果提升之后，两个操作数类型仍然不同，继续转换<ul>
+<li>操作数之一有unsigned, 等级大于等于另外一个操作数类型，那么都转为unsigned T</li>
+<li>另外一个情况，signed T等级大于另外一个操作数，此时只有T能够表示另外一个操作数所有值，即保值转换，才会进行转换<ul>
+<li>如果不能保值转换，两个操作数都转为T类型的unsigned T</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>一些例子</p>
+<table>
+<thead>
+<tr>
+<th>Left</th>
+<th>Right</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>unsigned int</td>
+<td>int</td>
+<td>unsigned int</td>
+</tr>
+<tr>
+<td>unsigned short</td>
+<td>int</td>
+<td>int</td>
+</tr>
+<tr>
+<td>unsigned char</td>
+<td>unsigned short</td>
+<td>int（左右都进行整数提升为int）</td>
+</tr>
+<tr>
+<td>unsigned int</td>
+<td>short</td>
+<td>unsigned int</td>
+</tr>
+<tr>
+<td>unsigned int</td>
+<td>long int</td>
+<td>unsigned long int</td>
+</tr>
+<tr>
+<td>unsigned int</td>
+<td>long long int</td>
+<td>long long int</td>
+</tr>
+</tbody></table>
+<h2 id="类型转换漏洞"><a href="#类型转换漏洞" class="headerlink" title="类型转换漏洞"></a>类型转换漏洞</h2><h3 id="Signed-Unsigned"><a href="#Signed-Unsigned" class="headerlink" title="Signed&#x2F;Unsigned"></a>Signed&#x2F;Unsigned</h3><p>常常用来绕过条件判断，存在于一些容易忽略的函数，系统调用中</p>
+<ul>
+<li>开发者本意和实际类型的不一致性导致</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">read</span>()</span><br><span class="line">snprintf()</span><br><span class="line">strncpy()</span><br><span class="line">memcpy()</span><br><span class="line">strncat()</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>审计，寻找上述函数调用或使用<code>size_t/unsigned</code>参数传递过程，查看该输入是否是一个<font color="red">ACID</font></li>
+</ul>
+<h3 id="Sign-Extension"><a href="#Sign-Extension" class="headerlink" title="Sign Extension"></a>Sign Extension</h3><p>带符号数据类型扩展为无符号类型，可能导致值被改变</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">char</span> len;</span><br><span class="line">len = get_len_field();</span><br><span class="line"><span class="built_in">snprintf</span>(dst, (<span class="type">unsigned</span> <span class="type">int</span>)len, <span class="string">&quot;%s&quot;</span>, src);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>同上面的sign&#x2F;unsign转换相同</li>
+</ul>
+<p><strong>CVE-2000-0405, DNS溢出</strong></p>
+<ul>
+<li>AntiSniff version 1.01 and Researchers version 1 DNS overflow</li>
+</ul>
+<p>如通告中的描述</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> count;  </span><br><span class="line"><span class="type">char</span> nameStr[MAX_LEN];</span><br><span class="line">  ...</span><br><span class="line">  <span class="keyword">while</span> (count)&#123;</span><br><span class="line">    (<span class="type">char</span> *)indx++;</span><br><span class="line">      <span class="built_in">strncat</span>(nameStr, (<span class="type">char</span> *)indx, count);</span><br><span class="line">      indx += count;</span><br><span class="line">      count = (<span class="type">char</span>)*indx;</span><br><span class="line">      <span class="built_in">strncat</span>(nameStr, <span class="string">&quot;.&quot;</span>, <span class="keyword">sizeof</span>(nameStr) - <span class="built_in">strlen</span>(nameStr));</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>nameStr是一个stack变量</li>
+<li>如果可以制作一个超长域名，一直拼接，就会溢出<code>nameStr</code></li>
+</ul>
+<p>公告中的修复</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">while</span> (count)&#123;</span><br><span class="line">  <span class="keyword">if</span> ( <span class="built_in">strlen</span>(nameStr) + count &lt; (MAX_LEN - <span class="number">1</span>) )&#123;</span><br><span class="line">    (<span class="type">char</span> *)indx++;</span><br><span class="line">    <span class="built_in">strncat</span>(nameStr, (<span class="type">char</span> *)indx, count);</span><br><span class="line">    indx += count;</span><br><span class="line">    count = (<span class="type">char</span>)*indx;</span><br><span class="line">    <span class="built_in">strncat</span>(nameStr, <span class="string">&quot;.&quot;</span>, <span class="keyword">sizeof</span>(nameStr) - <span class="built_in">strlen</span>(nameStr));</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    count = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>由于这里的<code>count</code>为int类型，假如设置index的值为-1,经过符号扩展仍然为-1</li>
+<li>假设已经循环过一次，strlen(nameStr)为5，这个表达式<code>strlen(nameStr) + count</code>会进行类型转为，全部变为unsigned int，<ul>
+<li>此时5 + -1, 就会算术溢出，变为4，绕过检查</li>
+<li>之后的strncat，会写入count个数据导致nameStr溢出</li>
+</ul>
+</li>
+</ul>
+<p>最新版本的修复</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">unsigned</span> <span class="type">int</span> count, questionEntries;</span><br><span class="line"><span class="comment">//...</span></span><br><span class="line"><span class="keyword">if</span> (!questionEntries)</span><br><span class="line">    <span class="keyword">return</span> FALSE;</span><br><span class="line">  indx = (<span class="type">char</span> *)(pkt + rr_offset);</span><br><span class="line"></span><br><span class="line">  count = (<span class="type">unsigned</span> <span class="type">int</span>)(*indx);</span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> DEBUG</span></span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;count was: %d\n&quot;</span>, count);</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">while</span> (count)&#123;</span><br><span class="line">    indx++;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">strlen</span>(nameStr) + count &lt; (MAX_LEN - <span class="number">1</span>))&#123;</span><br><span class="line">      <span class="built_in">strncat</span>(nameStr, indx, count);</span><br><span class="line">      indx += count;</span><br><span class="line">      count = *indx;</span><br><span class="line">      <span class="built_in">strncat</span>(nameStr, <span class="string">&quot;.&quot;</span>, <span class="keyword">sizeof</span>(nameStr) - <span class="built_in">strlen</span>(nameStr));</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">&quot;Alert! someone is attempting to send LONG DNS packets\n&quot;</span>);</span><br><span class="line">      count = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  nameStr[<span class="built_in">strlen</span>(nameStr)<span class="number">-1</span>] = <span class="string">&#x27;\0&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>这里<code>count = (unsigned int)(*index)</code>，count是一个unsigned int， index是<code>unsigned char</code>，故会进行zero扩展，-1会变为255，不可能溢出了</li>
+</ul>
+<p>汇编层面的<code>Sign Extension &amp;&amp; Zero Extension</code></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">; sign</span><br><span class="line">mov [ebp + var_5], 5</span><br><span class="line">movsx eax, [ebp + var_5]; (move with Sign-Extension)</span><br><span class="line">mov [ebp + var_4], eax</span><br><span class="line"></span><br><span class="line">; zero</span><br><span class="line">mov [ebp + var_5], 5</span><br><span class="line">xor eax, eax</span><br><span class="line">mov al, [ebp + var_5]</span><br><span class="line">mov [ebp + var_4], eax</span><br></pre></td></tr></table></figure>
+
+<p>审计</p>
+<ul>
+<li><p>检查<code>char/short</code>类型代码，是否存在类型扩展</p>
+</li>
+<li><p>搜索<code>movsx</code>指令调用</p>
+</li>
+</ul>
+<h3 id="截断-1"><a href="#截断-1" class="headerlink" title="截断"></a>截断</h3><ul>
+<li>赋值</li>
+<li>类型转换cast</li>
+<li>函数调用</li>
+</ul>
+<p>上面的情况下，可能发生</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> g = <span class="number">0x12345678</span>;</span><br><span class="line"><span class="type">short</span> <span class="type">int</span> h;</span><br><span class="line">h = g;</span><br></pre></td></tr></table></figure>
+
+<p>case01:</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">myPrint</span><span class="params">(<span class="type">unsigned</span> <span class="type">short</span> uid)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;uid: %d\n&quot;</span>, uid);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> uid = <span class="number">0x00100000</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (uid == <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;root is not allowed\n&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    myPrint(uid);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>类型转换被截断，输出uid &#x3D;&#x3D;0,绕过了检查</li>
+</ul>
+<p><img src="/wiki/wiki/2024/07/16/x86%E6%9E%B6%E6%9E%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%8E%A2%E7%A9%B6/x86%E6%9E%B6%E6%9E%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%8E%A2%E7%A9%B6/image-20240718105150653.png" alt="image-20240718105150653"></p>
+<p>case02:</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">unsigned</span> <span class="type">short</span> <span class="type">int</span> f;</span><br><span class="line"><span class="type">char</span> mybuf[<span class="number">1024</span>];</span><br><span class="line"><span class="type">char</span> *userstr = getuserstr();</span><br><span class="line"></span><br><span class="line">f = <span class="built_in">strlen</span>(userstr);</span><br><span class="line"><span class="keyword">if</span> (f &gt; <span class="keyword">sizeof</span>(mybuf) - <span class="number">5</span>)</span><br><span class="line">&#123;</span><br><span class="line">    die(<span class="string">&quot;string too long!&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">strcpy</span>(mybuf, userstr);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>strlen返回值为<code>size_t</code>， 被转为了<code>short</code>，此时就会截断</li>
+<li>同样，如果长度为0x10000000, 绕过检查，后面的拷贝就会溢出</li>
+</ul>
+<p>审计</p>
+<ul>
+<li>追踪较短数据类型代码</li>
+</ul>
+<h3 id="比较"><a href="#比较" class="headerlink" title="比较"></a>比较</h3><p>case01:</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> MAX_SIZE 1024</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">read_packet</span><span class="params">(<span class="type">int</span> sockfd)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">short</span> length;</span><br><span class="line">    <span class="type">char</span> buf[MAX_SIZE];</span><br><span class="line">    length = network_get_short(sockfd);</span><br><span class="line">    <span class="keyword">if</span> (lenght - <span class="keyword">sizeof</span>(<span class="type">short</span>) &lt;= <span class="number">0</span> || length &gt; MAX_SIZE)</span><br><span class="line">    &#123;</span><br><span class="line">        error(<span class="string">&quot;bad length supplied\n&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (read(sockfd, buf, length - <span class="keyword">sizeof</span>(<span class="type">short</span>)) &lt; <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        error(<span class="string">&quot;read: %m\n&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>length 是一个<code>short</code>类型数， 而sizeof返回的为size_t类型，此时会发生算术类型转换， length会被提升为int</li>
+<li>而size_t为unsigned int， 故最终会被提升为unsigned int类型，<code>length-sizeof(short)</code>的结果永远不可能小于0</li>
+<li>而第二个条件length会被提升为int, 只要length为负数就可以绕过</li>
+</ul>
+<p>审计</p>
+<ul>
+<li>注意表达式中相关变量的数据类型，关注<code>sizeof/strlen</code>等函数</li>
+</ul>
+<h2 id="运算符"><a href="#运算符" class="headerlink" title="运算符"></a>运算符</h2><ul>
+<li>sizeof(buffer)是获取buffer分配了多少空间，但是buffer如果是指针，那么返回值固定</li>
+<li>注意审计sizeof()参数是否为指针</li>
+</ul>
+<h3 id><a href="#" class="headerlink" title="&gt;&gt; &#x2F; %"></a>&gt;&gt; &#x2F; %</h3><p>右移</p>
+<ul>
+<li>signed类型，符号位扩展</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">signed</span> <span class="type">char</span> c = <span class="number">0x80</span>;</span><br><span class="line"><span class="comment">// 0x80: 1000 0000</span></span><br><span class="line">c &gt;&gt;= <span class="number">4</span>;</span><br><span class="line"><span class="comment">// 1111 1000</span></span><br></pre></td></tr></table></figure>
+
+<p>-128 &gt;&gt; -8</p>
+<h3 id="结构体对齐"><a href="#结构体对齐" class="headerlink" title="结构体对齐"></a>结构体对齐</h3><p><strong>基本对齐</strong>：</p>
+<ul>
+<li>每个成员的地址都应该是其类型大小的整数倍。比如，<code>int</code> 通常对齐到 4 字节边界，<code>double</code> 通常对齐到 8 字节边界。</li>
+</ul>
+<p><strong>结构体对齐</strong>：</p>
+<ul>
+<li>结构体的起始地址必须是<strong>其内部最大对齐成员</strong>的对齐大小的整数倍。</li>
+<li>结构体的<strong>大小</strong>必须是其内部最大对齐成员的对齐大小的整数倍。</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Example</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="type">char</span> a;</span><br><span class="line">    <span class="type">char</span> b;</span><br><span class="line">    <span class="type">char</span> c;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Example02</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="type">int</span> a;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">short</span> b;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">char</span> c;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">Example</span> <span class="title">ex</span>;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">Example02</span> <span class="title">ex02</span>;</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Size of struct Example: %zu\n&quot;</span>, <span class="keyword">sizeof</span>(ex));</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Size of struct Example02: %zu\n&quot;</span>, <span class="keyword">sizeof</span>(ex02));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/wiki/2024/07/16/x86%E6%9E%B6%E6%9E%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%8E%A2%E7%A9%B6/x86%E6%9E%B6%E6%9E%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%8E%A2%E7%A9%B6/image-20240718143347231.png" alt="image-20240718143347231"></p>
+<p>为了对齐，进行了填充</p>
+<p><img src="/wiki/wiki/2024/07/16/x86%E6%9E%B6%E6%9E%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%8E%A2%E7%A9%B6/x86%E6%9E%B6%E6%9E%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%8E%A2%E7%A9%B6/image-20240718143649297.png" alt="image-20240718143649297"></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://www.cnblogs.com/zhangziqiu/archive/2011/03/30/ComputerCode.html">https://www.cnblogs.com/zhangziqiu/archive/2011/03/30/ComputerCode.html</a></li>
+</ul>
+]]></content>
+      <tags>
+        <tag>Integer Overflow</tag>
+        <tag>C-Family Implementation Vuls</tag>
       </tags>
   </entry>
 </search>

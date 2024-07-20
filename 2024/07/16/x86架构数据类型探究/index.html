@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/wiki/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/wiki/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/wiki/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/wiki/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/wiki/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lora:300,300italic,400,400italic,700,700italic|serif:300,300italic,400,400italic,700,700italic|Noto+Serif+SC:300,300italic,400,400italic,700,700italic|Fira+Code:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14.0/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/pace-js@1.0.2/themes/blue/pace-theme-minimal.css">
+  <script src="//cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"w3b5h3ll.github.io","root":"/wiki/","scheme":"Muse","version":"8.0.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"buttons","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+
+  <meta name="description" content="基本类型使用sizeof()&#x2F;%zu打印相关类型大小，如下  $ gcc -g -m32 -o check_size_32 check_size_32.c &amp;&amp; .&#x2F;check_size_32 &amp;&amp; gcc -g -o check_size check_size.c &amp;&amp; .&#x2F;check_size __x86__Size of char: 1 byt">
+<meta property="og:type" content="article">
+<meta property="og:title" content="x86架构数据类型探究">
+<meta property="og:url" content="https://w3b5h3ll.github.io/wiki/2024/07/16/x86%E6%9E%B6%E6%9E%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%8E%A2%E7%A9%B6/index.html">
+<meta property="og:site_name" content="尘埃落定的WIKI">
+<meta property="og:description" content="基本类型使用sizeof()&#x2F;%zu打印相关类型大小，如下  $ gcc -g -m32 -o check_size_32 check_size_32.c &amp;&amp; .&#x2F;check_size_32 &amp;&amp; gcc -g -o check_size check_size.c &amp;&amp; .&#x2F;check_size __x86__Size of char: 1 byt">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://w3b5h3ll.github.io/wiki/wiki/2024/07/16/x86%E6%9E%B6%E6%9E%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%8E%A2%E7%A9%B6/x86%E6%9E%B6%E6%9E%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%8E%A2%E7%A9%B6/image-20240718105150653.png">
+<meta property="og:image" content="https://w3b5h3ll.github.io/wiki/wiki/2024/07/16/x86%E6%9E%B6%E6%9E%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%8E%A2%E7%A9%B6/x86%E6%9E%B6%E6%9E%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%8E%A2%E7%A9%B6/image-20240718143347231.png">
+<meta property="og:image" content="https://w3b5h3ll.github.io/wiki/wiki/2024/07/16/x86%E6%9E%B6%E6%9E%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%8E%A2%E7%A9%B6/x86%E6%9E%B6%E6%9E%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%8E%A2%E7%A9%B6/image-20240718143649297.png">
+<meta property="article:published_time" content="2024-07-16T10:41:35.000Z">
+<meta property="article:modified_time" content="2024-07-20T03:53:41.673Z">
+<meta property="article:author" content="w3b5h3ll">
+<meta property="article:tag" content="Integer Overflow">
+<meta property="article:tag" content="C-Family Implementation Vuls">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://w3b5h3ll.github.io/wiki/wiki/2024/07/16/x86%E6%9E%B6%E6%9E%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%8E%A2%E7%A9%B6/x86%E6%9E%B6%E6%9E%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%8E%A2%E7%A9%B6/image-20240718105150653.png">
+
+
+<link rel="canonical" href="https://w3b5h3ll.github.io/wiki/2024/07/16/x86%E6%9E%B6%E6%9E%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%8E%A2%E7%A9%B6/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>x86架构数据类型探究 | 尘埃落定的WIKI</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/wiki/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">尘埃落定的WIKI</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">嘩啦啦啦啦 天在下雨 嘩啦啦啦啦 雲在哭泣 ......</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/wiki/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/wiki/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.</span> <span class="nav-text">基本类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%97%E6%9C%AF%E8%BE%B9%E7%95%8C"><span class="nav-number">2.</span> <span class="nav-text">算术边界</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%8F%E6%B3%95"><span class="nav-number">2.1.</span> <span class="nav-text">减法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2"><span class="nav-number">3.</span> <span class="nav-text">类型转换</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Value-preserving-Conversion"><span class="nav-number">3.1.</span> <span class="nav-text">Value-preserving Conversion</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A9%E5%B1%95"><span class="nav-number">3.2.</span> <span class="nav-text">扩展</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%88%AA%E6%96%AD"><span class="nav-number">3.3.</span> <span class="nav-text">截断</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2"><span class="nav-number">3.4.</span> <span class="nav-text">简单类型转换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%9C%AF%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2"><span class="nav-number">3.5.</span> <span class="nav-text">算术类型转换</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E6%BC%8F%E6%B4%9E"><span class="nav-number">4.</span> <span class="nav-text">类型转换漏洞</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Signed-Unsigned"><span class="nav-number">4.1.</span> <span class="nav-text">Signed&#x2F;Unsigned</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Sign-Extension"><span class="nav-number">4.2.</span> <span class="nav-text">Sign Extension</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%88%AA%E6%96%AD-1"><span class="nav-number">4.3.</span> <span class="nav-text">截断</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AF%94%E8%BE%83"><span class="nav-number">4.4.</span> <span class="nav-text">比较</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="nav-number">5.</span> <span class="nav-text">运算符</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">5.1.</span> <span class="nav-text">&gt;&gt; &#x2F; %</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E6%9E%84%E4%BD%93%E5%AF%B9%E9%BD%90"><span class="nav-number">5.2.</span> <span class="nav-text">结构体对齐</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">w3b5h3ll</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/wiki/archives">
+          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/wiki/tags/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/w3b5h3ll" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;w3b5h3ll" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </section>
+        <div class="back-to-top animated">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+      
+
+      
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://w3b5h3ll.github.io/wiki/2024/07/16/x86%E6%9E%B6%E6%9E%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%8E%A2%E7%A9%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/wiki/images/avatar.gif">
+      <meta itemprop="name" content="w3b5h3ll">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="尘埃落定的WIKI">
+    </span>
+
+    
+    
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          x86架构数据类型探究
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-07-16 18:41:35" itemprop="dateCreated datePublished" datetime="2024-07-16T18:41:35+08:00">2024-07-16</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2024-07-20 11:53:41" itemprop="dateModified" datetime="2024-07-20T11:53:41+08:00">2024-07-20</time>
+      </span>
+
+  
+    <span id="/wiki/2024/07/16/x86%E6%9E%B6%E6%9E%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%8E%A2%E7%A9%B6/" class="post-meta-item leancloud_visitors" data-flag-title="x86架构数据类型探究" title="阅读次数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span class="leancloud-visitors-count"></span>
+    </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/wiki/2024/07/16/x86%E6%9E%B6%E6%9E%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%8E%A2%E7%A9%B6/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/wiki/2024/07/16/x86%E6%9E%B6%E6%9E%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%8E%A2%E7%A9%B6/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="基本类型"><a href="#基本类型" class="headerlink" title="基本类型"></a>基本类型</h2><p>使用<code>sizeof()/%zu</code>打印相关类型大小，如下</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"> $ gcc -g -m32 -o check_size_32 check_size_32.c &amp;&amp; ./check_size_32 &amp;&amp; gcc -g -o check_size check_size.c &amp;&amp; ./check_size </span><br><span class="line"></span><br><span class="line">__x86__</span><br><span class="line">Size of char: 1 bytes</span><br><span class="line">Size of unsigned char: 1 bytes</span><br><span class="line">Size of signed char: 1 bytes</span><br><span class="line">____</span><br><span class="line">Size of short int: 2 bytes</span><br><span class="line">Size of unsigned short int: 2 bytes</span><br><span class="line">Size of int: 4 bytes</span><br><span class="line">Size of unsigned int: 4 bytes</span><br><span class="line">Size of long int: 4 bytes</span><br><span class="line">Size of unsigned long int: 4 bytes</span><br><span class="line">Size of long long int: 8 bytes</span><br><span class="line">Size of unsigned long long int: 8 bytes</span><br><span class="line">____</span><br><span class="line">Size of <span class="built_in">float</span>: 4 bytes</span><br><span class="line">Size of double: 8 bytes</span><br><span class="line">Size of long double: 12 bytes</span><br><span class="line">____</span><br><span class="line">Size of void* (pointer): 4 bytes</span><br><span class="line">Size of char* (pointer): 4 bytes</span><br><span class="line"></span><br><span class="line">__x86_64__</span><br><span class="line">Size of char: 1 bytes</span><br><span class="line">Size of unsigned char: 1 bytes</span><br><span class="line">Size of signed char: 1 bytes</span><br><span class="line">____</span><br><span class="line">Size of short int: 2 bytes</span><br><span class="line">Size of unsigned short int: 2 bytes</span><br><span class="line">Size of int: 4 bytes</span><br><span class="line">Size of unsigned int: 4 bytes</span><br><span class="line">Size of long int: 8 bytes</span><br><span class="line">Size of unsigned long int: 8 bytes</span><br><span class="line">Size of long long int: 8 bytes</span><br><span class="line">Size of unsigned long long int: 8 bytes</span><br><span class="line">____</span><br><span class="line">Size of <span class="built_in">float</span>: 4 bytes</span><br><span class="line">Size of double: 8 bytes</span><br><span class="line">Size of long double: 16 bytes</span><br><span class="line">____</span><br><span class="line">Size of void* (pointer): 8 bytes</span><br><span class="line">Size of char* (pointer): 8 bytes</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，<code>long/pointer</code>随着平台而变化，其他类型保持不变</p>
+<h2 id="算术边界"><a href="#算术边界" class="headerlink" title="算术边界"></a>算术边界</h2><p>无符号</p>
+<ul>
+<li>加法上溢</li>
+<li>乘法上溢</li>
+<li>减法下溢</li>
+</ul>
+<p>实例</p>
+<p>case01:</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">u_char *<span class="title function_">make_table</span><span class="params">(<span class="type">unsigned</span> <span class="type">int</span> width, <span class="type">unsigned</span> <span class="type">int</span> height, u_char *init_row)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">int</span> n;</span><br><span class="line">    <span class="type">int</span> i;</span><br><span class="line">    u_char *buf;</span><br><span class="line">    n = width * height;</span><br><span class="line">    buf = (<span class="type">char</span> *)<span class="built_in">malloc</span>(n);</span><br><span class="line">    <span class="keyword">if</span> (!buf)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; height; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">memcpy</span>(&amp;buf[i * width], init_row, width);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> buf;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如果这里的width和height可控，即<font color="red">ACID(Attacker Control Input Data)</font></li>
+<li>那么会污染到变量n，此时已经可以发生乘法上溢了</li>
+<li>这里实际分配的内存少于后面copy所需的空间</li>
+</ul>
+<p>case02: openssh3.1</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">u_int nresp;</span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line">nresp = packet_get_int();</span><br><span class="line"><span class="keyword">if</span> (nresp &gt; <span class="number">0</span>)</span><br><span class="line">&#123;</span><br><span class="line">    response = xmalloc(nresp * <span class="keyword">sizeof</span>(<span class="type">char</span> *));</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; nresp; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        response[i] = packet_get_string(<span class="literal">NULL</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>这里的<code>nresp</code>用户可控，那么就会乘法上溢</li>
+</ul>
+<h3 id="减法"><a href="#减法" class="headerlink" title="减法"></a>减法</h3><p>计算机世界的减法是如何完成的？</p>
+<ul>
+<li>原码、反码和补码是计算机系统中用于表示<strong>有符号整数</strong>的三种方法。</li>
+</ul>
+<p>Why?</p>
+<ul>
+<li>从基础运算来说，为了设计简单，不用识别符号位，而是让符号位也参与运算</li>
+</ul>
+<p>如1, -1, 假设为8bit二进制</p>
+<ul>
+<li>原：符号位+数值位</li>
+<li>反：针对负数来说，符号位不变，数值位取反</li>
+<li>补：针对负数来说，反码+1</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>原</th>
+<th>反</th>
+<th>补</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>00000001</td>
+<td>00000001</td>
+<td>00000001</td>
+</tr>
+<tr>
+<td>-1</td>
+<td>10000001</td>
+<td>11111110</td>
+<td>11111111</td>
+</tr>
+</tbody></table>
+<p>使用原码做减法，结果-2，不正确</p>
+<p>使用反码：结果为：11111111，对应的原码为10000000，数值正确，但是引入了符号，即-0，但-0 &#x3D; +0 &#x3D; 0</p>
+<ul>
+<li>一个0拥有了两个表示</li>
+</ul>
+<p>引入<strong>补码</strong>（当前最佳解决方案）</p>
+<ul>
+<li>1-1, 结果为00000000, 对应的原码为00000000，正确</li>
+</ul>
+<p>-128 &#x3D; 10000000, 只有在<strong>补码的形式下存在</strong>，且无原码与反码</p>
+<ul>
+<li>故，n位二进制数的范围应是[-2^(n-1), 2^(n-1) -1]</li>
+<li>补码即为其无符号二进制数与补码真值关于2^n的同余</li>
+</ul>
+<hr>
+<p>回到溢出，减法下溢</p>
+<p>case03:</p>
+<p>这里的例子，只是说了一下sign与unsinged的不同</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">header</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="type">unsigned</span> <span class="type">int</span> lenghth;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">int</span> message_type;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="type">char</span> *<span class="title function_">read_packet</span><span class="params">(<span class="type">int</span> sockfd)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> n;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">int</span> length;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">header</span> <span class="title">hdr</span>;</span></span><br><span class="line">    <span class="type">static</span> <span class="type">char</span> buffer[<span class="number">1024</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(full_read(sockfd， (<span class="type">void</span> *)&amp;hdr， <span class="keyword">sizeof</span>(hdr))&lt;=<span class="number">0</span>) &#123;</span><br><span class="line">        error (<span class="string">&quot; full_read: %m&quot;</span>) ;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NULL</span> ;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    length = ntohl (hdr. length) ;</span><br><span class="line">    <span class="keyword">if</span>(length &gt; (l024 + <span class="keyword">sizeof</span>(<span class="keyword">struct</span> header) - <span class="number">1</span>)) &#123;</span><br><span class="line">        error(<span class="string">&quot;not enough room in buffer\n&quot;</span>) ;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NULL</span> ;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(full_read(sockfd, buffer, length-<span class="keyword">sizeof</span>(<span class="keyword">struct</span> header))&lt;=<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        error(<span class="string">&quot;read: %m&quot;</span>) ;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NULL</span> ;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如果length可控，可设置较小的值</li>
+<li>之后减去一个sizeof(struct header)，由于是unsigned int，那么就会造成越界读</li>
+</ul>
+<p>带符号整数边界</p>
+<ul>
+<li>符号位变化<ul>
+<li>导致可用绕过条件判断，正数变负数</li>
+<li>熟悉read(fd, buf, lengh)， 没错length是一个unsigned int</li>
+</ul>
+</li>
+</ul>
+<h2 id="类型转换"><a href="#类型转换" class="headerlink" title="类型转换"></a>类型转换</h2><h3 id="Value-preserving-Conversion"><a href="#Value-preserving-Conversion" class="headerlink" title="Value-preserving Conversion"></a>Value-preserving Conversion</h3><p>保值转换：新类型可代表旧类型所有值，即旧类型可看作新类型子集，那么转换不会导致值变化或丢失</p>
+<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><p>窄类型转为宽类型</p>
+<ul>
+<li>unsigned type: zero extension, 即高位填充0</li>
+<li>signed type: sign extension, 高位填充符号位</li>
+</ul>
+<h3 id="截断"><a href="#截断" class="headerlink" title="截断"></a>截断</h3><p>宽类型转为窄类型</p>
+<ul>
+<li>变值转换，精度会丢失</li>
+</ul>
+<p>总结</p>
+<ul>
+<li>从窄的<strong>带符号类型</strong>转换为宽的无符号类型，编译器会生成汇编指令执行<strong>符号位扩展</strong>，对象的值可能<br>会改变。</li>
+<li>从窄的<strong>带符号类型</strong>转换为宽的带符号类型，编译器会生成汇编指令执行<strong>符号位扩展</strong>，对象的值不变</li>
+<li>从窄的无符号类型转换为宽的类型，编译器会生成汇编指令执行零扩展，对象的值不变</li>
+<li>从宽类型转换为窄号类型，编译器会生成汇编指令执行截断，对象的值可能改变</li>
+<li>相同宽度无符号类型和带符号类型之间的转换，编译器实际上不会做任何事，在位级别下是相同<br>的，但对象的值可能会改变</li>
+</ul>
+<h3 id="简单类型转换"><a href="#简单类型转换" class="headerlink" title="简单类型转换"></a>简单类型转换</h3><ul>
+<li>cast</li>
+<li>赋值</li>
+<li>函数传参</li>
+<li>返回值</li>
+<li>整数提升<ul>
+<li>如果一个类型比int窄，整数提升将其转为int</li>
+</ul>
+</li>
+</ul>
+<h3 id="算术类型转换"><a href="#算术类型转换" class="headerlink" title="算术类型转换"></a>算术类型转换</h3><ul>
+<li><strong>浮点优先</strong></li>
+<li>整数提升<ul>
+<li>如果提升之后，两个操作数类型仍然不同，继续转换<ul>
+<li>操作数之一有unsigned, 等级大于等于另外一个操作数类型，那么都转为unsigned T</li>
+<li>另外一个情况，signed T等级大于另外一个操作数，此时只有T能够表示另外一个操作数所有值，即保值转换，才会进行转换<ul>
+<li>如果不能保值转换，两个操作数都转为T类型的unsigned T</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>一些例子</p>
+<table>
+<thead>
+<tr>
+<th>Left</th>
+<th>Right</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>unsigned int</td>
+<td>int</td>
+<td>unsigned int</td>
+</tr>
+<tr>
+<td>unsigned short</td>
+<td>int</td>
+<td>int</td>
+</tr>
+<tr>
+<td>unsigned char</td>
+<td>unsigned short</td>
+<td>int（左右都进行整数提升为int）</td>
+</tr>
+<tr>
+<td>unsigned int</td>
+<td>short</td>
+<td>unsigned int</td>
+</tr>
+<tr>
+<td>unsigned int</td>
+<td>long int</td>
+<td>unsigned long int</td>
+</tr>
+<tr>
+<td>unsigned int</td>
+<td>long long int</td>
+<td>long long int</td>
+</tr>
+</tbody></table>
+<h2 id="类型转换漏洞"><a href="#类型转换漏洞" class="headerlink" title="类型转换漏洞"></a>类型转换漏洞</h2><h3 id="Signed-Unsigned"><a href="#Signed-Unsigned" class="headerlink" title="Signed&#x2F;Unsigned"></a>Signed&#x2F;Unsigned</h3><p>常常用来绕过条件判断，存在于一些容易忽略的函数，系统调用中</p>
+<ul>
+<li>开发者本意和实际类型的不一致性导致</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">read</span>()</span><br><span class="line">snprintf()</span><br><span class="line">strncpy()</span><br><span class="line">memcpy()</span><br><span class="line">strncat()</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>审计，寻找上述函数调用或使用<code>size_t/unsigned</code>参数传递过程，查看该输入是否是一个<font color="red">ACID</font></li>
+</ul>
+<h3 id="Sign-Extension"><a href="#Sign-Extension" class="headerlink" title="Sign Extension"></a>Sign Extension</h3><p>带符号数据类型扩展为无符号类型，可能导致值被改变</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">char</span> len;</span><br><span class="line">len = get_len_field();</span><br><span class="line"><span class="built_in">snprintf</span>(dst, (<span class="type">unsigned</span> <span class="type">int</span>)len, <span class="string">&quot;%s&quot;</span>, src);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>同上面的sign&#x2F;unsign转换相同</li>
+</ul>
+<p><strong>CVE-2000-0405, DNS溢出</strong></p>
+<ul>
+<li>AntiSniff version 1.01 and Researchers version 1 DNS overflow</li>
+</ul>
+<p>如通告中的描述</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> count;  </span><br><span class="line"><span class="type">char</span> nameStr[MAX_LEN];</span><br><span class="line">  ...</span><br><span class="line">  <span class="keyword">while</span> (count)&#123;</span><br><span class="line">    (<span class="type">char</span> *)indx++;</span><br><span class="line">      <span class="built_in">strncat</span>(nameStr, (<span class="type">char</span> *)indx, count);</span><br><span class="line">      indx += count;</span><br><span class="line">      count = (<span class="type">char</span>)*indx;</span><br><span class="line">      <span class="built_in">strncat</span>(nameStr, <span class="string">&quot;.&quot;</span>, <span class="keyword">sizeof</span>(nameStr) - <span class="built_in">strlen</span>(nameStr));</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>nameStr是一个stack变量</li>
+<li>如果可以制作一个超长域名，一直拼接，就会溢出<code>nameStr</code></li>
+</ul>
+<p>公告中的修复</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">while</span> (count)&#123;</span><br><span class="line">  <span class="keyword">if</span> ( <span class="built_in">strlen</span>(nameStr) + count &lt; (MAX_LEN - <span class="number">1</span>) )&#123;</span><br><span class="line">    (<span class="type">char</span> *)indx++;</span><br><span class="line">    <span class="built_in">strncat</span>(nameStr, (<span class="type">char</span> *)indx, count);</span><br><span class="line">    indx += count;</span><br><span class="line">    count = (<span class="type">char</span>)*indx;</span><br><span class="line">    <span class="built_in">strncat</span>(nameStr, <span class="string">&quot;.&quot;</span>, <span class="keyword">sizeof</span>(nameStr) - <span class="built_in">strlen</span>(nameStr));</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    count = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>由于这里的<code>count</code>为int类型，假如设置index的值为-1,经过符号扩展仍然为-1</li>
+<li>假设已经循环过一次，strlen(nameStr)为5，这个表达式<code>strlen(nameStr) + count</code>会进行类型转为，全部变为unsigned int，<ul>
+<li>此时5 + -1, 就会算术溢出，变为4，绕过检查</li>
+<li>之后的strncat，会写入count个数据导致nameStr溢出</li>
+</ul>
+</li>
+</ul>
+<p>最新版本的修复</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">unsigned</span> <span class="type">int</span> count, questionEntries;</span><br><span class="line"><span class="comment">//...</span></span><br><span class="line"><span class="keyword">if</span> (!questionEntries)</span><br><span class="line">    <span class="keyword">return</span> FALSE;</span><br><span class="line">  indx = (<span class="type">char</span> *)(pkt + rr_offset);</span><br><span class="line"></span><br><span class="line">  count = (<span class="type">unsigned</span> <span class="type">int</span>)(*indx);</span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> DEBUG</span></span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;count was: %d\n&quot;</span>, count);</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">while</span> (count)&#123;</span><br><span class="line">    indx++;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">strlen</span>(nameStr) + count &lt; (MAX_LEN - <span class="number">1</span>))&#123;</span><br><span class="line">      <span class="built_in">strncat</span>(nameStr, indx, count);</span><br><span class="line">      indx += count;</span><br><span class="line">      count = *indx;</span><br><span class="line">      <span class="built_in">strncat</span>(nameStr, <span class="string">&quot;.&quot;</span>, <span class="keyword">sizeof</span>(nameStr) - <span class="built_in">strlen</span>(nameStr));</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">&quot;Alert! someone is attempting to send LONG DNS packets\n&quot;</span>);</span><br><span class="line">      count = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  nameStr[<span class="built_in">strlen</span>(nameStr)<span class="number">-1</span>] = <span class="string">&#x27;\0&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>这里<code>count = (unsigned int)(*index)</code>，count是一个unsigned int， index是<code>unsigned char</code>，故会进行zero扩展，-1会变为255，不可能溢出了</li>
+</ul>
+<p>汇编层面的<code>Sign Extension &amp;&amp; Zero Extension</code></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">; sign</span><br><span class="line">mov [ebp + var_5], 5</span><br><span class="line">movsx eax, [ebp + var_5]; (move with Sign-Extension)</span><br><span class="line">mov [ebp + var_4], eax</span><br><span class="line"></span><br><span class="line">; zero</span><br><span class="line">mov [ebp + var_5], 5</span><br><span class="line">xor eax, eax</span><br><span class="line">mov al, [ebp + var_5]</span><br><span class="line">mov [ebp + var_4], eax</span><br></pre></td></tr></table></figure>
+
+<p>审计</p>
+<ul>
+<li><p>检查<code>char/short</code>类型代码，是否存在类型扩展</p>
+</li>
+<li><p>搜索<code>movsx</code>指令调用</p>
+</li>
+</ul>
+<h3 id="截断-1"><a href="#截断-1" class="headerlink" title="截断"></a>截断</h3><ul>
+<li>赋值</li>
+<li>类型转换cast</li>
+<li>函数调用</li>
+</ul>
+<p>上面的情况下，可能发生</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> g = <span class="number">0x12345678</span>;</span><br><span class="line"><span class="type">short</span> <span class="type">int</span> h;</span><br><span class="line">h = g;</span><br></pre></td></tr></table></figure>
+
+<p>case01:</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">myPrint</span><span class="params">(<span class="type">unsigned</span> <span class="type">short</span> uid)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;uid: %d\n&quot;</span>, uid);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> uid = <span class="number">0x00100000</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (uid == <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;root is not allowed\n&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    myPrint(uid);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>类型转换被截断，输出uid &#x3D;&#x3D;0,绕过了检查</li>
+</ul>
+<p><img src="/wiki/wiki/2024/07/16/x86%E6%9E%B6%E6%9E%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%8E%A2%E7%A9%B6/x86%E6%9E%B6%E6%9E%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%8E%A2%E7%A9%B6/image-20240718105150653.png" alt="image-20240718105150653"></p>
+<p>case02:</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">unsigned</span> <span class="type">short</span> <span class="type">int</span> f;</span><br><span class="line"><span class="type">char</span> mybuf[<span class="number">1024</span>];</span><br><span class="line"><span class="type">char</span> *userstr = getuserstr();</span><br><span class="line"></span><br><span class="line">f = <span class="built_in">strlen</span>(userstr);</span><br><span class="line"><span class="keyword">if</span> (f &gt; <span class="keyword">sizeof</span>(mybuf) - <span class="number">5</span>)</span><br><span class="line">&#123;</span><br><span class="line">    die(<span class="string">&quot;string too long!&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">strcpy</span>(mybuf, userstr);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>strlen返回值为<code>size_t</code>， 被转为了<code>short</code>，此时就会截断</li>
+<li>同样，如果长度为0x10000000, 绕过检查，后面的拷贝就会溢出</li>
+</ul>
+<p>审计</p>
+<ul>
+<li>追踪较短数据类型代码</li>
+</ul>
+<h3 id="比较"><a href="#比较" class="headerlink" title="比较"></a>比较</h3><p>case01:</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> MAX_SIZE 1024</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">read_packet</span><span class="params">(<span class="type">int</span> sockfd)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">short</span> length;</span><br><span class="line">    <span class="type">char</span> buf[MAX_SIZE];</span><br><span class="line">    length = network_get_short(sockfd);</span><br><span class="line">    <span class="keyword">if</span> (lenght - <span class="keyword">sizeof</span>(<span class="type">short</span>) &lt;= <span class="number">0</span> || length &gt; MAX_SIZE)</span><br><span class="line">    &#123;</span><br><span class="line">        error(<span class="string">&quot;bad length supplied\n&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (read(sockfd, buf, length - <span class="keyword">sizeof</span>(<span class="type">short</span>)) &lt; <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        error(<span class="string">&quot;read: %m\n&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>length 是一个<code>short</code>类型数， 而sizeof返回的为size_t类型，此时会发生算术类型转换， length会被提升为int</li>
+<li>而size_t为unsigned int， 故最终会被提升为unsigned int类型，<code>length-sizeof(short)</code>的结果永远不可能小于0</li>
+<li>而第二个条件length会被提升为int, 只要length为负数就可以绕过</li>
+</ul>
+<p>审计</p>
+<ul>
+<li>注意表达式中相关变量的数据类型，关注<code>sizeof/strlen</code>等函数</li>
+</ul>
+<h2 id="运算符"><a href="#运算符" class="headerlink" title="运算符"></a>运算符</h2><ul>
+<li>sizeof(buffer)是获取buffer分配了多少空间，但是buffer如果是指针，那么返回值固定</li>
+<li>注意审计sizeof()参数是否为指针</li>
+</ul>
+<h3 id><a href="#" class="headerlink" title="&gt;&gt; &#x2F; %"></a>&gt;&gt; &#x2F; %</h3><p>右移</p>
+<ul>
+<li>signed类型，符号位扩展</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">signed</span> <span class="type">char</span> c = <span class="number">0x80</span>;</span><br><span class="line"><span class="comment">// 0x80: 1000 0000</span></span><br><span class="line">c &gt;&gt;= <span class="number">4</span>;</span><br><span class="line"><span class="comment">// 1111 1000</span></span><br></pre></td></tr></table></figure>
+
+<p>-128 &gt;&gt; -8</p>
+<h3 id="结构体对齐"><a href="#结构体对齐" class="headerlink" title="结构体对齐"></a>结构体对齐</h3><p><strong>基本对齐</strong>：</p>
+<ul>
+<li>每个成员的地址都应该是其类型大小的整数倍。比如，<code>int</code> 通常对齐到 4 字节边界，<code>double</code> 通常对齐到 8 字节边界。</li>
+</ul>
+<p><strong>结构体对齐</strong>：</p>
+<ul>
+<li>结构体的起始地址必须是<strong>其内部最大对齐成员</strong>的对齐大小的整数倍。</li>
+<li>结构体的<strong>大小</strong>必须是其内部最大对齐成员的对齐大小的整数倍。</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Example</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="type">char</span> a;</span><br><span class="line">    <span class="type">char</span> b;</span><br><span class="line">    <span class="type">char</span> c;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Example02</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="type">int</span> a;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">short</span> b;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">char</span> c;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">Example</span> <span class="title">ex</span>;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">Example02</span> <span class="title">ex02</span>;</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Size of struct Example: %zu\n&quot;</span>, <span class="keyword">sizeof</span>(ex));</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Size of struct Example02: %zu\n&quot;</span>, <span class="keyword">sizeof</span>(ex02));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/wiki/2024/07/16/x86%E6%9E%B6%E6%9E%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%8E%A2%E7%A9%B6/x86%E6%9E%B6%E6%9E%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%8E%A2%E7%A9%B6/image-20240718143347231.png" alt="image-20240718143347231"></p>
+<p>为了对齐，进行了填充</p>
+<p><img src="/wiki/wiki/2024/07/16/x86%E6%9E%B6%E6%9E%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%8E%A2%E7%A9%B6/x86%E6%9E%B6%E6%9E%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%8E%A2%E7%A9%B6/image-20240718143649297.png" alt="image-20240718143649297"></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/zhangziqiu/archive/2011/03/30/ComputerCode.html">https://www.cnblogs.com/zhangziqiu/archive/2011/03/30/ComputerCode.html</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>w3b5h3ll
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://w3b5h3ll.github.io/wiki/2024/07/16/x86%E6%9E%B6%E6%9E%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%8E%A2%E7%A9%B6/" title="x86架构数据类型探究">https://w3b5h3ll.github.io/wiki/2024/07/16/x86架构数据类型探究/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/wiki/tags/Integer-Overflow/" rel="tag"># Integer Overflow</a>
+              <a href="/wiki/tags/C-Family-Implementation-Vuls/" rel="tag"># C-Family Implementation Vuls</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/wiki/2024/06/29/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="prev" title="USB接口安全测试">
+                  <i class="fa fa-chevron-left"></i> USB接口安全测试
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+  
+  
+  
+
+
+
+      
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      
+
+      
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">w3b5h3ll</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+<script src="/wiki/js/utils.js"></script><script src="/wiki/js/motion.js"></script><script src="/wiki/js/schemes/muse.js"></script><script src="/wiki/js/next-boot.js"></script>
+
+  
+
+
+
+
+  <script src="/wiki/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8.7.0/dist/mermaid.min.js', () => {
+    mermaid.init({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    }, '.mermaid');
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+NexT.utils.loadComments('#valine-comments', () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', () => {
+    new Valine(Object.assign({
+      el  : '#valine-comments',
+      path: "/wiki/2024/07/16/x86%E6%9E%B6%E6%9E%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%8E%A2%E7%A9%B6/",
+    }, {"enable":true,"appId":"htEoF16VKxb4kS3oG0LReLBz-MdYXbMMI","appKey":"P7rwEt21RTK0B11XxuTwjss2","serverURLs":"https://hteof16v.api.lncldglobal.com","placeholder":"Just go go","avatar":"mm","meta":["nick","mail","link"],"pageSize":10,"visitor":true,"comment_count":true,"recordIP":false}
+    ));
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
