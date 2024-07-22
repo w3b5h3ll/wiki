@@ -1,6 +1,362 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>ADB overview</title>
+    <url>/wiki/2024/07/08/ADB-overview/</url>
+    <content><![CDATA[<p>ADB架构以及命令总结</p>
+<h2 id="Under-the-hood"><a href="#Under-the-hood" class="headerlink" title="Under the hood"></a>Under the hood</h2><p><img src="/wiki/2024/07/08/ADB-overview/ADB-overview/image-20240708104840466.png" alt="image-20240708104840466"></p>
+<p><code>client</code>通过本地的<code>server</code>与远端的<code>daemon</code>进程通信。</p>
+<ul>
+<li>client执行子命令</li>
+<li>server提供client与adbd直接的代理</li>
+<li>daemon运行在目标设备上</li>
+</ul>
+<p>ADB两个角色</p>
+<ul>
+<li>提供传输，在host与target之间提供通道<ul>
+<li>可以是USB或TCP</li>
+</ul>
+</li>
+<li>提供服务，在target设备上执行命令<ul>
+<li>如adb shell或adb push&#x2F;pull</li>
+</ul>
+</li>
+</ul>
+<p>When does adb server start?</p>
+<ul>
+<li>可以通过<code>adb start-server</code></li>
+<li>或者直接执行命令，系统自动检测是否已经启动，没有的话进行启动</li>
+</ul>
+<h2 id="ADB-internal"><a href="#ADB-internal" class="headerlink" title="ADB internal"></a>ADB internal</h2><p>交互过程</p>
+<p><img src="/wiki/2024/07/08/ADB-overview/ADB-overview/image-20240708110301429.png" alt="image-20240708110301429"></p>
+<p><code>ro.secure == 1</code>为正常Android设备配置</p>
+<ul>
+<li>如果<code>ro.debuggable == 1</code>，可以使用<code>adb root</code></li>
+</ul>
+<p>连接</p>
+<ul>
+<li>当连接USB设备时，adb会检查Vendor ID</li>
+<li>可以在<code>$HOME/.android/adb_usb.ini</code>添加Vendor ID</li>
+</ul>
+<p>转换连接方式</p>
+<ul>
+<li>使用<code>TCP</code>模式：<code>adb tcpip 5555</code></li>
+</ul>
+<p><img src="/wiki/2024/07/08/ADB-overview/ADB-overview/image-20240708111744931.png" alt="image-20240708111744931"></p>
+<p>模拟器相关</p>
+<p><code>adb emu window scale 0.5</code> 是用于 Android 模拟器的命令，用来调整模拟器窗口的显示比例。具体来说，该命令的作用是将模拟器窗口的显示比例设置为 0.5，即窗口的尺寸会被缩小到原来的一半。</p>
+<p>备份</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">┌───(c0r3dump@ArchLinux)-[~/Workspace/temp]</span><br><span class="line">└─$ adb backup com.saicmotor.r        </span><br><span class="line">WARNING: adb backup is deprecated and may be removed <span class="keyword">in</span> a future release</span><br><span class="line">Now unlock your device and confirm the backup operation...</span><br><span class="line">┌───(c0r3dump@ArchLinux)-[~/Workspace/temp]</span><br><span class="line">└─$ <span class="built_in">ls</span></span><br><span class="line">archlinux-2024.06.01-x86_64.iso  backup.ab</span><br><span class="line">┌───(c0r3dump@ArchLinux)-[~/Workspace/temp]</span><br><span class="line">└─$ <span class="built_in">ls</span> -l backup.ab                                </span><br><span class="line">-rw-r----- 1 c0r3dump c0r3dump 11930803 Jul 8日 13:10 backup.ab</span><br><span class="line">┌───(c0r3dump@ArchLinux)-[~/Workspace/temp]</span><br><span class="line">└─$ <span class="built_in">ls</span> -lh backup.ab</span><br><span class="line">-rw-r----- 1 c0r3dump c0r3dump 12M Jul 8日 13:10 backup.ab</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>Android</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Reading: Android Internals(The Power User&#39;s View)</title>
+    <url>/wiki/2024/07/22/Reading-Android-Internals-The-Power-User-s-View/</url>
+    <content><![CDATA[<p>注：实验以手头上的Android10进行</p>
+<h2 id="init"><a href="#init" class="headerlink" title="init"></a>init</h2><p>UNIX系统启动后的，用户态第一个进程：init进程。Android中init进程的不同之处</p>
+<ul>
+<li>支持系统属性，使用rc文件规定行为</li>
+<li>化身为ueventd和watchdogd</li>
+</ul>
+<p><img src="/wiki/2024/07/22/Reading-Android-Internals-The-Power-User-s-View/Reading-Android-Internals-The-Power-User-s-View/image-20240722145644260.png" alt="image-20240722145644260"></p>
+<p>&#x2F;init是一个静态链接的二进制文件</p>
+<ul>
+<li>&#x2F;init执行时，只有boot分区的RAM disk被mount上来了，即root文件系统</li>
+</ul>
+<h3 id="系统属性"><a href="#系统属性" class="headerlink" title="系统属性"></a>系统属性</h3><p>全局访问的配置设置，如下加载顺序</p>
+<p><img src="/wiki/2024/07/22/Reading-Android-Internals-The-Power-User-s-View/Reading-Android-Internals-The-Power-User-s-View/image-20240722150526934.png" alt="image-20240722150526934"></p>
+<p>&#x2F;init作为所有进程的初始，执行了系统属性的初始化</p>
+<ul>
+<li>property_init(), 安装系统属性<ul>
+<li>先创建<code>/dev/__properties__</code>，然后map到内存<code>__system_proterty_area</code></li>
+<li>再次以只读模式打开，获得描述符，并可被子进程继承</li>
+<li>最后unlink该文件，此时其他人再也无法打开文件</li>
+</ul>
+</li>
+</ul>
+<p>属性被存储在了一个混合trie&#x2F;binary树结构上</p>
+<p>property_sevice</p>
+<ul>
+<li>提供写系统属性的服务</li>
+<li>&#x2F;dev&#x2F;socket&#x2F;property_service, 一个UNIX域套接字<ul>
+<li>检查该socket的caller，如果有权限，那么可写</li>
+</ul>
+</li>
+</ul>
+<p>属性访问方法</p>
+<ul>
+<li>getprop&#x2F;setprop</li>
+<li>watchprops(Android 10未有该命令)</li>
+</ul>
+<h3 id="rc"><a href="#rc" class="headerlink" title=".rc"></a>.rc</h3><p>主配置文件，&#x2F;init.rc</p>
+<p>从Android 4.x版本开始，&#x2F;init.rc被硬编码了，其他rc可以通过import进行导入。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">marlin:/ <span class="comment"># cat /init.rc |grep import                                                                                                                                                    </span></span><br><span class="line">import /init.environ.rc</span><br><span class="line">import /init.usb.rc</span><br><span class="line">import /init.<span class="variable">$&#123;ro.hardware&#125;</span>.rc</span><br><span class="line">import /vendor/etc/init/hw/init.<span class="variable">$&#123;ro.hardware&#125;</span>.rc</span><br><span class="line">import /init.usb.configfs.rc</span><br><span class="line">import /init.<span class="variable">$&#123;ro.zygote&#125;</span>.rc</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>.rc文件的描述</p>
+<ul>
+<li>trigger语句，条件满足时触发执行<ul>
+<li>预定义的启动阶段，或者属性值设置</li>
+</ul>
+</li>
+<li>service，定义守护进程</li>
+</ul>
+<p><img src="/wiki/2024/07/22/Reading-Android-Internals-The-Power-User-s-View/Reading-Android-Internals-The-Power-User-s-View/image-20240722153256302.png" alt="image-20240722153256302"></p>
+<p>init.rc语法以及命令集</p>
+<ul>
+<li><strong>COMMAND</strong>关键字，trigger语句或<strong>启动阶段</strong>执行的动作</li>
+<li><strong>OPTION</strong>，修改服务状态，只在service关键字开头的语句块中有效</li>
+</ul>
+<p>以系统中的&#x2F;init.rc文件进行说明</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="comment"># 充电模式，class_[start|stop]，启动以class指定的server_class相关的所有服务</span></span><br><span class="line">on charger</span><br><span class="line">    class_start charger</span><br><span class="line">    </span><br><span class="line">...</span><br><span class="line"><span class="comment">## Daemon processes to be run by init.</span></span><br><span class="line"><span class="comment">##</span></span><br><span class="line">service ueventd /system/bin/ueventd</span><br><span class="line"><span class="comment"># OPTION关键字</span></span><br><span class="line"><span class="comment"># class，将服务加入core组</span></span><br><span class="line">    class core</span><br><span class="line"><span class="comment"># 定义为一个关键服务，可以自启，如果crash超过预置上限，进入recovery模式</span></span><br><span class="line">    critical</span><br><span class="line"><span class="comment"># 设置SELinux标签</span></span><br><span class="line">    seclabel u:r:ueventd:s0</span><br><span class="line">    shutdown critical</span><br></pre></td></tr></table></figure>
+
+<p>启动服务</p>
+<p>init使用fork()方式启动服务子进程，并维护一个指向该服务的父链接</p>
+<ul>
+<li><p>如果服务crash，init收到<code>SIGCHLD</code>信号后就可以重启服务</p>
+</li>
+<li><p>onrestart, 列出重启该服务需要执行的命令。通常用来重启其他依赖服务</p>
+</li>
+<li><p>init维护一个服务状态属性，init.svc.sevice</p>
+</li>
+</ul>
+<p><u><strong>组合键 &#x2F;dev&#x2F;keychord</strong></u></p>
+<p>init可以定义组合键启动的服务</p>
+<ul>
+<li><strong>keycodes</strong>关键字</li>
+</ul>
+<p>要支持组合键，满足条件</p>
+<ul>
+<li>&#x2F;dev&#x2F;keychord文件，keychord内核驱动导出的设备节点</li>
+<li>内核编译时使用<code>INPUT_KEYCHORD</code></li>
+</ul>
+<p>mount文件系统</p>
+<p>&#x2F;init进程刚刚启动时候，只有&#x2F;根文件系统，需要mount如&#x2F;system文件系统来启动上面的守护进程</p>
+<ul>
+<li>vold，卷管理守护进程（Android10，未有fs阶段）</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">on early-fs</span><br><span class="line">    <span class="comment"># Once metadata has been mounted, we&#x27;ll need vold to deal with userdata checkpointing</span></span><br><span class="line">    start vold</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">marlin:/ <span class="comment"># cat /vendor/etc/fstab.marlin                                                                                                                                                 </span></span><br><span class="line"><span class="comment"># Android fstab file.</span></span><br><span class="line"><span class="comment"># The filesystem that contains the filesystem e2fsck binary (typically /system) cannot</span></span><br><span class="line"><span class="comment"># specify &#x27;check&#x27;, and must come before any filesystems that do specify &#x27;check&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># <span class="doctag">NOTE:</span> /vendor partition is now early-mounted and the fstab entry is specified in device tree:</span></span><br><span class="line"><span class="comment">#       /proc/device-tree/firmware/android/fstab/vendor</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#&lt;src&gt;                                                  &lt;mnt_point&gt;         &lt;type&gt;  &lt;mnt_flags and options&gt;     &lt;fs_mgr_flags&gt;</span></span><br><span class="line">/dev/block/platform/soc/624000.ufshc/by-name/system     /                   ext4    ro,barrier=1                <span class="built_in">wait</span>,slotselect,verify</span><br><span class="line">/dev/block/platform/soc/624000.ufshc/by-name/modem      /firmware/radio     vfat    ro,shortname=lower,uid=1000,gid=0,dmask=227,fmask=337,context=u:object_r:firmware_file:s0   <span class="built_in">wait</span>,slotselect</span><br><span class="line">/dev/block/platform/soc/624000.ufshc/by-name/userdata   /data               ext4    errors=panic,noatime,nosuid,nodev,barrier=1,noauto_da_alloc  latemount,<span class="built_in">wait</span>,check,formattable,fileencryption=ice,quota,reservedsize=128M</span><br><span class="line">/dev/block/zram0                                        none                swap    defaults                    zramsize=536870912,max_comp_streams=4</span><br><span class="line">/dev/block/platform/soc/624000.ufshc/by-name/misc       /misc               emmc    defaults                    defaults</span><br><span class="line">/devices/*/xhci-hcd.0.auto/usb*                         auto                vfat    defaults                    voldmanaged=usb:auto</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="总结：init的执行流程"><a href="#总结：init的执行流程" class="headerlink" title="总结：init的执行流程"></a>总结：init的执行流程</h3><p>建立服务的经典模式：初始化，然后loop</p>
+<p>run-loop</p>
+<ul>
+<li>execute_one_command()，从action_queue头部取出action并执行</li>
+<li>restart_processed()，检查已注册服务，必要时重启</li>
+<li>轮询如下三个socket<ul>
+<li>property_set_fd, 设置属性相关</li>
+<li>keychord_fd，如果存在，检查组合键</li>
+<li>signal_recv_fd, 处理SIGCHLD信号，处理子进程</li>
+</ul>
+</li>
+</ul>
+<h3 id="init和USB"><a href="#init和USB" class="headerlink" title="init和USB"></a>init和USB</h3><p>Android设备通过USB连接后的角色由<code>sys.usb.config</code>决定。</p>
+<ul>
+<li>根据请求，通过修改该值，将Android模拟成为各种设备</li>
+<li>向如下的各个伪文件写入数据，另外一端就是USB gadget driver，一个多功能驱动</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">marlin:/proc/1 <span class="comment"># ls /sys/class/android_usb/android0/                                                                                                                                    </span></span><br><span class="line">bDeviceClass              f_accessory/              f_ecm/                    f_ncm/                    f_usb_mbim/               idle_pc_rpm_no_int_secs   uevent</span><br><span class="line">bDeviceProtocol           f_acm/                    f_ecm_qc/                 f_ptp/                    <span class="built_in">functions</span>                 pm_qos                    up_pm_qos_sample_sec</span><br><span class="line">bDeviceSubClass           f_audio/                  f_ffs/                    f_qdss/                   iManufacturer             pm_qos_state              up_pm_qos_threshold</span><br><span class="line">bcdDevice                 f_audio_source/           f_gps/                    f_rmnet/                  iProduct                  power/</span><br><span class="line">down_pm_qos_sample_sec    f_ccid/                   f_mass_storage/           f_rndis/                  iSerial                   remote_wakeup</span><br><span class="line">down_pm_qos_threshold     f_charging/               f_midi/                   f_rndis_qc/               idProduct                 state</span><br><span class="line"><span class="built_in">enable</span>                    f_diag/                   f_mtp/                    f_serial/                 idVendor                  subsystem/</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/2024/07/22/Reading-Android-Internals-The-Power-User-s-View/Reading-Android-Internals-The-Power-User-s-View/image-20240722163110619.png" alt="image-20240722163110619"></p>
+<p>USB标识信息</p>
+<ul>
+<li>iProduct</li>
+<li>iSerial</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">-rw-r--r-- 1 root root 4096 2024-07-22 16:37 iProduct</span><br><span class="line">-rw-r--r-- 1 root root 4096 2024-07-22 16:37 iSerial</span><br><span class="line">-rw-r--r-- 1 root root 4096 2024-07-22 16:37 idProduct</span><br><span class="line">-rw-r--r-- 1 root root 4096 2024-07-22 16:37 idVendor</span><br><span class="line">-rw-r--r-- 1 root root 4096 2024-07-22 16:38 idle_pc_rpm_no_int_secs</span><br><span class="line">-rw-r--r-- 1 root root 4096 2024-07-22 16:38 pm_qos</span><br><span class="line">-r--r--r-- 1 root root 4096 2024-07-22 16:38 pm_qos_state</span><br><span class="line">drwxr-xr-x 2 root root    0 1973-05-20 08:35 power</span><br><span class="line">-rw-r--r-- 1 root root 4096 2024-07-22 16:38 remote_wakeup</span><br><span class="line">-r--r--r-- 1 root root 4096 2024-07-22 16:38 state</span><br><span class="line">lrwxrwxrwx 1 root root    0 2024-07-22 16:38 subsystem -&gt; ../../../../class/android_usb</span><br><span class="line">-rw-r--r-- 1 root root 4096 1973-05-20 08:35 uevent</span><br><span class="line">-rw-r--r-- 1 root root 4096 2024-07-22 16:38 up_pm_qos_sample_sec</span><br><span class="line">-rw-r--r-- 1 root root 4096 2024-07-22 16:38 up_pm_qos_threshold</span><br><span class="line">marlin:/sys/class/android_usb/android0 <span class="comment"># </span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="init的其他角色"><a href="#init的其他角色" class="headerlink" title="init的其他角色"></a>init的其他角色</h3><p>ueventd</p>
+<p>管理硬件设备，&#x2F;ueventd.rc配置文件</p>
+<ul>
+<li>设置文件权限</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># kms driver for drm based gpu</span></span><br><span class="line">/dev/dri/*                0666   root       graphics</span><br><span class="line"></span><br><span class="line"><span class="comment"># these should not be world writable</span></span><br><span class="line">/dev/uhid                 0660   uhid       uhid</span><br><span class="line">/dev/uinput               0660   uhid       uhid</span><br><span class="line">/dev/rtc0                 0640   system     system</span><br><span class="line">/dev/tty0                 0660   root       system</span><br><span class="line">/dev/graphics/*           0660   root       graphics</span><br><span class="line">/dev/input/*              0660   root       input</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/2024/07/22/Reading-Android-Internals-The-Power-User-s-View/Reading-Android-Internals-The-Power-User-s-View/4470817.png" alt="img"></p>
+<p>watchdogd</p>
+<p>硬件定时器，每隔一段时间就发送一个keepalive信号。</p>
+<ul>
+<li>如果超时未能发送，该定时器会发出中断，<strong>内核重启</strong></li>
+</ul>
+<h2 id="Android系统上的守护进程"><a href="#Android系统上的守护进程" class="headerlink" title="Android系统上的守护进程"></a>Android系统上的守护进程</h2><p>daemons被定义在&#x2F;init.rc中的service块，它们所属的<strong>分类</strong>很重要。</p>
+<p>启动顺序</p>
+<ol>
+<li><code>core</code>类服务</li>
+<li><code>main</code>类服务</li>
+</ol>
+<h3 id="Core类服务"><a href="#Core类服务" class="headerlink" title="Core类服务"></a>Core类服务</h3><p>此类服务无需访问&#x2F;data分区，无需等待&#x2F;data分区mount</p>
+<p>adbd</p>
+<ul>
+<li>adb直接使用</li>
+<li>ddms间接使用</li>
+</ul>
+]]></content>
+      <tags>
+        <tag>Android System</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>USB接口安全测试</title>
+    <url>/wiki/2024/06/29/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>USB已经成为计算机与智能设备的必备接口之一，广泛应用于社会的各个场景。近年来各类硬件产品的安全事件层出不穷，出现了多种针对USB接口的攻击手段，导致相关系统面临着严重的安全风险。简要对于<code>USB</code>接口存在的安全问题进行梳理，并进行测试。</p>
+<span id="more"></span>
+
+<h2 id="USB-101"><a href="#USB-101" class="headerlink" title="USB 101"></a>USB 101</h2><p><img src="https://www.usbzh.com/uploadimg/202105080959336094.png" alt="USB协议分层"></p>
+<p>USB设备的枚举过程如下：</p>
+<ol>
+<li>USB设备插入USB接口后，主机检测D+&#x2F;D-线上的电压，确认有设备连接，USB<a href="https://www.usbzh.com/article/detail-25.html">集线器</a>通过中断<a href="https://www.usbzh.com/article/detail-450.html">IN</a>通道，向主机报告有USB设备连接。</li>
+<li>主机接到通知后，通过<a href="https://www.usbzh.com/article/detail-25.html">集线器</a>设备类请求<a href="https://www.usbzh.com/article/detail-1162.html">GetPortStatus</a>获取更多的信息。然后主机等待100ms等待设备稳定，然后发送<a href="https://www.usbzh.com/article/detail-25.html">集线器</a>设备类请求SetPortStatus,对USB设备进行复位，复位后USB设备的地址为0，这样主机就可以使用地址0与USB设备进行通信,复位后的设备可以从USB总线上获取小于100mA的电流，用于使用默认地址对管道0控制<a href="https://www.usbzh.com/article/detail-691.html">事务</a>响应。</li>
+<li>主机向地址为0（即刚插入的USB设备）的设备端点0（默认端点）发送获取<a href="https://www.usbzh.com/article/detail-104.html">设备描述符</a>的<a href="https://www.usbzh.com/article/detail-417.html">标准请求</a>GetDescriptor。</li>
+<li>USB设备收到请求后，将其预设的<a href="https://www.usbzh.com/article/detail-104.html">设备描述符</a>返回给主机。</li>
+<li>主机收到设备描述符后，返回一个0长度的数据确认包。</li>
+<li>主机对设备再次复位，复位后主机对地址为0的设备端点0发送一个设置地址SetAddress请求（新的设备地址在数据包中）。</li>
+<li>主机发送请求状态返回，设备返回0长度的状态数据包。</li>
+<li>主机收到状态数据包后，发送应答包<a href="https://www.usbzh.com/article/detail-452.html">ACK</a>给设备，设备收到<a href="https://www.usbzh.com/article/detail-452.html">ACK</a>后，启用新的设备地址。</li>
+<li>主机再次使新的地址获取设备描述符GetDescriptor，设备返回地址描述符。</li>
+<li>主机获取第一次<a href="https://www.usbzh.com/article/detail-67.html">配置描述符</a>有前18个字节，设备返回<a href="https://www.usbzh.com/article/detail-67.html">配置描述符</a>的前18个字节，其数据包中含有配置描述符的总长度。</li>
+<li>主机根据配置描述符的总长度再次获取配置描述符，设备返回全总的配置描述符。</li>
+<li>如果还有<a href="https://www.usbzh.com/article/detail-53.html">字符串描述符</a>，系统还会获取<a href="https://www.usbzh.com/article/detail-53.html">字符串描述符</a>。像<a href="https://www.usbzh.com/article/detail-76.html">HID</a>设备还有<a href="https://www.usbzh.com/article/detail-48.html">报告描述符</a>，它也需要单独获取。</li>
+</ol>
+<h2 id="测试工具"><a href="#测试工具" class="headerlink" title="测试工具"></a>测试工具</h2><h3 id="Facedancer"><a href="#Facedancer" class="headerlink" title="Facedancer"></a>Facedancer</h3><blockquote>
+<p>a tool for implementing USB devices in host-side Python using the GoodFET framework. Access to the USB chip is extremely low-level, so protocols may be mis-implemented in all sorts of creative ways. This allows a clever neighbor to quickly find and exploit USB driver vulnerabilities from the comfort of a modern workstation, only later porting such exploits to run standalone. Additionally, we’ll show you some nifty tricks for replacing the firmware of commercial USB devices in order to house your exploits.</p>
+</blockquote>
+<p><img src="http://farm6.staticflickr.com/5333/7397758016_7b01d44ca9.jpg" alt="Facedancer10"></p>
+<p>使用<code>GoodFET</code>框架，在主机端使用Python实现了USB</p>
+<p>使用教程</p>
+<ol>
+<li>首先更新firmware</li>
+</ol>
+<ul>
+<li><p><a href="https://github.com/travisgoodspeed/goodfet/">GitHub - travisgoodspeed&#x2F;goodfet: An embedded bus adapter for various microcontrollers and radios.</a></p>
+</li>
+<li><p><a href="https://github.com/greatscottgadgets/Facedancer">GitHub - greatscottgadgets&#x2F;Facedancer: modern FaceDancer core for multiple devices– including GreatFET</a></p>
+</li>
+</ul>
+<blockquote>
+<p>In Linux, the FTDI drivers are included by default. Be sure that the user has permissions for <code>/dev/ttyUSB0</code>, which will likely require adding that user to the dialout group.</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt-get install -y gcc-msp430 msp430-libc curl wget python-serial <span class="comment"># Ubuntu Xenial</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>由于需要<code>/dev/ttyUSB0</code>权限，将用户加入组中</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo usermod -a -G dialout w3b5h3ll</span><br></pre></td></tr></table></figure>
+
+<p>刷写过程(环境：<code>Python2.7</code>+双头<code>USB mini</code>接口)</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">(base) w3b5h3ll@ubuntu:~/goodfet/firmware$ board=facedancer21 goodfet.bsl --dumpinfo &gt; info.txt</span><br><span class="line">Use -h <span class="keyword">for</span> <span class="built_in">help</span></span><br><span class="line">Use --fromweb to upgrade a GoodFET.</span><br><span class="line">MSP430 Bootstrap Loader Version: 1.39-goodfet-8</span><br><span class="line">Invoking BSL...</span><br><span class="line">Transmit default password ...</span><br><span class="line">Current bootstrap loader version: 2.13 (Device ID: f26f)</span><br><span class="line"></span><br><span class="line"><span class="comment"># update 2023/11</span></span><br><span class="line"><span class="built_in">export</span> board=facedancer21</span><br><span class="line">make</span><br><span class="line">goodfet.bsl ./goodfet.hex</span><br></pre></td></tr></table></figure>
+
+<h3 id="RubberDucky"><a href="#RubberDucky" class="headerlink" title="RubberDucky"></a>RubberDucky</h3><p>一款可以执行<code>HID</code>键盘注入的工具</p>
+<ul>
+<li><a href="https://docs.hak5.org/hak5-usb-rubber-ducky/">USB Rubber Ducky by Hak5 - USB Rubber Ducky</a></li>
+</ul>
+<p><img src="https://shop.hak5.org/cdn/shop/products/usb-rubber-ducky_mk2_2000x.jpg?v=1659974440" alt="USB Rubber Ducky"></p>
+<p>Hak5有自己的脚本语言<code>DuckyScript</code>，官方也提供了诸多Payloads使用</p>
+<ul>
+<li><a href="https://github.com/hak5/usbrubberducky-payloads/">GitHub - hak5&#x2F;usbrubberducky-payloads: The Official USB Rubber Ducky Payload Repository</a></li>
+</ul>
+<p>使用在线IDE进行编译，烧录，将<code>inject.bin</code>拷贝至其根目录即可。想要返回<code>Arming mode</code>：拆件，插入电脑后，按压按钮即可</p>
+<ul>
+<li><a href="https://payloadstudio.hak5.org/community/">https://payloadstudio.hak5.org/community/</a></li>
+</ul>
+<h3 id="BushBunny"><a href="#BushBunny" class="headerlink" title="BushBunny"></a>BushBunny</h3><p>同为Hak5的产品，<code>Bash Bunny</code>更贵，介绍上说比前者更加强大，是一个完整的Linux系统。</p>
+<ul>
+<li><p><a href="https://docs.hak5.org/bash-bunny/">Bash Bunny by Hak5 - Bash Bunny</a></p>
+</li>
+<li><p><a href="https://hackinglab.cz/en/blog/bash-bunny-guide/">Bash Bunny – Guide - Hacking Lab</a></p>
+</li>
+</ul>
+<p><img src="https://3076592524-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FnxJgJ9UdPfrcuL1U8DpL%2Fuploads%2FNY6fwd09yUtu3sRsbNJe%2Fimage.png?alt=media&token=d0880bb8-0e9b-41bd-809e-d3724c8fe234"></p>
+<p>切换到<code>Arming Mode</code>后，串口进入</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">picocom -b 115200 /dev/tty.usbmodemch0000011</span><br><span class="line">root:hak5bunny</span><br></pre></td></tr></table></figure>
+
+<p>同时其作为存储设备，如下目录</p>
+<p><img src="/wiki/2024/06/29/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/2023-11-09-16-05-30-image.png"></p>
+<h2 id="攻击面分析"><a href="#攻击面分析" class="headerlink" title="攻击面分析"></a>攻击面分析</h2><p><img src="/wiki/2024/06/29/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/2023-11-09-12-56-02-image.png"></p>
+<h3 id="攻击负载媒介"><a href="#攻击负载媒介" class="headerlink" title="攻击负载媒介"></a>攻击负载媒介</h3><p>非常典型有震网病毒，通过U盘即突破了物理隔离，不做详细展开</p>
+<p><img src="https://s.secrss.com/anquanneican/702f33f11f8bf9226bb4185e124fefb3.jpg"></p>
+<h3 id="HID攻击"><a href="#HID攻击" class="headerlink" title="HID攻击"></a>HID攻击</h3><blockquote>
+<p>USB人机交互设备（Human Interface Device，HID）是一种非常重要和广泛使用的USB设备类型，被广泛应用于人机交互和少量实时数据传输中，例如键盘、鼠标、游戏杆等应用场景. USB HID设备最主要的特点是可以模拟人和机器的交互过程，能够主动地向连接的主机中传输数据和命令. 同时，基于USB HID协议中的约定，USB HID设备无须安装驱动就能与主机进行交互.</p>
+</blockquote>
+<p>基于HID的攻击有如下特点：</p>
+<ul>
+<li><p>隐蔽性强。攻击原理是模仿用户按键操作，系统不会对输入进行审计。另外恶意代码被隐藏在了芯片的固件中，上层杀软无法进行检测。</p>
+</li>
+<li><p>更高权限。可以获取系统权限。</p>
+</li>
+</ul>
+<p>常见USB HID开发平台</p>
+<p><img src="/wiki/2024/06/29/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/2023-11-09-13-17-25-image.png"></p>
+<p>想要实现<code>HID</code>攻击，设备需要支持<code>Keyboard</code>等人机交互接口类型。利用<code>Umap2</code>框架，可以对目标进行一个初步的USB安全评估（注：该工具需要使用<code>Python2.7</code>启动）</p>
+<ul>
+<li><a href="https://github.com/nccgroup/umap2">GitHub - nccgroup&#x2F;umap2: Umap2 is the second revision of NCC Group’s python based USB host security assessment tool.</a></li>
+</ul>
+<p>Device Emulation</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 获取支持的设备类型</span></span><br><span class="line">↪ umap2list                                                                          (base)</span><br><span class="line">audio</span><br><span class="line">billboard</span><br><span class="line">cdc_acm</span><br><span class="line">ftdi</span><br><span class="line">hub</span><br><span class="line">keyboard</span><br><span class="line">mass_storage</span><br><span class="line">mtp</span><br><span class="line">printer</span><br><span class="line">smartcard</span><br><span class="line"><span class="comment"># emulate -C keyboard</span></span><br><span class="line">umap2emulate -P fd:/dev/tty.usbserial-A10LLJBV -C keyboard -v</span><br></pre></td></tr></table></figure>
+
+<p>Device Support Scanning</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Umap2 can attempt to detect what types of USB devices are supported by the host. </span></span><br><span class="line">umap2scan -P fd:/dev/tty.usbserial-A10LLJBV</span><br></pre></td></tr></table></figure>
+
+<p>确认一下<code>facedancer</code></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">lsusb</span><br><span class="line">Bus 020 Device 012: ID 0403:6001 Future Technology Devices International Limited FT232R USB UART  Serial: A10LLJBV</span><br></pre></td></tr></table></figure>
+
+<p>Vendor Specific Device Support Scanning 厂商设备支持扫描</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># timeout设置5s，条目间隔2s</span></span><br><span class="line">umap2vsscan -P fd:/dev/tty.usbserial-A10LLJBV -d ~/Desktop/MyRepos/umap2/data/vid_pid_db.py -t 5 -b 2</span><br></pre></td></tr></table></figure>
+
+<p>经测试，发现如下，目标支持4种类型：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Found 4 supported device(s):</span><br><span class="line">1.audio</span><br><span class="line">2.hub</span><br><span class="line">3.keyboard</span><br><span class="line">4.mass storage</span><br></pre></td></tr></table></figure>
+
+<h4 id="Demo01-Nmap扫描"><a href="#Demo01-Nmap扫描" class="headerlink" title="Demo01: Nmap扫描"></a>Demo01: Nmap扫描</h4><p>Win10支持<code>RNDIS</code>，即USB网卡，那么可以使用<code>BushBunny</code>配置为相关模式后扫描目标主机</p>
+<blockquote>
+<p>RNDIS（Remote Network Driver Interface Specification，远程网络驱动接口规范）是一个通信协议。它是<a href="https://zh.wikipedia.org/wiki/%E5%BE%AE%E8%BD%AF%E5%85%AC%E5%8F%B8" title="微软公司">微软公司</a>的<a href="https://zh.wikipedia.org/w/index.php?title=%E4%B8%93%E5%88%A9%E5%8D%8F%E8%AE%AE&action=edit&redlink=1">专利协议</a>，被大多数<a href="https://zh.wikipedia.org/wiki/Windows" title="Windows">Windows</a>、<a href="https://zh.wikipedia.org/wiki/Linux" title="Linux">Linux</a>和<a href="https://zh.wikipedia.org/wiki/Unix" title="Unix">Unix</a>系统所支持。它主要使用<a href="https://zh.wikipedia.org/wiki/USB" title="USB">USB</a>协议作为其下层传输，它向上层提供虚拟的<a href="https://zh.wikipedia.org/wiki/%E4%BB%A5%E5%A4%AA%E7%BD%91" title="以太网">以太网</a>连接。</p>
+</blockquote>
+<p>Payload如下</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Title:         Nmapper for Bash Bunny</span></span><br><span class="line"><span class="comment"># Author:        Hak5Darren</span></span><br><span class="line"><span class="comment"># Version:       1.1</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Scans target with nmap using specified options</span></span><br><span class="line"><span class="comment"># Saves sequential logs to mass storage loot folder</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Red ...........Setup</span></span><br><span class="line"><span class="comment"># Red Blinking...Setup Failed. Target did not obtain IP address. Exit.</span></span><br><span class="line"><span class="comment"># Amber..........Scanning</span></span><br><span class="line"><span class="comment"># White..........Switching to Mass Storage (optional)</span></span><br><span class="line"><span class="comment"># Green..........Finished</span></span><br><span class="line"><span class="comment"># </span></span><br><span class="line"><span class="comment"># See nmap --help for options. Default &quot;-O --fuzzy&quot; profiles target OS.</span></span><br><span class="line">NMAP_OPTIONS=<span class="string">&quot;-O --fuzzy&quot;</span></span><br><span class="line">LOOTDIR=/root/udisk/loot/nmap</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">######## INITIALIZATION ########</span></span><br><span class="line">LED SETUP</span><br><span class="line"><span class="comment"># Use RNDIS for Windows. Mac/*nix use ECM_ETHERNET</span></span><br><span class="line">ATTACKMODE RNDIS_ETHERNET </span><br><span class="line"><span class="comment">#ATTACKMODE ECM_ETHERNET</span></span><br><span class="line">GET TARGET_IP</span><br><span class="line">GET TARGET_HOSTNAME</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">######## MAKE LOOT DIRECTORY ########</span></span><br><span class="line"><span class="comment"># Setup named logs in loot directory</span></span><br><span class="line"><span class="built_in">mkdir</span> -p <span class="variable">$LOOTDIR</span></span><br><span class="line">HOST=<span class="variable">$&#123;TARGET_HOSTNAME&#125;</span></span><br><span class="line"><span class="comment"># If hostname is blank set it to &quot;noname&quot;</span></span><br><span class="line">[[ -z <span class="string">&quot;<span class="variable">$HOST</span>&quot;</span> ]] &amp;&amp; HOST=<span class="string">&quot;noname&quot;</span></span><br><span class="line">COUNT=$(<span class="built_in">ls</span> -lad <span class="variable">$LOOTDIR</span>/<span class="variable">$HOST</span>*.<span class="built_in">log</span> | <span class="built_in">wc</span> -l)</span><br><span class="line">COUNT=$((COUNT+<span class="number">1</span>))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">######## ERROR IF NO TARGET IP ########</span></span><br><span class="line"><span class="keyword">if</span> [ -z <span class="string">&quot;<span class="variable">$&#123;TARGET_IP&#125;</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">    LED FAIL</span><br><span class="line">    <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">######## ATTACK ########</span></span><br><span class="line">LED ATTACK</span><br><span class="line">nmap <span class="variable">$NMAP_OPTIONS</span> <span class="variable">$TARGET_IP</span> &gt;&gt; <span class="variable">$LOOTDIR</span>/<span class="variable">$HOST</span>-<span class="variable">$COUNT</span>.<span class="built_in">log</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">######## CLEANUP ########</span></span><br><span class="line">LED CLEANUP</span><br><span class="line"><span class="built_in">sync</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">######## FINISH ########</span></span><br><span class="line">LED FINISH</span><br></pre></td></tr></table></figure>
+
+<p>扫描结果</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ <span class="built_in">pwd</span></span><br><span class="line">/Volumes/BashBunny/loot/nmap</span><br><span class="line">$ <span class="built_in">cat</span> LEHZ5202344-1.10g</span><br><span class="line">Starting Nmap 6.47 http://nmap.org at 2021-01-30 18:26 PST</span><br><span class="line">Nmap scan report <span class="keyword">for</span> 172.16.64.10</span><br><span class="line">Host is up (0.00051s latency).</span><br><span class="line">Not shown:994 filtered ports</span><br><span class="line">PORT</span><br><span class="line">STATE SERVICE</span><br><span class="line">80/tcp</span><br><span class="line">open</span><br><span class="line">http</span><br><span class="line">135/tcp</span><br><span class="line">open msrpc</span><br><span class="line">139/tcp</span><br><span class="line">open netbios-ssn</span><br><span class="line">445/tcp</span><br><span class="line">open microsoft-ds</span><br><span class="line">2701/tcp open</span><br><span class="line">sms-rcinfo</span><br><span class="line">6129/tcp open</span><br><span class="line">unknown</span><br><span class="line">MAC Address:00:11:22:33:44:55 (Cimsys)</span><br><span class="line">Warning:OSScan results may be unreliable because we could not find at least 1 open and 1 closed port</span><br><span class="line">Device <span class="built_in">type</span>:general purpose</span><br><span class="line">Running (JUST GUESSING):Microsoft Windows 2008 (85%)</span><br><span class="line">OS CPE:cpe:/o:microsoft:windows_server_2008:sp1 cpe:/o:microsoft:windows_server_2008:r2</span><br><span class="line">Aggressive os guesses:Microsoft Windows Server 2008 SP1 or Windows Server 2008 R2 (85%)</span><br><span class="line">No exact os matches <span class="keyword">for</span> host (<span class="built_in">test</span> conditions non-ideal).</span><br><span class="line">Network Distance:1 hop</span><br><span class="line">OS detection performed.Please report any incorrect results at http://nmap.org/submit/</span><br><span class="line">Nmap <span class="keyword">done</span>:1 IP address (1 host up)scanned <span class="keyword">in</span> 43.56 seconds</span><br></pre></td></tr></table></figure>
+
+<h4 id="Demo02"><a href="#Demo02" class="headerlink" title="Demo02:"></a>Demo02:</h4><p>查看、分析针对<code>Android/Linux</code>平台的payload，描绘攻击路径。（未有可直接使用<code>Android</code>平台Payload，待开发）</p>
+<h3 id="BadUSB"><a href="#BadUSB" class="headerlink" title="BadUSB"></a>BadUSB</h3><p>对USB HID技术的改进。原有技术依赖于特定的嵌入式开发版，无法在通用USB设备上实现。存在局限性：无法通用；容易被破除设备封装等检测方式发现。</p>
+<p>BadUSB攻击的基本思路是<strong>篡改USB设备中的原有固件，将含有攻击负载的内容写入到设备固件中，从而使得USB设备在接入到目标主机时，通过执行固件中的攻击负载实现攻击功能</strong>. BadUSB攻击的实现虽然需要USB设备支持固件更新这一前提，但是仍然比USB HID攻击具有更好的通用性（据Karsten Nohl称，BadUSB首次提出时可以适用的优盘占当时市场份额的50%以上另外，由于BadUSB攻击实现过程中仅对存储器芯片中存放的固件进行了篡改，并不对USB设备硬件进行任何改变，所以该类攻击的隐蔽性更高.</p>
+<p>BadUSB攻击的出现，不仅仅是在通用性和隐蔽性上对USB HID攻击进行了改进，而且通过篡改设备固件，为攻击者提供了更多的攻击选择. 一方面，攻击者通过修改固件，能够执行的操作不仅仅局限在模拟HID操作，通过借助USB设备控制器可以实现更多的复杂操作；另一方面，具有不同类型和功能配置的USB设备给攻击者提供了更多可能性，例如<strong>攻击者通过对设备固件的篡改，可控制USB网卡设备中本身具备的网络适配器，从而可实现对目标主机网络流量的劫持和监控；还可以通过控制USB存储设备的存储器，实现对目标主机敏感信息的提取和隐蔽存储等.</strong></p>
+<h3 id="驱动漏洞利用"><a href="#驱动漏洞利用" class="headerlink" title="驱动漏洞利用"></a>驱动漏洞利用</h3><p>此部分涉及USB模糊测试相关内容</p>
+<h3 id="USB接口监听"><a href="#USB接口监听" class="headerlink" title="USB接口监听"></a>USB接口监听</h3><p>想要对USB接口流量进行<code>sniff</code>，一般<code>Linux</code>系统需要通过<code>usbmon</code>来实现</p>
+<ul>
+<li><p><a href="https://www.kernel.org/doc/html/latest/usb/usbmon.html">usbmon — The Linux Kernel documentation</a></p>
+</li>
+<li><p><a href="https://www.cnblogs.com/qiynet/p/17754131.html">Linux下USB抓包工具UsbMon的使用和包数据格式解析 - 瘋耔 - 博客园</a></p>
+</li>
+<li><p><a href="https://zhuanlan.zhihu.com/p/267820933">https://zhuanlan.zhihu.com/p/267820933</a></p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 关闭SELinux</span></span><br><span class="line">setenforce 0</span><br><span class="line"><span class="comment"># 可抓包接口list</span></span><br><span class="line">:/data/local/tmp <span class="comment"># ./tcpdump -D</span></span><br><span class="line">1.dummy0 [Up, Running]</span><br><span class="line">2.eth0 [Up, Running, Connected]</span><br><span class="line">3.eth1 [Up, Running, Connected]</span><br><span class="line">4.vlan3 [Up, Running, Connected]</span><br><span class="line">5.vlan5 [Up, Running, Connected]</span><br><span class="line">6.vlan7 [Up, Running, Connected]</span><br><span class="line">7.vlan8 [Up, Running, Connected]</span><br><span class="line">8.vlan9 [Up, Running, Connected]</span><br><span class="line">9.vlan67 [Up, Running, Connected]</span><br><span class="line">10.any (Pseudo-device that captures on all interfaces) [Up, Running]</span><br><span class="line">11.lo [Up, Running, Loopback]</span><br><span class="line">12.wlan0 [Up, Wireless]</span><br><span class="line">13.sit0 [none]</span><br><span class="line">14.p2p0 [Wireless]</span><br><span class="line">15.nflog (Linux netfilter <span class="built_in">log</span> (NFLOG) interface) [none]</span><br><span class="line">16.nfqueue (Linux netfilter queue (NFQUEUE) interface) [none]</span><br><span class="line">17.bond0 [none, Disconnected]</span><br><span class="line"><span class="comment"># 查看驱动安装情况</span></span><br><span class="line">:/data/local/tmp <span class="comment"># lsmod</span></span><br><span class="line">Module                  Size  Used by</span><br><span class="line">ptp_virtual            16384  0</span><br><span class="line">wlan                 6107136  0</span><br><span class="line">emac_dwc_eqos         200704  0</span><br><span class="line">v4l2loopback           40960  4</span><br><span class="line">machine_dlkm          208896  0</span><br><span class="line">stub_dlkm              16384  1</span><br><span class="line">native_dlkm           159744  0</span><br><span class="line">platform_dlkm        3186688  77 native_dlkm</span><br><span class="line">q6_dlkm              1282048  5 machine_dlkm,native_dlkm,platform_dlkm</span><br><span class="line">adsp_loader_dlkm       16384  0</span><br><span class="line">apr_dlkm              229376  4 machine_dlkm,platform_dlkm,q6_dlkm,adsp_loader_dlkm</span><br><span class="line">snd_event_dlkm         16384  3 machine_dlkm,q6_dlkm,apr_dlkm</span><br><span class="line">q6_notifier_dlkm       16384  1 apr_dlkm</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><p><a href="https://www.secrss.com/articles/16837">针对USB接口的安全测试方法研究 - 安全内参 | 决策者的网络安全知识库</a></p>
+</li>
+<li><p>USB设备安全问题及防御方法综述</p>
+</li>
+<li><p><a href="https://www.usbzh.com/article/detail-607.html">USB规范分类大全和USB协议关系树 - USB中文网</a></p>
+</li>
+<li><p><a href="https://evilpan.com/2021/01/24/usb-fun/">USB 协议核心概念与实践 - evilpan</a></p>
+</li>
+<li><p><a href="https://www.usbzh.com/article/detail-110.html">USB 枚举&#x2F;断开过程 - USB中文网</a></p>
+</li>
+<li><p><a href="https://zh.wikipedia.org/wiki/USB%E5%A4%A7%E5%AE%B9%E9%87%8F%E5%AD%98%E5%82%A8%E8%AE%BE%E5%A4%87">USB大容量存储设备 - 维基百科，自由的百科全书</a></p>
+</li>
+<li><p><a href="https://en.wikipedia.org/wiki/USB_On-The-Go">https://en.wikipedia.org/wiki/USB_On-The-Go</a></p>
+</li>
+</ul>
+]]></content>
+      <tags>
+        <tag>IoT Security</tag>
+        <tag>USB</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>CS 106L: Standard C++ Programming课程总结</title>
     <url>/wiki/2024/06/25/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/</url>
     <content><![CDATA[<h2 id="Namespace"><a href="#Namespace" class="headerlink" title="Namespace"></a>Namespace</h2><ul>
@@ -543,164 +899,6 @@
       <tags>
         <tag>C++</tag>
         <tag>Programing</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>USB接口安全测试</title>
-    <url>/wiki/2024/06/29/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>USB已经成为计算机与智能设备的必备接口之一，广泛应用于社会的各个场景。近年来各类硬件产品的安全事件层出不穷，出现了多种针对USB接口的攻击手段，导致相关系统面临着严重的安全风险。简要对于<code>USB</code>接口存在的安全问题进行梳理，并进行测试。</p>
-<span id="more"></span>
-
-<h2 id="USB-101"><a href="#USB-101" class="headerlink" title="USB 101"></a>USB 101</h2><p><img src="https://www.usbzh.com/uploadimg/202105080959336094.png" alt="USB协议分层"></p>
-<p>USB设备的枚举过程如下：</p>
-<ol>
-<li>USB设备插入USB接口后，主机检测D+&#x2F;D-线上的电压，确认有设备连接，USB<a href="https://www.usbzh.com/article/detail-25.html">集线器</a>通过中断<a href="https://www.usbzh.com/article/detail-450.html">IN</a>通道，向主机报告有USB设备连接。</li>
-<li>主机接到通知后，通过<a href="https://www.usbzh.com/article/detail-25.html">集线器</a>设备类请求<a href="https://www.usbzh.com/article/detail-1162.html">GetPortStatus</a>获取更多的信息。然后主机等待100ms等待设备稳定，然后发送<a href="https://www.usbzh.com/article/detail-25.html">集线器</a>设备类请求SetPortStatus,对USB设备进行复位，复位后USB设备的地址为0，这样主机就可以使用地址0与USB设备进行通信,复位后的设备可以从USB总线上获取小于100mA的电流，用于使用默认地址对管道0控制<a href="https://www.usbzh.com/article/detail-691.html">事务</a>响应。</li>
-<li>主机向地址为0（即刚插入的USB设备）的设备端点0（默认端点）发送获取<a href="https://www.usbzh.com/article/detail-104.html">设备描述符</a>的<a href="https://www.usbzh.com/article/detail-417.html">标准请求</a>GetDescriptor。</li>
-<li>USB设备收到请求后，将其预设的<a href="https://www.usbzh.com/article/detail-104.html">设备描述符</a>返回给主机。</li>
-<li>主机收到设备描述符后，返回一个0长度的数据确认包。</li>
-<li>主机对设备再次复位，复位后主机对地址为0的设备端点0发送一个设置地址SetAddress请求（新的设备地址在数据包中）。</li>
-<li>主机发送请求状态返回，设备返回0长度的状态数据包。</li>
-<li>主机收到状态数据包后，发送应答包<a href="https://www.usbzh.com/article/detail-452.html">ACK</a>给设备，设备收到<a href="https://www.usbzh.com/article/detail-452.html">ACK</a>后，启用新的设备地址。</li>
-<li>主机再次使新的地址获取设备描述符GetDescriptor，设备返回地址描述符。</li>
-<li>主机获取第一次<a href="https://www.usbzh.com/article/detail-67.html">配置描述符</a>有前18个字节，设备返回<a href="https://www.usbzh.com/article/detail-67.html">配置描述符</a>的前18个字节，其数据包中含有配置描述符的总长度。</li>
-<li>主机根据配置描述符的总长度再次获取配置描述符，设备返回全总的配置描述符。</li>
-<li>如果还有<a href="https://www.usbzh.com/article/detail-53.html">字符串描述符</a>，系统还会获取<a href="https://www.usbzh.com/article/detail-53.html">字符串描述符</a>。像<a href="https://www.usbzh.com/article/detail-76.html">HID</a>设备还有<a href="https://www.usbzh.com/article/detail-48.html">报告描述符</a>，它也需要单独获取。</li>
-</ol>
-<h2 id="测试工具"><a href="#测试工具" class="headerlink" title="测试工具"></a>测试工具</h2><h3 id="Facedancer"><a href="#Facedancer" class="headerlink" title="Facedancer"></a>Facedancer</h3><blockquote>
-<p>a tool for implementing USB devices in host-side Python using the GoodFET framework. Access to the USB chip is extremely low-level, so protocols may be mis-implemented in all sorts of creative ways. This allows a clever neighbor to quickly find and exploit USB driver vulnerabilities from the comfort of a modern workstation, only later porting such exploits to run standalone. Additionally, we’ll show you some nifty tricks for replacing the firmware of commercial USB devices in order to house your exploits.</p>
-</blockquote>
-<p><img src="http://farm6.staticflickr.com/5333/7397758016_7b01d44ca9.jpg" alt="Facedancer10"></p>
-<p>使用<code>GoodFET</code>框架，在主机端使用Python实现了USB</p>
-<p>使用教程</p>
-<ol>
-<li>首先更新firmware</li>
-</ol>
-<ul>
-<li><p><a href="https://github.com/travisgoodspeed/goodfet/">GitHub - travisgoodspeed&#x2F;goodfet: An embedded bus adapter for various microcontrollers and radios.</a></p>
-</li>
-<li><p><a href="https://github.com/greatscottgadgets/Facedancer">GitHub - greatscottgadgets&#x2F;Facedancer: modern FaceDancer core for multiple devices– including GreatFET</a></p>
-</li>
-</ul>
-<blockquote>
-<p>In Linux, the FTDI drivers are included by default. Be sure that the user has permissions for <code>/dev/ttyUSB0</code>, which will likely require adding that user to the dialout group.</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt-get install -y gcc-msp430 msp430-libc curl wget python-serial <span class="comment"># Ubuntu Xenial</span></span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>由于需要<code>/dev/ttyUSB0</code>权限，将用户加入组中</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo usermod -a -G dialout w3b5h3ll</span><br></pre></td></tr></table></figure>
-
-<p>刷写过程(环境：<code>Python2.7</code>+双头<code>USB mini</code>接口)</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">(base) w3b5h3ll@ubuntu:~/goodfet/firmware$ board=facedancer21 goodfet.bsl --dumpinfo &gt; info.txt</span><br><span class="line">Use -h <span class="keyword">for</span> <span class="built_in">help</span></span><br><span class="line">Use --fromweb to upgrade a GoodFET.</span><br><span class="line">MSP430 Bootstrap Loader Version: 1.39-goodfet-8</span><br><span class="line">Invoking BSL...</span><br><span class="line">Transmit default password ...</span><br><span class="line">Current bootstrap loader version: 2.13 (Device ID: f26f)</span><br><span class="line"></span><br><span class="line"><span class="comment"># update 2023/11</span></span><br><span class="line"><span class="built_in">export</span> board=facedancer21</span><br><span class="line">make</span><br><span class="line">goodfet.bsl ./goodfet.hex</span><br></pre></td></tr></table></figure>
-
-<h3 id="RubberDucky"><a href="#RubberDucky" class="headerlink" title="RubberDucky"></a>RubberDucky</h3><p>一款可以执行<code>HID</code>键盘注入的工具</p>
-<ul>
-<li><a href="https://docs.hak5.org/hak5-usb-rubber-ducky/">USB Rubber Ducky by Hak5 - USB Rubber Ducky</a></li>
-</ul>
-<p><img src="https://shop.hak5.org/cdn/shop/products/usb-rubber-ducky_mk2_2000x.jpg?v=1659974440" alt="USB Rubber Ducky"></p>
-<p>Hak5有自己的脚本语言<code>DuckyScript</code>，官方也提供了诸多Payloads使用</p>
-<ul>
-<li><a href="https://github.com/hak5/usbrubberducky-payloads/">GitHub - hak5&#x2F;usbrubberducky-payloads: The Official USB Rubber Ducky Payload Repository</a></li>
-</ul>
-<p>使用在线IDE进行编译，烧录，将<code>inject.bin</code>拷贝至其根目录即可。想要返回<code>Arming mode</code>：拆件，插入电脑后，按压按钮即可</p>
-<ul>
-<li><a href="https://payloadstudio.hak5.org/community/">https://payloadstudio.hak5.org/community/</a></li>
-</ul>
-<h3 id="BushBunny"><a href="#BushBunny" class="headerlink" title="BushBunny"></a>BushBunny</h3><p>同为Hak5的产品，<code>Bash Bunny</code>更贵，介绍上说比前者更加强大，是一个完整的Linux系统。</p>
-<ul>
-<li><p><a href="https://docs.hak5.org/bash-bunny/">Bash Bunny by Hak5 - Bash Bunny</a></p>
-</li>
-<li><p><a href="https://hackinglab.cz/en/blog/bash-bunny-guide/">Bash Bunny – Guide - Hacking Lab</a></p>
-</li>
-</ul>
-<p><img src="https://3076592524-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FnxJgJ9UdPfrcuL1U8DpL%2Fuploads%2FNY6fwd09yUtu3sRsbNJe%2Fimage.png?alt=media&token=d0880bb8-0e9b-41bd-809e-d3724c8fe234"></p>
-<p>切换到<code>Arming Mode</code>后，串口进入</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">picocom -b 115200 /dev/tty.usbmodemch0000011</span><br><span class="line">root:hak5bunny</span><br></pre></td></tr></table></figure>
-
-<p>同时其作为存储设备，如下目录</p>
-<p><img src="/wiki/2024/06/29/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/2023-11-09-16-05-30-image.png"></p>
-<h2 id="攻击面分析"><a href="#攻击面分析" class="headerlink" title="攻击面分析"></a>攻击面分析</h2><p><img src="/wiki/2024/06/29/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/2023-11-09-12-56-02-image.png"></p>
-<h3 id="攻击负载媒介"><a href="#攻击负载媒介" class="headerlink" title="攻击负载媒介"></a>攻击负载媒介</h3><p>非常典型有震网病毒，通过U盘即突破了物理隔离，不做详细展开</p>
-<p><img src="https://s.secrss.com/anquanneican/702f33f11f8bf9226bb4185e124fefb3.jpg"></p>
-<h3 id="HID攻击"><a href="#HID攻击" class="headerlink" title="HID攻击"></a>HID攻击</h3><blockquote>
-<p>USB人机交互设备（Human Interface Device，HID）是一种非常重要和广泛使用的USB设备类型，被广泛应用于人机交互和少量实时数据传输中，例如键盘、鼠标、游戏杆等应用场景. USB HID设备最主要的特点是可以模拟人和机器的交互过程，能够主动地向连接的主机中传输数据和命令. 同时，基于USB HID协议中的约定，USB HID设备无须安装驱动就能与主机进行交互.</p>
-</blockquote>
-<p>基于HID的攻击有如下特点：</p>
-<ul>
-<li><p>隐蔽性强。攻击原理是模仿用户按键操作，系统不会对输入进行审计。另外恶意代码被隐藏在了芯片的固件中，上层杀软无法进行检测。</p>
-</li>
-<li><p>更高权限。可以获取系统权限。</p>
-</li>
-</ul>
-<p>常见USB HID开发平台</p>
-<p><img src="/wiki/2024/06/29/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/2023-11-09-13-17-25-image.png"></p>
-<p>想要实现<code>HID</code>攻击，设备需要支持<code>Keyboard</code>等人机交互接口类型。利用<code>Umap2</code>框架，可以对目标进行一个初步的USB安全评估（注：该工具需要使用<code>Python2.7</code>启动）</p>
-<ul>
-<li><a href="https://github.com/nccgroup/umap2">GitHub - nccgroup&#x2F;umap2: Umap2 is the second revision of NCC Group’s python based USB host security assessment tool.</a></li>
-</ul>
-<p>Device Emulation</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 获取支持的设备类型</span></span><br><span class="line">↪ umap2list                                                                          (base)</span><br><span class="line">audio</span><br><span class="line">billboard</span><br><span class="line">cdc_acm</span><br><span class="line">ftdi</span><br><span class="line">hub</span><br><span class="line">keyboard</span><br><span class="line">mass_storage</span><br><span class="line">mtp</span><br><span class="line">printer</span><br><span class="line">smartcard</span><br><span class="line"><span class="comment"># emulate -C keyboard</span></span><br><span class="line">umap2emulate -P fd:/dev/tty.usbserial-A10LLJBV -C keyboard -v</span><br></pre></td></tr></table></figure>
-
-<p>Device Support Scanning</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Umap2 can attempt to detect what types of USB devices are supported by the host. </span></span><br><span class="line">umap2scan -P fd:/dev/tty.usbserial-A10LLJBV</span><br></pre></td></tr></table></figure>
-
-<p>确认一下<code>facedancer</code></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">lsusb</span><br><span class="line">Bus 020 Device 012: ID 0403:6001 Future Technology Devices International Limited FT232R USB UART  Serial: A10LLJBV</span><br></pre></td></tr></table></figure>
-
-<p>Vendor Specific Device Support Scanning 厂商设备支持扫描</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># timeout设置5s，条目间隔2s</span></span><br><span class="line">umap2vsscan -P fd:/dev/tty.usbserial-A10LLJBV -d ~/Desktop/MyRepos/umap2/data/vid_pid_db.py -t 5 -b 2</span><br></pre></td></tr></table></figure>
-
-<p>经测试，发现如下，目标支持4种类型：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Found 4 supported device(s):</span><br><span class="line">1.audio</span><br><span class="line">2.hub</span><br><span class="line">3.keyboard</span><br><span class="line">4.mass storage</span><br></pre></td></tr></table></figure>
-
-<h4 id="Demo01-Nmap扫描"><a href="#Demo01-Nmap扫描" class="headerlink" title="Demo01: Nmap扫描"></a>Demo01: Nmap扫描</h4><p>Win10支持<code>RNDIS</code>，即USB网卡，那么可以使用<code>BushBunny</code>配置为相关模式后扫描目标主机</p>
-<blockquote>
-<p>RNDIS（Remote Network Driver Interface Specification，远程网络驱动接口规范）是一个通信协议。它是<a href="https://zh.wikipedia.org/wiki/%E5%BE%AE%E8%BD%AF%E5%85%AC%E5%8F%B8" title="微软公司">微软公司</a>的<a href="https://zh.wikipedia.org/w/index.php?title=%E4%B8%93%E5%88%A9%E5%8D%8F%E8%AE%AE&action=edit&redlink=1">专利协议</a>，被大多数<a href="https://zh.wikipedia.org/wiki/Windows" title="Windows">Windows</a>、<a href="https://zh.wikipedia.org/wiki/Linux" title="Linux">Linux</a>和<a href="https://zh.wikipedia.org/wiki/Unix" title="Unix">Unix</a>系统所支持。它主要使用<a href="https://zh.wikipedia.org/wiki/USB" title="USB">USB</a>协议作为其下层传输，它向上层提供虚拟的<a href="https://zh.wikipedia.org/wiki/%E4%BB%A5%E5%A4%AA%E7%BD%91" title="以太网">以太网</a>连接。</p>
-</blockquote>
-<p>Payload如下</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Title:         Nmapper for Bash Bunny</span></span><br><span class="line"><span class="comment"># Author:        Hak5Darren</span></span><br><span class="line"><span class="comment"># Version:       1.1</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Scans target with nmap using specified options</span></span><br><span class="line"><span class="comment"># Saves sequential logs to mass storage loot folder</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Red ...........Setup</span></span><br><span class="line"><span class="comment"># Red Blinking...Setup Failed. Target did not obtain IP address. Exit.</span></span><br><span class="line"><span class="comment"># Amber..........Scanning</span></span><br><span class="line"><span class="comment"># White..........Switching to Mass Storage (optional)</span></span><br><span class="line"><span class="comment"># Green..........Finished</span></span><br><span class="line"><span class="comment"># </span></span><br><span class="line"><span class="comment"># See nmap --help for options. Default &quot;-O --fuzzy&quot; profiles target OS.</span></span><br><span class="line">NMAP_OPTIONS=<span class="string">&quot;-O --fuzzy&quot;</span></span><br><span class="line">LOOTDIR=/root/udisk/loot/nmap</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">######## INITIALIZATION ########</span></span><br><span class="line">LED SETUP</span><br><span class="line"><span class="comment"># Use RNDIS for Windows. Mac/*nix use ECM_ETHERNET</span></span><br><span class="line">ATTACKMODE RNDIS_ETHERNET </span><br><span class="line"><span class="comment">#ATTACKMODE ECM_ETHERNET</span></span><br><span class="line">GET TARGET_IP</span><br><span class="line">GET TARGET_HOSTNAME</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">######## MAKE LOOT DIRECTORY ########</span></span><br><span class="line"><span class="comment"># Setup named logs in loot directory</span></span><br><span class="line"><span class="built_in">mkdir</span> -p <span class="variable">$LOOTDIR</span></span><br><span class="line">HOST=<span class="variable">$&#123;TARGET_HOSTNAME&#125;</span></span><br><span class="line"><span class="comment"># If hostname is blank set it to &quot;noname&quot;</span></span><br><span class="line">[[ -z <span class="string">&quot;<span class="variable">$HOST</span>&quot;</span> ]] &amp;&amp; HOST=<span class="string">&quot;noname&quot;</span></span><br><span class="line">COUNT=$(<span class="built_in">ls</span> -lad <span class="variable">$LOOTDIR</span>/<span class="variable">$HOST</span>*.<span class="built_in">log</span> | <span class="built_in">wc</span> -l)</span><br><span class="line">COUNT=$((COUNT+<span class="number">1</span>))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">######## ERROR IF NO TARGET IP ########</span></span><br><span class="line"><span class="keyword">if</span> [ -z <span class="string">&quot;<span class="variable">$&#123;TARGET_IP&#125;</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">    LED FAIL</span><br><span class="line">    <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">######## ATTACK ########</span></span><br><span class="line">LED ATTACK</span><br><span class="line">nmap <span class="variable">$NMAP_OPTIONS</span> <span class="variable">$TARGET_IP</span> &gt;&gt; <span class="variable">$LOOTDIR</span>/<span class="variable">$HOST</span>-<span class="variable">$COUNT</span>.<span class="built_in">log</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">######## CLEANUP ########</span></span><br><span class="line">LED CLEANUP</span><br><span class="line"><span class="built_in">sync</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">######## FINISH ########</span></span><br><span class="line">LED FINISH</span><br></pre></td></tr></table></figure>
-
-<p>扫描结果</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ <span class="built_in">pwd</span></span><br><span class="line">/Volumes/BashBunny/loot/nmap</span><br><span class="line">$ <span class="built_in">cat</span> LEHZ5202344-1.10g</span><br><span class="line">Starting Nmap 6.47 http://nmap.org at 2021-01-30 18:26 PST</span><br><span class="line">Nmap scan report <span class="keyword">for</span> 172.16.64.10</span><br><span class="line">Host is up (0.00051s latency).</span><br><span class="line">Not shown:994 filtered ports</span><br><span class="line">PORT</span><br><span class="line">STATE SERVICE</span><br><span class="line">80/tcp</span><br><span class="line">open</span><br><span class="line">http</span><br><span class="line">135/tcp</span><br><span class="line">open msrpc</span><br><span class="line">139/tcp</span><br><span class="line">open netbios-ssn</span><br><span class="line">445/tcp</span><br><span class="line">open microsoft-ds</span><br><span class="line">2701/tcp open</span><br><span class="line">sms-rcinfo</span><br><span class="line">6129/tcp open</span><br><span class="line">unknown</span><br><span class="line">MAC Address:00:11:22:33:44:55 (Cimsys)</span><br><span class="line">Warning:OSScan results may be unreliable because we could not find at least 1 open and 1 closed port</span><br><span class="line">Device <span class="built_in">type</span>:general purpose</span><br><span class="line">Running (JUST GUESSING):Microsoft Windows 2008 (85%)</span><br><span class="line">OS CPE:cpe:/o:microsoft:windows_server_2008:sp1 cpe:/o:microsoft:windows_server_2008:r2</span><br><span class="line">Aggressive os guesses:Microsoft Windows Server 2008 SP1 or Windows Server 2008 R2 (85%)</span><br><span class="line">No exact os matches <span class="keyword">for</span> host (<span class="built_in">test</span> conditions non-ideal).</span><br><span class="line">Network Distance:1 hop</span><br><span class="line">OS detection performed.Please report any incorrect results at http://nmap.org/submit/</span><br><span class="line">Nmap <span class="keyword">done</span>:1 IP address (1 host up)scanned <span class="keyword">in</span> 43.56 seconds</span><br></pre></td></tr></table></figure>
-
-<h4 id="Demo02"><a href="#Demo02" class="headerlink" title="Demo02:"></a>Demo02:</h4><p>查看、分析针对<code>Android/Linux</code>平台的payload，描绘攻击路径。（未有可直接使用<code>Android</code>平台Payload，待开发）</p>
-<h3 id="BadUSB"><a href="#BadUSB" class="headerlink" title="BadUSB"></a>BadUSB</h3><p>对USB HID技术的改进。原有技术依赖于特定的嵌入式开发版，无法在通用USB设备上实现。存在局限性：无法通用；容易被破除设备封装等检测方式发现。</p>
-<p>BadUSB攻击的基本思路是<strong>篡改USB设备中的原有固件，将含有攻击负载的内容写入到设备固件中，从而使得USB设备在接入到目标主机时，通过执行固件中的攻击负载实现攻击功能</strong>. BadUSB攻击的实现虽然需要USB设备支持固件更新这一前提，但是仍然比USB HID攻击具有更好的通用性（据Karsten Nohl称，BadUSB首次提出时可以适用的优盘占当时市场份额的50%以上另外，由于BadUSB攻击实现过程中仅对存储器芯片中存放的固件进行了篡改，并不对USB设备硬件进行任何改变，所以该类攻击的隐蔽性更高.</p>
-<p>BadUSB攻击的出现，不仅仅是在通用性和隐蔽性上对USB HID攻击进行了改进，而且通过篡改设备固件，为攻击者提供了更多的攻击选择. 一方面，攻击者通过修改固件，能够执行的操作不仅仅局限在模拟HID操作，通过借助USB设备控制器可以实现更多的复杂操作；另一方面，具有不同类型和功能配置的USB设备给攻击者提供了更多可能性，例如<strong>攻击者通过对设备固件的篡改，可控制USB网卡设备中本身具备的网络适配器，从而可实现对目标主机网络流量的劫持和监控；还可以通过控制USB存储设备的存储器，实现对目标主机敏感信息的提取和隐蔽存储等.</strong></p>
-<h3 id="驱动漏洞利用"><a href="#驱动漏洞利用" class="headerlink" title="驱动漏洞利用"></a>驱动漏洞利用</h3><p>此部分涉及USB模糊测试相关内容</p>
-<h3 id="USB接口监听"><a href="#USB接口监听" class="headerlink" title="USB接口监听"></a>USB接口监听</h3><p>想要对USB接口流量进行<code>sniff</code>，一般<code>Linux</code>系统需要通过<code>usbmon</code>来实现</p>
-<ul>
-<li><p><a href="https://www.kernel.org/doc/html/latest/usb/usbmon.html">usbmon — The Linux Kernel documentation</a></p>
-</li>
-<li><p><a href="https://www.cnblogs.com/qiynet/p/17754131.html">Linux下USB抓包工具UsbMon的使用和包数据格式解析 - 瘋耔 - 博客园</a></p>
-</li>
-<li><p><a href="https://zhuanlan.zhihu.com/p/267820933">https://zhuanlan.zhihu.com/p/267820933</a></p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 关闭SELinux</span></span><br><span class="line">setenforce 0</span><br><span class="line"><span class="comment"># 可抓包接口list</span></span><br><span class="line">:/data/local/tmp <span class="comment"># ./tcpdump -D</span></span><br><span class="line">1.dummy0 [Up, Running]</span><br><span class="line">2.eth0 [Up, Running, Connected]</span><br><span class="line">3.eth1 [Up, Running, Connected]</span><br><span class="line">4.vlan3 [Up, Running, Connected]</span><br><span class="line">5.vlan5 [Up, Running, Connected]</span><br><span class="line">6.vlan7 [Up, Running, Connected]</span><br><span class="line">7.vlan8 [Up, Running, Connected]</span><br><span class="line">8.vlan9 [Up, Running, Connected]</span><br><span class="line">9.vlan67 [Up, Running, Connected]</span><br><span class="line">10.any (Pseudo-device that captures on all interfaces) [Up, Running]</span><br><span class="line">11.lo [Up, Running, Loopback]</span><br><span class="line">12.wlan0 [Up, Wireless]</span><br><span class="line">13.sit0 [none]</span><br><span class="line">14.p2p0 [Wireless]</span><br><span class="line">15.nflog (Linux netfilter <span class="built_in">log</span> (NFLOG) interface) [none]</span><br><span class="line">16.nfqueue (Linux netfilter queue (NFQUEUE) interface) [none]</span><br><span class="line">17.bond0 [none, Disconnected]</span><br><span class="line"><span class="comment"># 查看驱动安装情况</span></span><br><span class="line">:/data/local/tmp <span class="comment"># lsmod</span></span><br><span class="line">Module                  Size  Used by</span><br><span class="line">ptp_virtual            16384  0</span><br><span class="line">wlan                 6107136  0</span><br><span class="line">emac_dwc_eqos         200704  0</span><br><span class="line">v4l2loopback           40960  4</span><br><span class="line">machine_dlkm          208896  0</span><br><span class="line">stub_dlkm              16384  1</span><br><span class="line">native_dlkm           159744  0</span><br><span class="line">platform_dlkm        3186688  77 native_dlkm</span><br><span class="line">q6_dlkm              1282048  5 machine_dlkm,native_dlkm,platform_dlkm</span><br><span class="line">adsp_loader_dlkm       16384  0</span><br><span class="line">apr_dlkm              229376  4 machine_dlkm,platform_dlkm,q6_dlkm,adsp_loader_dlkm</span><br><span class="line">snd_event_dlkm         16384  3 machine_dlkm,q6_dlkm,apr_dlkm</span><br><span class="line">q6_notifier_dlkm       16384  1 apr_dlkm</span><br></pre></td></tr></table></figure>
-
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><p><a href="https://www.secrss.com/articles/16837">针对USB接口的安全测试方法研究 - 安全内参 | 决策者的网络安全知识库</a></p>
-</li>
-<li><p>USB设备安全问题及防御方法综述</p>
-</li>
-<li><p><a href="https://www.usbzh.com/article/detail-607.html">USB规范分类大全和USB协议关系树 - USB中文网</a></p>
-</li>
-<li><p><a href="https://evilpan.com/2021/01/24/usb-fun/">USB 协议核心概念与实践 - evilpan</a></p>
-</li>
-<li><p><a href="https://www.usbzh.com/article/detail-110.html">USB 枚举&#x2F;断开过程 - USB中文网</a></p>
-</li>
-<li><p><a href="https://zh.wikipedia.org/wiki/USB%E5%A4%A7%E5%AE%B9%E9%87%8F%E5%AD%98%E5%82%A8%E8%AE%BE%E5%A4%87">USB大容量存储设备 - 维基百科，自由的百科全书</a></p>
-</li>
-<li><p><a href="https://en.wikipedia.org/wiki/USB_On-The-Go">https://en.wikipedia.org/wiki/USB_On-The-Go</a></p>
-</li>
-</ul>
-]]></content>
-      <tags>
-        <tag>IoT Security</tag>
-        <tag>USB</tag>
       </tags>
   </entry>
   <entry>

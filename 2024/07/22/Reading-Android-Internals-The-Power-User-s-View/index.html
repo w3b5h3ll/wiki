@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/wiki/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/wiki/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/wiki/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/wiki/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/wiki/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lora:300,300italic,400,400italic,700,700italic|serif:300,300italic,400,400italic,700,700italic|Noto+Serif+SC:300,300italic,400,400italic,700,700italic|Fira+Code:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14.0/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/pace-js@1.0.2/themes/blue/pace-theme-minimal.css">
+  <script src="//cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"w3b5h3ll.github.io","root":"/wiki/","scheme":"Muse","version":"8.0.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"buttons","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+
+  <meta name="description" content="注：实验以手头上的Android10进行 initUNIX系统启动后的，用户态第一个进程：init进程。Android中init进程的不同之处  支持系统属性，使用rc文件规定行为 化身为ueventd和watchdogd   &#x2F;init是一个静态链接的二进制文件  &#x2F;init执行时，只有boot分区的RAM disk被mount上来了，即root文件系统  系统属性全局访问的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Reading: Android Internals(The Power User&#39;s View)">
+<meta property="og:url" content="https://w3b5h3ll.github.io/wiki/2024/07/22/Reading-Android-Internals-The-Power-User-s-View/index.html">
+<meta property="og:site_name" content="尘埃落定的WIKI">
+<meta property="og:description" content="注：实验以手头上的Android10进行 initUNIX系统启动后的，用户态第一个进程：init进程。Android中init进程的不同之处  支持系统属性，使用rc文件规定行为 化身为ueventd和watchdogd   &#x2F;init是一个静态链接的二进制文件  &#x2F;init执行时，只有boot分区的RAM disk被mount上来了，即root文件系统  系统属性全局访问的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://w3b5h3ll.github.io/wiki/2024/07/22/Reading-Android-Internals-The-Power-User-s-View/Reading-Android-Internals-The-Power-User-s-View/image-20240722145644260.png">
+<meta property="og:image" content="https://w3b5h3ll.github.io/wiki/2024/07/22/Reading-Android-Internals-The-Power-User-s-View/Reading-Android-Internals-The-Power-User-s-View/image-20240722150526934.png">
+<meta property="og:image" content="https://w3b5h3ll.github.io/wiki/2024/07/22/Reading-Android-Internals-The-Power-User-s-View/Reading-Android-Internals-The-Power-User-s-View/image-20240722153256302.png">
+<meta property="og:image" content="https://w3b5h3ll.github.io/wiki/2024/07/22/Reading-Android-Internals-The-Power-User-s-View/Reading-Android-Internals-The-Power-User-s-View/image-20240722163110619.png">
+<meta property="og:image" content="https://w3b5h3ll.github.io/wiki/2024/07/22/Reading-Android-Internals-The-Power-User-s-View/Reading-Android-Internals-The-Power-User-s-View/4470817.png">
+<meta property="article:published_time" content="2024-07-22T06:51:02.000Z">
+<meta property="article:modified_time" content="2024-07-22T23:47:50.302Z">
+<meta property="article:author" content="w3b5h3ll">
+<meta property="article:tag" content="Android System">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://w3b5h3ll.github.io/wiki/2024/07/22/Reading-Android-Internals-The-Power-User-s-View/Reading-Android-Internals-The-Power-User-s-View/image-20240722145644260.png">
+
+
+<link rel="canonical" href="https://w3b5h3ll.github.io/wiki/2024/07/22/Reading-Android-Internals-The-Power-User-s-View/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Reading: Android Internals(The Power User's View) | 尘埃落定的WIKI</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/wiki/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">尘埃落定的WIKI</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">嘩啦啦啦啦 天在下雨 嘩啦啦啦啦 雲在哭泣 ......</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/wiki/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/wiki/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#init"><span class="nav-number">1.</span> <span class="nav-text">init</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E5%B1%9E%E6%80%A7"><span class="nav-number">1.1.</span> <span class="nav-text">系统属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rc"><span class="nav-number">1.2.</span> <span class="nav-text">.rc</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93%EF%BC%9Ainit%E7%9A%84%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B"><span class="nav-number">1.3.</span> <span class="nav-text">总结：init的执行流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#init%E5%92%8CUSB"><span class="nav-number">1.4.</span> <span class="nav-text">init和USB</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#init%E7%9A%84%E5%85%B6%E4%BB%96%E8%A7%92%E8%89%B2"><span class="nav-number">1.5.</span> <span class="nav-text">init的其他角色</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android%E7%B3%BB%E7%BB%9F%E4%B8%8A%E7%9A%84%E5%AE%88%E6%8A%A4%E8%BF%9B%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">Android系统上的守护进程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Core%E7%B1%BB%E6%9C%8D%E5%8A%A1"><span class="nav-number">2.1.</span> <span class="nav-text">Core类服务</span></a></li></ol></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">w3b5h3ll</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/wiki/archives">
+          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/wiki/tags/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/w3b5h3ll" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;w3b5h3ll" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </section>
+        <div class="back-to-top animated">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+      
+
+      
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://w3b5h3ll.github.io/wiki/2024/07/22/Reading-Android-Internals-The-Power-User-s-View/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/wiki/images/avatar.gif">
+      <meta itemprop="name" content="w3b5h3ll">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="尘埃落定的WIKI">
+    </span>
+
+    
+    
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Reading: Android Internals(The Power User's View)
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-07-22 14:51:02" itemprop="dateCreated datePublished" datetime="2024-07-22T14:51:02+08:00">2024-07-22</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2024-07-23 07:47:50" itemprop="dateModified" datetime="2024-07-23T07:47:50+08:00">2024-07-23</time>
+      </span>
+
+  
+    <span id="/wiki/2024/07/22/Reading-Android-Internals-The-Power-User-s-View/" class="post-meta-item leancloud_visitors" data-flag-title="Reading: Android Internals(The Power User's View)" title="阅读次数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span class="leancloud-visitors-count"></span>
+    </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/wiki/2024/07/22/Reading-Android-Internals-The-Power-User-s-View/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/wiki/2024/07/22/Reading-Android-Internals-The-Power-User-s-View/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>注：实验以手头上的Android10进行</p>
+<h2 id="init"><a href="#init" class="headerlink" title="init"></a>init</h2><p>UNIX系统启动后的，用户态第一个进程：init进程。Android中init进程的不同之处</p>
+<ul>
+<li>支持系统属性，使用rc文件规定行为</li>
+<li>化身为ueventd和watchdogd</li>
+</ul>
+<p><img src="/wiki/2024/07/22/Reading-Android-Internals-The-Power-User-s-View/Reading-Android-Internals-The-Power-User-s-View/image-20240722145644260.png" alt="image-20240722145644260"></p>
+<p>&#x2F;init是一个静态链接的二进制文件</p>
+<ul>
+<li>&#x2F;init执行时，只有boot分区的RAM disk被mount上来了，即root文件系统</li>
+</ul>
+<h3 id="系统属性"><a href="#系统属性" class="headerlink" title="系统属性"></a>系统属性</h3><p>全局访问的配置设置，如下加载顺序</p>
+<p><img src="/wiki/2024/07/22/Reading-Android-Internals-The-Power-User-s-View/Reading-Android-Internals-The-Power-User-s-View/image-20240722150526934.png" alt="image-20240722150526934"></p>
+<p>&#x2F;init作为所有进程的初始，执行了系统属性的初始化</p>
+<ul>
+<li>property_init(), 安装系统属性<ul>
+<li>先创建<code>/dev/__properties__</code>，然后map到内存<code>__system_proterty_area</code></li>
+<li>再次以只读模式打开，获得描述符，并可被子进程继承</li>
+<li>最后unlink该文件，此时其他人再也无法打开文件</li>
+</ul>
+</li>
+</ul>
+<p>属性被存储在了一个混合trie&#x2F;binary树结构上</p>
+<p>property_sevice</p>
+<ul>
+<li>提供写系统属性的服务</li>
+<li>&#x2F;dev&#x2F;socket&#x2F;property_service, 一个UNIX域套接字<ul>
+<li>检查该socket的caller，如果有权限，那么可写</li>
+</ul>
+</li>
+</ul>
+<p>属性访问方法</p>
+<ul>
+<li>getprop&#x2F;setprop</li>
+<li>watchprops(Android 10未有该命令)</li>
+</ul>
+<h3 id="rc"><a href="#rc" class="headerlink" title=".rc"></a>.rc</h3><p>主配置文件，&#x2F;init.rc</p>
+<p>从Android 4.x版本开始，&#x2F;init.rc被硬编码了，其他rc可以通过import进行导入。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">marlin:/ <span class="comment"># cat /init.rc |grep import                                                                                                                                                    </span></span><br><span class="line">import /init.environ.rc</span><br><span class="line">import /init.usb.rc</span><br><span class="line">import /init.<span class="variable">$&#123;ro.hardware&#125;</span>.rc</span><br><span class="line">import /vendor/etc/init/hw/init.<span class="variable">$&#123;ro.hardware&#125;</span>.rc</span><br><span class="line">import /init.usb.configfs.rc</span><br><span class="line">import /init.<span class="variable">$&#123;ro.zygote&#125;</span>.rc</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>.rc文件的描述</p>
+<ul>
+<li>trigger语句，条件满足时触发执行<ul>
+<li>预定义的启动阶段，或者属性值设置</li>
+</ul>
+</li>
+<li>service，定义守护进程</li>
+</ul>
+<p><img src="/wiki/2024/07/22/Reading-Android-Internals-The-Power-User-s-View/Reading-Android-Internals-The-Power-User-s-View/image-20240722153256302.png" alt="image-20240722153256302"></p>
+<p>init.rc语法以及命令集</p>
+<ul>
+<li><strong>COMMAND</strong>关键字，trigger语句或<strong>启动阶段</strong>执行的动作</li>
+<li><strong>OPTION</strong>，修改服务状态，只在service关键字开头的语句块中有效</li>
+</ul>
+<p>以系统中的&#x2F;init.rc文件进行说明</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="comment"># 充电模式，class_[start|stop]，启动以class指定的server_class相关的所有服务</span></span><br><span class="line">on charger</span><br><span class="line">    class_start charger</span><br><span class="line">    </span><br><span class="line">...</span><br><span class="line"><span class="comment">## Daemon processes to be run by init.</span></span><br><span class="line"><span class="comment">##</span></span><br><span class="line">service ueventd /system/bin/ueventd</span><br><span class="line"><span class="comment"># OPTION关键字</span></span><br><span class="line"><span class="comment"># class，将服务加入core组</span></span><br><span class="line">    class core</span><br><span class="line"><span class="comment"># 定义为一个关键服务，可以自启，如果crash超过预置上限，进入recovery模式</span></span><br><span class="line">    critical</span><br><span class="line"><span class="comment"># 设置SELinux标签</span></span><br><span class="line">    seclabel u:r:ueventd:s0</span><br><span class="line">    shutdown critical</span><br></pre></td></tr></table></figure>
+
+<p>启动服务</p>
+<p>init使用fork()方式启动服务子进程，并维护一个指向该服务的父链接</p>
+<ul>
+<li><p>如果服务crash，init收到<code>SIGCHLD</code>信号后就可以重启服务</p>
+</li>
+<li><p>onrestart, 列出重启该服务需要执行的命令。通常用来重启其他依赖服务</p>
+</li>
+<li><p>init维护一个服务状态属性，init.svc.sevice</p>
+</li>
+</ul>
+<p><u><strong>组合键 &#x2F;dev&#x2F;keychord</strong></u></p>
+<p>init可以定义组合键启动的服务</p>
+<ul>
+<li><strong>keycodes</strong>关键字</li>
+</ul>
+<p>要支持组合键，满足条件</p>
+<ul>
+<li>&#x2F;dev&#x2F;keychord文件，keychord内核驱动导出的设备节点</li>
+<li>内核编译时使用<code>INPUT_KEYCHORD</code></li>
+</ul>
+<p>mount文件系统</p>
+<p>&#x2F;init进程刚刚启动时候，只有&#x2F;根文件系统，需要mount如&#x2F;system文件系统来启动上面的守护进程</p>
+<ul>
+<li>vold，卷管理守护进程（Android10，未有fs阶段）</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">on early-fs</span><br><span class="line">    <span class="comment"># Once metadata has been mounted, we&#x27;ll need vold to deal with userdata checkpointing</span></span><br><span class="line">    start vold</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">marlin:/ <span class="comment"># cat /vendor/etc/fstab.marlin                                                                                                                                                 </span></span><br><span class="line"><span class="comment"># Android fstab file.</span></span><br><span class="line"><span class="comment"># The filesystem that contains the filesystem e2fsck binary (typically /system) cannot</span></span><br><span class="line"><span class="comment"># specify &#x27;check&#x27;, and must come before any filesystems that do specify &#x27;check&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># <span class="doctag">NOTE:</span> /vendor partition is now early-mounted and the fstab entry is specified in device tree:</span></span><br><span class="line"><span class="comment">#       /proc/device-tree/firmware/android/fstab/vendor</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#&lt;src&gt;                                                  &lt;mnt_point&gt;         &lt;type&gt;  &lt;mnt_flags and options&gt;     &lt;fs_mgr_flags&gt;</span></span><br><span class="line">/dev/block/platform/soc/624000.ufshc/by-name/system     /                   ext4    ro,barrier=1                <span class="built_in">wait</span>,slotselect,verify</span><br><span class="line">/dev/block/platform/soc/624000.ufshc/by-name/modem      /firmware/radio     vfat    ro,shortname=lower,uid=1000,gid=0,dmask=227,fmask=337,context=u:object_r:firmware_file:s0   <span class="built_in">wait</span>,slotselect</span><br><span class="line">/dev/block/platform/soc/624000.ufshc/by-name/userdata   /data               ext4    errors=panic,noatime,nosuid,nodev,barrier=1,noauto_da_alloc  latemount,<span class="built_in">wait</span>,check,formattable,fileencryption=ice,quota,reservedsize=128M</span><br><span class="line">/dev/block/zram0                                        none                swap    defaults                    zramsize=536870912,max_comp_streams=4</span><br><span class="line">/dev/block/platform/soc/624000.ufshc/by-name/misc       /misc               emmc    defaults                    defaults</span><br><span class="line">/devices/*/xhci-hcd.0.auto/usb*                         auto                vfat    defaults                    voldmanaged=usb:auto</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="总结：init的执行流程"><a href="#总结：init的执行流程" class="headerlink" title="总结：init的执行流程"></a>总结：init的执行流程</h3><p>建立服务的经典模式：初始化，然后loop</p>
+<p>run-loop</p>
+<ul>
+<li>execute_one_command()，从action_queue头部取出action并执行</li>
+<li>restart_processed()，检查已注册服务，必要时重启</li>
+<li>轮询如下三个socket<ul>
+<li>property_set_fd, 设置属性相关</li>
+<li>keychord_fd，如果存在，检查组合键</li>
+<li>signal_recv_fd, 处理SIGCHLD信号，处理子进程</li>
+</ul>
+</li>
+</ul>
+<h3 id="init和USB"><a href="#init和USB" class="headerlink" title="init和USB"></a>init和USB</h3><p>Android设备通过USB连接后的角色由<code>sys.usb.config</code>决定。</p>
+<ul>
+<li>根据请求，通过修改该值，将Android模拟成为各种设备</li>
+<li>向如下的各个伪文件写入数据，另外一端就是USB gadget driver，一个多功能驱动</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">marlin:/proc/1 <span class="comment"># ls /sys/class/android_usb/android0/                                                                                                                                    </span></span><br><span class="line">bDeviceClass              f_accessory/              f_ecm/                    f_ncm/                    f_usb_mbim/               idle_pc_rpm_no_int_secs   uevent</span><br><span class="line">bDeviceProtocol           f_acm/                    f_ecm_qc/                 f_ptp/                    <span class="built_in">functions</span>                 pm_qos                    up_pm_qos_sample_sec</span><br><span class="line">bDeviceSubClass           f_audio/                  f_ffs/                    f_qdss/                   iManufacturer             pm_qos_state              up_pm_qos_threshold</span><br><span class="line">bcdDevice                 f_audio_source/           f_gps/                    f_rmnet/                  iProduct                  power/</span><br><span class="line">down_pm_qos_sample_sec    f_ccid/                   f_mass_storage/           f_rndis/                  iSerial                   remote_wakeup</span><br><span class="line">down_pm_qos_threshold     f_charging/               f_midi/                   f_rndis_qc/               idProduct                 state</span><br><span class="line"><span class="built_in">enable</span>                    f_diag/                   f_mtp/                    f_serial/                 idVendor                  subsystem/</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/2024/07/22/Reading-Android-Internals-The-Power-User-s-View/Reading-Android-Internals-The-Power-User-s-View/image-20240722163110619.png" alt="image-20240722163110619"></p>
+<p>USB标识信息</p>
+<ul>
+<li>iProduct</li>
+<li>iSerial</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">-rw-r--r-- 1 root root 4096 2024-07-22 16:37 iProduct</span><br><span class="line">-rw-r--r-- 1 root root 4096 2024-07-22 16:37 iSerial</span><br><span class="line">-rw-r--r-- 1 root root 4096 2024-07-22 16:37 idProduct</span><br><span class="line">-rw-r--r-- 1 root root 4096 2024-07-22 16:37 idVendor</span><br><span class="line">-rw-r--r-- 1 root root 4096 2024-07-22 16:38 idle_pc_rpm_no_int_secs</span><br><span class="line">-rw-r--r-- 1 root root 4096 2024-07-22 16:38 pm_qos</span><br><span class="line">-r--r--r-- 1 root root 4096 2024-07-22 16:38 pm_qos_state</span><br><span class="line">drwxr-xr-x 2 root root    0 1973-05-20 08:35 power</span><br><span class="line">-rw-r--r-- 1 root root 4096 2024-07-22 16:38 remote_wakeup</span><br><span class="line">-r--r--r-- 1 root root 4096 2024-07-22 16:38 state</span><br><span class="line">lrwxrwxrwx 1 root root    0 2024-07-22 16:38 subsystem -&gt; ../../../../class/android_usb</span><br><span class="line">-rw-r--r-- 1 root root 4096 1973-05-20 08:35 uevent</span><br><span class="line">-rw-r--r-- 1 root root 4096 2024-07-22 16:38 up_pm_qos_sample_sec</span><br><span class="line">-rw-r--r-- 1 root root 4096 2024-07-22 16:38 up_pm_qos_threshold</span><br><span class="line">marlin:/sys/class/android_usb/android0 <span class="comment"># </span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="init的其他角色"><a href="#init的其他角色" class="headerlink" title="init的其他角色"></a>init的其他角色</h3><p>ueventd</p>
+<p>管理硬件设备，&#x2F;ueventd.rc配置文件</p>
+<ul>
+<li>设置文件权限</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># kms driver for drm based gpu</span></span><br><span class="line">/dev/dri/*                0666   root       graphics</span><br><span class="line"></span><br><span class="line"><span class="comment"># these should not be world writable</span></span><br><span class="line">/dev/uhid                 0660   uhid       uhid</span><br><span class="line">/dev/uinput               0660   uhid       uhid</span><br><span class="line">/dev/rtc0                 0640   system     system</span><br><span class="line">/dev/tty0                 0660   root       system</span><br><span class="line">/dev/graphics/*           0660   root       graphics</span><br><span class="line">/dev/input/*              0660   root       input</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/2024/07/22/Reading-Android-Internals-The-Power-User-s-View/Reading-Android-Internals-The-Power-User-s-View/4470817.png" alt="img"></p>
+<p>watchdogd</p>
+<p>硬件定时器，每隔一段时间就发送一个keepalive信号。</p>
+<ul>
+<li>如果超时未能发送，该定时器会发出中断，<strong>内核重启</strong></li>
+</ul>
+<h2 id="Android系统上的守护进程"><a href="#Android系统上的守护进程" class="headerlink" title="Android系统上的守护进程"></a>Android系统上的守护进程</h2><p>daemons被定义在&#x2F;init.rc中的service块，它们所属的<strong>分类</strong>很重要。</p>
+<p>启动顺序</p>
+<ol>
+<li><code>core</code>类服务</li>
+<li><code>main</code>类服务</li>
+</ol>
+<h3 id="Core类服务"><a href="#Core类服务" class="headerlink" title="Core类服务"></a>Core类服务</h3><p>此类服务无需访问&#x2F;data分区，无需等待&#x2F;data分区mount</p>
+<p>adbd</p>
+<ul>
+<li>adb直接使用</li>
+<li>ddms间接使用</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>w3b5h3ll
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://w3b5h3ll.github.io/wiki/2024/07/22/Reading-Android-Internals-The-Power-User-s-View/" title="Reading: Android Internals(The Power User&#39;s View)">https://w3b5h3ll.github.io/wiki/2024/07/22/Reading-Android-Internals-The-Power-User-s-View/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/wiki/tags/Android-System/" rel="tag"># Android System</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/wiki/2024/07/16/x86%E6%9E%B6%E6%9E%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%8E%A2%E7%A9%B6/" rel="prev" title="x86架构数据类型探究">
+                  <i class="fa fa-chevron-left"></i> x86架构数据类型探究
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+  
+  
+  
+
+
+
+      
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      
+
+      
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">w3b5h3ll</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+<script src="/wiki/js/utils.js"></script><script src="/wiki/js/motion.js"></script><script src="/wiki/js/schemes/muse.js"></script><script src="/wiki/js/next-boot.js"></script>
+
+  
+
+
+
+
+  <script src="/wiki/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8.7.0/dist/mermaid.min.js', () => {
+    mermaid.init({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    }, '.mermaid');
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+NexT.utils.loadComments('#valine-comments', () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', () => {
+    new Valine(Object.assign({
+      el  : '#valine-comments',
+      path: "/wiki/2024/07/22/Reading-Android-Internals-The-Power-User-s-View/",
+    }, {"enable":true,"appId":"htEoF16VKxb4kS3oG0LReLBz-MdYXbMMI","appKey":"P7rwEt21RTK0B11XxuTwjss2","serverURLs":"https://hteof16v.api.lncldglobal.com","placeholder":"Just go go","avatar":"mm","meta":["nick","mail","link"],"pageSize":10,"visitor":true,"comment_count":true,"recordIP":false}
+    ));
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
