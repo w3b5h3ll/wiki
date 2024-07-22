@@ -32,15 +32,15 @@
 <meta property="og:site_name" content="尘埃落定的WIKI">
 <meta property="og:description" content="ADB架构以及命令总结 Under the hood client通过本地的server与远端的daemon进程通信。  client执行子命令 server提供client与adbd直接的代理 daemon运行在目标设备上  ADB两个角色  提供传输，在host与target之间提供通道 可以是USB或TCP   提供服务，在target设备上执行命令 如adb shell或adb push&amp;">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://w3b5h3ll.github.io/wiki/2024/07/08/ADB-overview/ADB-overview/image-20240708104840466.png">
-<meta property="og:image" content="https://w3b5h3ll.github.io/wiki/2024/07/08/ADB-overview/ADB-overview/image-20240708110301429.png">
-<meta property="og:image" content="https://w3b5h3ll.github.io/wiki/2024/07/08/ADB-overview/ADB-overview/image-20240708111744931.png">
+<meta property="og:image" content="https://w3b5h3ll.github.io/wiki/2024/07/08/ADB-overview/image-20240708104840466.png">
+<meta property="og:image" content="https://w3b5h3ll.github.io/wiki/2024/07/08/ADB-overview/image-20240708110301429.png">
+<meta property="og:image" content="https://w3b5h3ll.github.io/wiki/2024/07/08/ADB-overview/image-20240708111744931.png">
 <meta property="article:published_time" content="2024-07-08T02:47:04.000Z">
 <meta property="article:modified_time" content="2024-07-22T23:47:43.057Z">
 <meta property="article:author" content="w3b5h3ll">
 <meta property="article:tag" content="Android">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://w3b5h3ll.github.io/wiki/2024/07/08/ADB-overview/ADB-overview/image-20240708104840466.png">
+<meta name="twitter:image" content="https://w3b5h3ll.github.io/wiki/2024/07/08/ADB-overview/image-20240708104840466.png">
 
 
 <link rel="canonical" href="https://w3b5h3ll.github.io/wiki/2024/07/08/ADB-overview/">
@@ -333,7 +333,7 @@
     
     <div class="post-body" itemprop="articleBody">
         <p>ADB架构以及命令总结</p>
-<h2 id="Under-the-hood"><a href="#Under-the-hood" class="headerlink" title="Under the hood"></a>Under the hood</h2><p><img src="/wiki/2024/07/08/ADB-overview/ADB-overview/image-20240708104840466.png" alt="image-20240708104840466"></p>
+<h2 id="Under-the-hood"><a href="#Under-the-hood" class="headerlink" title="Under the hood"></a>Under the hood</h2><p><img src="/wiki/2024/07/08/ADB-overview/image-20240708104840466.png" alt="image-20240708104840466"></p>
 <p><code>client</code>通过本地的<code>server</code>与远端的<code>daemon</code>进程通信。</p>
 <ul>
 <li>client执行子命令</li>
@@ -357,7 +357,7 @@
 <li>或者直接执行命令，系统自动检测是否已经启动，没有的话进行启动</li>
 </ul>
 <h2 id="ADB-internal"><a href="#ADB-internal" class="headerlink" title="ADB internal"></a>ADB internal</h2><p>交互过程</p>
-<p><img src="/wiki/2024/07/08/ADB-overview/ADB-overview/image-20240708110301429.png" alt="image-20240708110301429"></p>
+<p><img src="/wiki/2024/07/08/ADB-overview/image-20240708110301429.png" alt="image-20240708110301429"></p>
 <p><code>ro.secure == 1</code>为正常Android设备配置</p>
 <ul>
 <li>如果<code>ro.debuggable == 1</code>，可以使用<code>adb root</code></li>
@@ -371,7 +371,7 @@
 <ul>
 <li>使用<code>TCP</code>模式：<code>adb tcpip 5555</code></li>
 </ul>
-<p><img src="/wiki/2024/07/08/ADB-overview/ADB-overview/image-20240708111744931.png" alt="image-20240708111744931"></p>
+<p><img src="/wiki/2024/07/08/ADB-overview/image-20240708111744931.png" alt="image-20240708111744931"></p>
 <p>模拟器相关</p>
 <p><code>adb emu window scale 0.5</code> 是用于 Android 模拟器的命令，用来调整模拟器窗口的显示比例。具体来说，该命令的作用是将模拟器窗口的显示比例设置为 0.5，即窗口的尺寸会被缩小到原来的一半。</p>
 <p>备份</p>
