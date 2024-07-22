@@ -81,7 +81,7 @@
 <li><p>std::ifstream</p>
 </li>
 </ul>
-<p><img src="/wiki/wiki/2024/06/25/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/2024-06-27-23-33-37-image.png"></p>
+<p><img src="/wiki/2024/06/25/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/2024-06-27-23-33-37-image.png"></p>
 <h2 id="容器"><a href="#容器" class="headerlink" title="容器"></a>容器</h2><p>容器</p>
 <p>vectors, stacks, queues</p>
 <p>重排列相关的数据</p>
@@ -115,7 +115,7 @@
 <ul>
 <li>可顺序访问的容器</li>
 </ul>
-<p><img src="/wiki/wiki/2024/06/25/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/2024-06-27-23-51-14-image.png"></p>
+<p><img src="/wiki/2024/06/25/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/2024-06-27-23-51-14-image.png"></p>
 <p>Associative 关联类型</p>
 <ul>
 <li>容器不必有顺序</li>
@@ -150,10 +150,10 @@
 </li>
 </ul>
 <p>不同类型的<code>iterator</code></p>
-<p><img src="/wiki/wiki/2024/06/25/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/2024-06-28-00-01-45-image.png"></p>
+<p><img src="/wiki/2024/06/25/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/2024-06-28-00-01-45-image.png"></p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">// Input</span><br><span class="line">auto elem = *it;</span><br><span class="line"></span><br><span class="line">// Output</span><br><span class="line">*elem = value;</span><br><span class="line"></span><br><span class="line">// 双向Bidirectional</span><br><span class="line">--iter;</span><br><span class="line"></span><br><span class="line">// 随机，Random</span><br><span class="line">iter += 5;</span><br><span class="line">// 例如，vec[1], vec[7]</span><br></pre></td></tr></table></figure>
 
-<p><img src="/wiki/wiki/2024/06/25/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/2024-06-28-00-05-33-image.png"></p>
+<p><img src="/wiki/2024/06/25/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/2024-06-28-00-05-33-image.png"></p>
 <p>for-range循环</p>
 <figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">auto</span> iter=set.<span class="built_in">begin</span>(); iter!=set.<span class="built_in">end</span>(); ++iter)</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span>&amp; elem = *iter;</span><br></pre></td></tr></table></figure>
 
@@ -168,7 +168,7 @@
 <ul>
 <li>类允许用户封装数据和功能</li>
 </ul>
-<p><img src="/wiki/wiki/2024/06/25/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/9626c7d8a2ef779174905f670570d533122d07a8.png"></p>
+<p><img src="/wiki/2024/06/25/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/9626c7d8a2ef779174905f670570d533122d07a8.png"></p>
 <h3 id="OOP"><a href="#OOP" class="headerlink" title="OOP"></a>OOP</h3><ul>
 <li>一切围绕对象展开</li>
 <li>关注类设计与实现</li>
@@ -306,7 +306,7 @@
 <li><p>执行了<code>empty % 2</code></p>
 </li>
 </ul>
-<p><img src="/wiki/wiki/2024/06/25/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/2024-06-26-22-21-38-image.png"></p>
+<p><img src="/wiki/2024/06/25/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/2024-06-26-22-21-38-image.png"></p>
 <p>修复</p>
 <figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">removeOddsFromEnd</span><span class="params">(std::vector&lt;<span class="type">int</span>&gt; &amp;vec)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 判空操作</span></span><br><span class="line">    <span class="keyword">while</span> (!vec.<span class="built_in">empty</span>() &amp;&amp; vec.<span class="built_in">back</span>() % <span class="number">2</span> == <span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        vec.<span class="built_in">pop_back</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -342,7 +342,7 @@
 <li><p>尽可能在编译时确保安全</p>
 </li>
 </ul>
-<p><img src="/wiki/wiki/2024/06/25/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/2024-06-26-22-55-40-image.png"></p>
+<p><img src="/wiki/2024/06/25/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/2024-06-26-22-55-40-image.png"></p>
 <h2 id="RAII-Smart-Pointers…"><a href="#RAII-Smart-Pointers…" class="headerlink" title="RAII, Smart Pointers…"></a>RAII, Smart Pointers…</h2><h3 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h3><blockquote>
 <p>异常是一个可能超出程序的控制范围的错误条件，它会阻止程序继续沿其常规执行路径执行。 某些操作（包括对象创建、文件输入&#x2F;输出以及从其他模块中进行的函数调用）都可能是异常的来源，即便程序正常运行也是如此。 可靠代码可预见并处理异常</p>
 </blockquote>
@@ -351,7 +351,7 @@
 
 <p>可使用<code>catch(...)</code>，则会处理所有类型的异常</p>
 <h3 id="RAII"><a href="#RAII" class="headerlink" title="RAII"></a>RAII</h3><p>由异常引出的问题，异常往往与资源申请，释放有关。手动资源管理是一件是十分复制的工作（<strong>尤其是出现异常的时候，我们如何确保之前申请的资源的确被释放了</strong>）可能导致遗漏。如下资源：</p>
-<p><img src="/wiki/wiki/2024/06/25/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/2024-06-26-13-40-14-image.png"></p>
+<p><img src="/wiki/2024/06/25/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/2024-06-26-13-40-14-image.png"></p>
 <p>RAII: Resource Acquisition is Initialization</p>
 <ul>
 <li><p>类使用的资源，在构造函数中获取</p>
@@ -408,10 +408,10 @@
 <ul>
 <li>一些场景：不具有对象所有权，但是想安全访问对象的情况</li>
 </ul>
-<p><img src="/wiki/wiki/2024/06/25/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/2024-06-26-21-13-58-image.png"></p>
+<p><img src="/wiki/2024/06/25/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/2024-06-26-21-13-58-image.png"></p>
 <figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;memory&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">B</span>;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">A</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    std::shared_ptr&lt;B&gt; ptrB;</span><br><span class="line">    ~<span class="built_in">A</span>() &#123; std::cout &lt;&lt; <span class="string">&quot;A destory!&quot;</span> &lt;&lt; std::endl; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">B</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// std::shared_ptr&lt;A&gt; ptrA;</span></span><br><span class="line">    std::weak_ptr&lt;A&gt; ptrA;</span><br><span class="line">    ~<span class="built_in">B</span>() &#123; std::cout &lt;&lt; <span class="string">&quot;B destory!&quot;</span> &lt;&lt; std::endl; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> a = std::<span class="built_in">make_shared</span>&lt;A&gt;();</span><br><span class="line">    <span class="keyword">auto</span> b = std::<span class="built_in">make_shared</span>&lt;B&gt;();</span><br><span class="line">    a-&gt;ptrB = b;</span><br><span class="line">    b-&gt;ptrA = a;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p><img src="/wiki/wiki/2024/06/25/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/2024-06-26-21-16-42-image.png"></p>
+<p><img src="/wiki/2024/06/25/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/CS-106L-Standard-C-Programming%E8%AF%BE%E7%A8%8B%E6%80%BB%E7%BB%93/2024-06-26-21-16-42-image.png"></p>
 <h2 id="Template"><a href="#Template" class="headerlink" title="Template"></a>Template</h2><p>存在3中template</p>
 <ul>
 <li><p>template class</p>
@@ -620,8 +620,8 @@
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">picocom -b 115200 /dev/tty.usbmodemch0000011</span><br><span class="line">root:hak5bunny</span><br></pre></td></tr></table></figure>
 
 <p>同时其作为存储设备，如下目录</p>
-<p><img src="/wiki/wiki/2024/06/29/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/2023-11-09-16-05-30-image.png"></p>
-<h2 id="攻击面分析"><a href="#攻击面分析" class="headerlink" title="攻击面分析"></a>攻击面分析</h2><p><img src="/wiki/wiki/2024/06/29/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/2023-11-09-12-56-02-image.png"></p>
+<p><img src="/wiki/2024/06/29/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/2023-11-09-16-05-30-image.png"></p>
+<h2 id="攻击面分析"><a href="#攻击面分析" class="headerlink" title="攻击面分析"></a>攻击面分析</h2><p><img src="/wiki/2024/06/29/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/2023-11-09-12-56-02-image.png"></p>
 <h3 id="攻击负载媒介"><a href="#攻击负载媒介" class="headerlink" title="攻击负载媒介"></a>攻击负载媒介</h3><p>非常典型有震网病毒，通过U盘即突破了物理隔离，不做详细展开</p>
 <p><img src="https://s.secrss.com/anquanneican/702f33f11f8bf9226bb4185e124fefb3.jpg"></p>
 <h3 id="HID攻击"><a href="#HID攻击" class="headerlink" title="HID攻击"></a>HID攻击</h3><blockquote>
@@ -635,7 +635,7 @@
 </li>
 </ul>
 <p>常见USB HID开发平台</p>
-<p><img src="/wiki/wiki/2024/06/29/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/2023-11-09-13-17-25-image.png"></p>
+<p><img src="/wiki/2024/06/29/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/USB%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/2023-11-09-13-17-25-image.png"></p>
 <p>想要实现<code>HID</code>攻击，设备需要支持<code>Keyboard</code>等人机交互接口类型。利用<code>Umap2</code>框架，可以对目标进行一个初步的USB安全评估（注：该工具需要使用<code>Python2.7</code>启动）</p>
 <ul>
 <li><a href="https://github.com/nccgroup/umap2">GitHub - nccgroup&#x2F;umap2: Umap2 is the second revision of NCC Group’s python based USB host security assessment tool.</a></li>
@@ -948,7 +948,7 @@
 <ul>
 <li>类型转换被截断，输出uid &#x3D;&#x3D;0,绕过了检查</li>
 </ul>
-<p><img src="/wiki/wiki/2024/07/16/x86%E6%9E%B6%E6%9E%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%8E%A2%E7%A9%B6/x86%E6%9E%B6%E6%9E%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%8E%A2%E7%A9%B6/image-20240718105150653.png" alt="image-20240718105150653"></p>
+<p><img src="/wiki/2024/07/16/x86%E6%9E%B6%E6%9E%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%8E%A2%E7%A9%B6/x86%E6%9E%B6%E6%9E%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%8E%A2%E7%A9%B6/image-20240718105150653.png" alt="image-20240718105150653"></p>
 <p>case02:</p>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">unsigned</span> <span class="type">short</span> <span class="type">int</span> f;</span><br><span class="line"><span class="type">char</span> mybuf[<span class="number">1024</span>];</span><br><span class="line"><span class="type">char</span> *userstr = getuserstr();</span><br><span class="line"></span><br><span class="line">f = <span class="built_in">strlen</span>(userstr);</span><br><span class="line"><span class="keyword">if</span> (f &gt; <span class="keyword">sizeof</span>(mybuf) - <span class="number">5</span>)</span><br><span class="line">&#123;</span><br><span class="line">    die(<span class="string">&quot;string too long!&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">strcpy</span>(mybuf, userstr);</span><br></pre></td></tr></table></figure>
 
@@ -994,9 +994,9 @@
 </ul>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Example</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="type">char</span> a;</span><br><span class="line">    <span class="type">char</span> b;</span><br><span class="line">    <span class="type">char</span> c;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Example02</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="type">int</span> a;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">short</span> b;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">char</span> c;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">Example</span> <span class="title">ex</span>;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">Example02</span> <span class="title">ex02</span>;</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Size of struct Example: %zu\n&quot;</span>, <span class="keyword">sizeof</span>(ex));</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Size of struct Example02: %zu\n&quot;</span>, <span class="keyword">sizeof</span>(ex02));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p><img src="/wiki/wiki/2024/07/16/x86%E6%9E%B6%E6%9E%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%8E%A2%E7%A9%B6/x86%E6%9E%B6%E6%9E%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%8E%A2%E7%A9%B6/image-20240718143347231.png" alt="image-20240718143347231"></p>
+<p><img src="/wiki/2024/07/16/x86%E6%9E%B6%E6%9E%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%8E%A2%E7%A9%B6/x86%E6%9E%B6%E6%9E%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%8E%A2%E7%A9%B6/image-20240718143347231.png" alt="image-20240718143347231"></p>
 <p>为了对齐，进行了填充</p>
-<p><img src="/wiki/wiki/2024/07/16/x86%E6%9E%B6%E6%9E%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%8E%A2%E7%A9%B6/x86%E6%9E%B6%E6%9E%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%8E%A2%E7%A9%B6/image-20240718143649297.png" alt="image-20240718143649297"></p>
+<p><img src="/wiki/2024/07/16/x86%E6%9E%B6%E6%9E%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%8E%A2%E7%A9%B6/x86%E6%9E%B6%E6%9E%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%8E%A2%E7%A9%B6/image-20240718143649297.png" alt="image-20240718143649297"></p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
 <li><a href="https://www.cnblogs.com/zhangziqiu/archive/2011/03/30/ComputerCode.html">https://www.cnblogs.com/zhangziqiu/archive/2011/03/30/ComputerCode.html</a></li>
 </ul>
